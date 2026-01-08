@@ -1,0 +1,48 @@
+#DSIL:1.0 msqdx-glass v1.0.0
+
+T.color.brand[purple:#b638ff|yellow:#fef14d|pink:#f256b6|orange:#ff6a3b|blue:#3b82f6|green:#00ca55|white:#ffffff|black:#000000]
+T.color.tints[purple:rgba(182,56,255,0.15)|yellow:rgba(254,241,77,0.15)|pink:rgba(242,86,182,0.15)|orange:rgba(255,106,59,0.15)|blue:rgba(59,130,246,0.15)|green:rgba(0,202,85,0.15)]
+T.color.semantic[success:#22c55e|warning:#f97316|error:#f87171|info:#3b82f6]
+T.color.light[background:#f8f6f0|paper:#ffffff|border:rgba(0,0,0,0.12)|textPrimary:#0f172a|textSecondary:#475569]
+T.color.dark[background:#0f0f0f|paper:#1a1a1a|border:rgba(255,255,255,0.12)|textPrimary:#ffffff|textSecondary:#cccccc]
+
+T.spacing.borderRadius[none:0|xs:4px|sm:8px|md:16px|lg:24px|xl:32px|xxl:40px|full:999px]
+T.spacing.scale[none:0|xxs:4px|xs:8px|sm:12px|md:16px|lg:24px|xl:32px|xxl:48px|xxxl:64px]
+
+T.typography.fontFamily[primary:"Noto Sans JP",sans-serif|mono:"JetBrains Mono",monospace]
+T.typography.fontSize[xs:0.625rem|sm:0.75rem|body2:0.8125rem|body1:0.875rem|base:1rem|lg:1.125rem|xl:1.25rem|2xl:1.5rem|3xl:2rem|4xl:2.5rem]
+T.typography.fontWeight[thin:100|extralight:200|light:300|regular:400|medium:500|semibold:600|bold:700|extrabold:800|black:900]
+T.typography.lineHeight[tight:1.2|normal:1.4|relaxed:1.6|loose:1.8]
+
+T.effects.glass[blur:12px|saturate:150%]
+T.effects.transitions[fast:0.15s ease-out|standard:0.2s ease-in-out|slow:0.3s cubic-bezier(0.4,0,0.2,1)|spring:0.4s cubic-bezier(0.4,0,0.2,1)]
+T.effects.zIndex[base:0|dropdown:1000|sticky:1100|fixed:1200|modalBackdrop:1300|modal:1400|popover:1500|tooltip:1600]
+
+T.breakpoint[xs:0px|sm:600px|md:900px|lg:1200px|xl:1536px]
+
+T.icon.sizes[xs:12px|sm:16px|md:20px|lg:24px|xl:32px|xxl:48px]
+T.icon.weights[light:200|thin:300|regular:400|medium:500|semibold:600|bold:700]
+
+I.action:add,edit,delete,save,close,check,cancel,refresh,search,filter,sort,download,upload,share,copy,cut,paste
+I.status:success,warning,error,info,check_circle,warning_amber,error_outline,info_outline
+I.navigation:menu,home,dashboard,settings,account,logout,login,arrow_back,arrow_forward,arrow_up,arrow_down,chevron_left,chevron_right
+I.content:visibility,visibility_off,lock,lock_open,star,favorite,bookmark,tag,label,folder,file,image,video,audio
+I.communication:send,message,chat,email,notification,bell,comment,reply,forward
+
+C.button:v[variant:contained*|outlined|text] v[color:primary*|secondary|error|warning|info|success] v[size:small|medium*|large] p[loading?:bool=false] p[glass?:bool=false] p[disabled?:bool=false] p[fullWidth?:bool=false] p[startIcon?:node] p[endIcon?:node] s[default!] e[click] !loading→disabled
+
+C.typography:v[variant:h1|h2|h3|h4|h5|h6|subtitle1|subtitle2|body1*|body2|caption|overline] p[weight?:thin|extralight|light|regular*|medium|semibold|bold|extrabold|black|num] p[eyebrow?:bool=false] p[color?:str] p[align?:left|center|right|justify] s[default!]
+
+C.chip:v[variant:glass*|filled|outlined] v[color:primary*|secondary|default] p[glow?:bool=false] p[label!:str] p[icon?:node] p[onDelete?:func] s[default?] e[click] e[delete] !glow→(glass|filled)
+
+P.form-field:[label?,field!,message?]
+P.button-actions:[secondary?,primary!]
+P.card-layout:[header?,content!,footer?]
+P.navigation:[logo?,items!,user?]
+
+S."user wählt eine Option":≤5→radio-group|>5→select|boolean→switch
+S."user löst Aktion aus":primary→button[variant:contained,color:primary]|secondary→button[variant:outlined]|navigation→link|destructive→button[variant:contained,color:error]
+S."user gibt Text ein":single→input|multi→textarea|password→input[type:password]|email→input[type:email]
+S."user sieht Status":success→chip[variant:filled,color:success]|warning→chip[variant:filled,color:warning]|error→chip[variant:filled,color:error]|info→chip[variant:glass,color:info]
+S."user sieht Überschrift":main→typography[variant:h1,weight:extrabold]|section→typography[variant:h2,weight:extrabold]|subsection→typography[variant:h3,weight:bold]|label→typography[variant:caption,eyebrow:true]
+

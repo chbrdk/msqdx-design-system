@@ -1,0 +1,438 @@
+# DSIL:1.0 msqdx-glass v1.0.0
+
+@meta {
+  name: "msqdx-glass"
+  version: "1.0.0"
+  dsil-version: "1.0.0"
+  prefix: { html: "msqdx-glass-", react: "Msqdx" }
+  imports: { react: "@msqdx/design-system" }
+  config: { strict: true, controlled: true, theme: "light" }
+}
+
+@tokens {
+  color: {
+    @group brand {
+      purple: { value: "#b638ff", @doc: "Primary Accent" }
+      yellow: { value: "#fef14d" }
+      pink: { value: "#f256b6" }
+      orange: { value: "#ff6a3b" }
+      blue: { value: "#3b82f6" }
+      green: { value: "#00ca55" }
+      white: { value: "#ffffff" }
+      black: { value: "#000000" }
+    }
+    @group tints {
+      purple: { value: "rgba(182, 56, 255, 0.15)" }
+      yellow: { value: "rgba(254, 241, 77, 0.15)" }
+      pink: { value: "rgba(242, 86, 182, 0.15)" }
+      orange: { value: "rgba(255, 106, 59, 0.15)" }
+      blue: { value: "rgba(59, 130, 246, 0.15)" }
+      green: { value: "rgba(0, 202, 85, 0.15)" }
+    }
+    @group semantic {
+      success: { value: "#22c55e" }
+      warning: { value: "#f97316" }
+      error: { value: "#f87171" }
+      info: { value: "#3b82f6" }
+    }
+    @group light {
+      background: { value: "#f8f6f0" }
+      paper: { value: "#ffffff" }
+      border: { value: "rgba(0, 0, 0, 0.12)" }
+      textPrimary: { value: "#0f172a" }
+      textSecondary: { value: "#475569" }
+    }
+    @group dark {
+      background: { value: "#0f0f0f" }
+      paper: { value: "#1a1a1a" }
+      border: { value: "rgba(255, 255, 255, 0.12)" }
+      textPrimary: { value: "#ffffff" }
+      textSecondary: { value: "#cccccc" }
+    }
+  }
+  
+  spacing: {
+    @group borderRadius {
+      none: { value: "0px" }
+      xs: { value: "4px" }
+      sm: { value: "8px" }
+      md: { value: "16px" }
+      lg: { value: "24px" }
+      xl: { value: "32px" }
+      xxl: { value: "40px" }
+      full: { value: "999px", @doc: "Pill shape" }
+    }
+    @group scale {
+      none: { value: "0px" }
+      xxs: { value: "4px" }
+      xs: { value: "8px" }
+      sm: { value: "12px" }
+      md: { value: "16px" }
+      lg: { value: "24px" }
+      xl: { value: "32px" }
+      xxl: { value: "48px" }
+      xxxl: { value: "64px" }
+    }
+  }
+  
+  typography: {
+    @group fontFamily {
+      primary: { value: '"Noto Sans JP", sans-serif' }
+      mono: { value: '"JetBrains Mono", monospace' }
+    }
+    @group fontSize {
+      xs: { value: "0.625rem", @doc: "10px" }
+      sm: { value: "0.75rem", @doc: "12px" }
+      body2: { value: "0.8125rem", @doc: "13px" }
+      body1: { value: "0.875rem", @doc: "14px" }
+      base: { value: "1rem", @doc: "16px" }
+      lg: { value: "1.125rem", @doc: "18px" }
+      xl: { value: "1.25rem", @doc: "20px" }
+      "2xl": { value: "1.5rem", @doc: "24px" }
+      "3xl": { value: "2rem", @doc: "32px" }
+      "4xl": { value: "2.5rem", @doc: "40px" }
+    }
+    @group fontWeight {
+      thin: { value: 100 }
+      extralight: { value: 200 }
+      light: { value: 300 }
+      regular: { value: 400 }
+      medium: { value: 500 }
+      semibold: { value: 600 }
+      bold: { value: 700 }
+      extrabold: { value: 800 }
+      black: { value: 900 }
+    }
+    @group lineHeight {
+      tight: { value: 1.2 }
+      normal: { value: 1.4 }
+      relaxed: { value: 1.6 }
+      loose: { value: 1.8 }
+    }
+  }
+  
+  effects: {
+    @group glass {
+      blur: { value: "12px" }
+      saturate: { value: "150%" }
+    }
+    @group transitions {
+      fast: { value: "0.15s ease-out" }
+      standard: { value: "0.2s ease-in-out" }
+      slow: { value: "0.3s cubic-bezier(0.4, 0, 0.2, 1)" }
+      spring: { value: "0.4s cubic-bezier(0.4, 0, 0.2, 1)" }
+    }
+    @group zIndex {
+      base: { value: 0 }
+      dropdown: { value: 1000 }
+      sticky: { value: 1100 }
+      fixed: { value: 1200 }
+      modalBackdrop: { value: 1300 }
+      modal: { value: 1400 }
+      popover: { value: 1500 }
+      tooltip: { value: 1600 }
+    }
+  }
+  
+  breakpoint: {
+    xs: { value: "0px", @doc: "Extra small devices (phones)" }
+    sm: { value: "600px", @doc: "Small devices (tablets, portrait)" }
+    md: { value: "900px", @doc: "Medium devices (tablets, landscape)" }
+    lg: { value: "1200px", @doc: "Large devices (desktops)" }
+    xl: { value: "1536px", @doc: "Extra large devices (large desktops)" }
+  }
+  
+  icon: {
+    @group sizes {
+      xs: { value: "12px" }
+      sm: { value: "16px" }
+      md: { value: "20px" }
+      lg: { value: "24px" }
+      xl: { value: "32px" }
+      xxl: { value: "48px" }
+    }
+    @group weights {
+      light: { value: 200 }
+      thin: { value: 300 }
+      regular: { value: 400 }
+      medium: { value: 500 }
+      semibold: { value: 600 }
+      bold: { value: 700 }
+    }
+  }
+}
+
+@icons {
+  @group action { add, edit, delete, save, close, check, cancel, refresh, search, filter, sort, download, upload, share, copy, cut, paste }
+  @group status { success, warning, error, info, check_circle, warning_amber, error_outline, info_outline }
+  @group navigation { menu, home, dashboard, settings, account, logout, login, arrow_back, arrow_forward, arrow_up, arrow_down, chevron_left, chevron_right }
+  @group content { visibility, visibility_off, lock, lock_open, star, favorite, bookmark, tag, label, folder, file, image, video, audio }
+  @group communication { send, message, chat, email, notification, bell, comment, reply, forward }
+}
+
+@component button {
+  @doc "Standard button component with pill shape, glassmorphism support, and integrated loading state"
+  @controlled false
+  @tag-react MsqdxButton
+  
+  variants: {
+    variant: {
+      contained: { @doc "Solid background with brand color" }
+      outlined: { @doc "Transparent with border" }
+      text: { @doc "Text only, no background" }
+    }
+    color: {
+      primary: { @doc "Brand green" }
+      secondary: { @doc "Brand yellow" }
+      error: { @doc "Error red" }
+      warning: { @doc "Warning orange" }
+      info: { @doc "Info blue" }
+      success: { @doc "Success green" }
+    }
+    size: {
+      small: { @doc "Compact button" }
+      medium: { @doc "Default size" }
+      large: { @doc "Large button" }
+    }
+  }
+  
+  props: {
+    loading: { type: boolean, default: false, @doc "Shows loading spinner" }
+    glass: { type: boolean, default: false, @doc "Applies glassmorphism effect" }
+    disabled: { type: boolean, default: false }
+    fullWidth: { type: boolean, default: false }
+    startIcon: { type: node, required: false }
+    endIcon: { type: node, required: false }
+  }
+  
+  slots: {
+    default: { required: true, type: text, @doc: "Button label" }
+  }
+  
+  events: {
+    click: { native: true }
+    mouseEnter: { native: true }
+    mouseLeave: { native: true }
+  }
+  
+  constraints: {
+    @rule "loading impliziert disabled" {
+      error: "Button mit loading ist automatisch disabled"
+    }
+    @rule "glass variant erfordert transparent background"
+  }
+  
+  examples: {
+    basic: |
+      <MsqdxButton variant="contained" color="primary">
+        Click me
+      </MsqdxButton>
+    loading: |
+      <MsqdxButton variant="contained" loading>
+        Loading...
+      </MsqdxButton>
+    glass: |
+      <MsqdxButton variant="outlined" glass>
+        Glass Button
+      </MsqdxButton>
+  }
+}
+
+@component typography {
+  @doc "Central typography component with built-in branding and special variants"
+  @controlled false
+  @tag-react MsqdxTypography
+  
+  variants: {
+    variant: {
+      h1: { @doc "Heading 1 - Extrabold (800)" }
+      h2: { @doc "Heading 2 - Extrabold (800)" }
+      h3: { @doc "Heading 3 - Bold (700)" }
+      h4: { @doc "Heading 4 - Bold (700)" }
+      h5: { @doc "Heading 5 - Semibold (600)" }
+      h6: { @doc "Heading 6 - Semibold (600)" }
+      subtitle1: { @doc "Subtitle 1 - Medium (500)" }
+      subtitle2: { @doc "Subtitle 2 - Semibold (600)" }
+      body1: { @doc "Body 1 - Regular (400)" }
+      body2: { @doc "Body 2 - Regular (400)" }
+      caption: { @doc "Caption - Regular (400)" }
+      overline: { @doc "Overline - Medium (500)" }
+    }
+  }
+  
+  props: {
+    weight: { type: "thin" | "extralight" | "light" | "regular" | "medium" | "semibold" | "bold" | "extrabold" | "black" | number, required: false, @doc "Font weight override" }
+    eyebrow: { type: boolean, default: false, @doc "Uppercase label style with letter spacing" }
+    color: { type: string, required: false, @doc "Text color" }
+    align: { type: "left" | "center" | "right" | "justify", required: false }
+  }
+  
+  slots: {
+    default: { required: true, type: text }
+  }
+  
+  events: {}
+  
+  constraints: {
+    @rule "eyebrow variant verwendet automatisch uppercase und letter-spacing"
+  }
+  
+  examples: {
+    heading: |
+      <MsqdxTypography variant="h1" weight="extrabold">
+        Main Heading
+      </MsqdxTypography>
+    body: |
+      <MsqdxTypography variant="body1" weight="regular">
+        Body text content
+      </MsqdxTypography>
+    eyebrow: |
+      <MsqdxTypography variant="caption" eyebrow>
+        Label
+      </MsqdxTypography>
+  }
+}
+
+@component chip {
+  @doc "Versatile chip component for categories, tags, and status indicators"
+  @controlled false
+  @tag-react MsqdxChip
+  
+  variants: {
+    variant: {
+      glass: { @doc "Glassmorphism style with blur" }
+      filled: { @doc "Solid background" }
+      outlined: { @doc "Transparent with border" }
+    }
+    color: {
+      primary: { @doc "Brand green" }
+      secondary: { @doc "Brand yellow" }
+      default: { @doc "Default gray" }
+    }
+  }
+  
+  props: {
+    glow: { type: boolean, default: false, @doc "Adds glow effect" }
+    label: { type: string, required: true }
+    icon: { type: node, required: false }
+    onDelete: { type: function, required: false, @doc "Shows delete icon when provided" }
+  }
+  
+  slots: {
+    default: { required: false, type: text, @doc: "Alternative to label prop" }
+  }
+  
+  events: {
+    click: { native: true }
+    delete: { payload: { event: MouseEvent } }
+  }
+  
+  constraints: {
+    @rule "glow erfordert variant glass oder filled"
+  }
+  
+  examples: {
+    glass: |
+      <MsqdxChip variant="glass" color="primary" label="Tag" />
+    filled: |
+      <MsqdxChip variant="filled" color="primary" label="Status" />
+    withDelete: |
+      <MsqdxChip variant="outlined" label="Removable" onDelete={() => {}} />
+  }
+}
+
+@patterns {
+  @pattern form-field {
+    structure: [label?, field!, message?]
+    components: { 
+      label: "MsqdxTypography[variant:caption]", 
+      field: "MsqdxFormField | input | select | textarea",
+      message: "MsqdxTypography[variant:caption,color:error]" 
+    }
+    constraints: { 
+      @rule "Field muss immer vorhanden sein"
+      @rule "Message nur bei error oder helper text"
+    }
+  }
+  
+  @pattern button-actions {
+    structure: [secondary?, primary!]
+    components: {
+      secondary: "MsqdxButton[variant:outlined]",
+      primary: "MsqdxButton[variant:contained,color:primary]"
+    }
+    constraints: { 
+      @rule "Primary Button rechts positioniert"
+      @rule "Maximal 2 Buttons in einer Action-Gruppe"
+    }
+  }
+  
+  @pattern card-layout {
+    structure: [header?, content!, footer?]
+    components: {
+      header: "MsqdxTypography[variant:h5]",
+      content: "node",
+      footer: "button-actions pattern"
+    }
+    constraints: {
+      @rule "Content ist immer erforderlich"
+    }
+  }
+  
+  @pattern navigation {
+    structure: [logo?, items!, user?]
+    components: {
+      logo: "image | text",
+      items: "MsqdxButton[variant:text] | link",
+      user: "MsqdxButton[variant:text,icon]"
+    }
+  }
+}
+
+@semantics {
+  @intent "user wählt eine Option" {
+    @alias "single select", "choose one"
+    conditions: {
+      "≤ 5 Optionen": { component: "radio-group", reason: "Alle sichtbar" }
+      "> 5 Optionen": { component: "select", reason: "Platzsparend" }
+      "Boolean Toggle": { component: "switch", reason: "Ein/Aus Zustand" }
+    }
+  }
+  
+  @intent "user löst Aktion aus" {
+    conditions: {
+      "primäre Aktion": { component: "button[variant:contained,color:primary]", reason: "Hauptaktion immer prominent" }
+      "sekundäre Aktion": { component: "button[variant:outlined]", reason: "Nebenaktion weniger prominent" }
+      "Navigation": { component: "link", reason: "Links für Navigation, nicht Buttons!" }
+      "destruktive Aktion": { component: "button[variant:contained,color:error]", reason: "Gefährliche Aktionen klar kennzeichnen" }
+    }
+  }
+  
+  @intent "user gibt Text ein" {
+    conditions: {
+      "einzeiliger Text": { component: "input", reason: "Standard Textfeld" }
+      "mehrzeiliger Text": { component: "textarea", reason: "Längere Eingaben" }
+      "Passwort": { component: "input[type:password]", reason: "Sicherheit" }
+      "Email": { component: "input[type:email]", reason: "Validierung" }
+    }
+  }
+  
+  @intent "user sieht Status" {
+    conditions: {
+      "Erfolg": { component: "chip[variant:filled,color:success]", reason: "Positiver Status" }
+      "Warnung": { component: "chip[variant:filled,color:warning]", reason: "Aufmerksamkeit erforderlich" }
+      "Fehler": { component: "chip[variant:filled,color:error]", reason: "Kritischer Status" }
+      "Info": { component: "chip[variant:glass,color:info]", reason: "Informativ" }
+    }
+  }
+  
+  @intent "user sieht Überschrift" {
+    conditions: {
+      "Hauptüberschrift": { component: "typography[variant:h1,weight:extrabold]", reason: "Größte Überschrift" }
+      "Sektionsüberschrift": { component: "typography[variant:h2,weight:extrabold]", reason: "Sektionen abgrenzen" }
+      "Unterüberschrift": { component: "typography[variant:h3,weight:bold]", reason: "Unterabschnitte" }
+      "Label über Feld": { component: "typography[variant:caption,eyebrow:true]", reason: "Kleines Label" }
+    }
+  }
+}
+
