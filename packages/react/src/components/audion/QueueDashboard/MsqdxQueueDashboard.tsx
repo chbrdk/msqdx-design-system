@@ -203,9 +203,7 @@ export const MsqdxQueueDashboard = ({
                     <MsqdxTypography variant="body2" weight="semibold">
                       Job {job.id.slice(0, 8)}
                     </MsqdxTypography>
-                    <MsqdxChip variant={chip.variant} size="small">
-                      {chip.label}
-                    </MsqdxChip>
+                    <MsqdxChip color={chip.variant} size="small" label={chip.label} />
                   </Box>
                   <MsqdxTypography variant="caption" sx={{ color: "text.secondary" }}>
                     Document: {job.documentId.slice(0, 8)}...

@@ -44,7 +44,7 @@ export function MsqdxTargetGroupCard({
       <Box display="flex" alignItems="center" gap={1.5} mb={1}>
         <MsqdxIcon name="groups" size="sm" />
         <Box flex={1}>
-          <MsqdxTypography variant="subtitle1" fontWeight={600}>
+          <MsqdxTypography variant="subtitle1" weight="semibold">
             {targetGroup.name}
           </MsqdxTypography>
           <MsqdxTypography variant="body2" color="text.secondary">

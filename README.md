@@ -1,37 +1,43 @@
 # MSQDX Design System
 
-Monorepo mit **Tokens** (`@msqdx/tokens`) und **React-Komponenten** (`@msqdx/react`). Storybook läuft im React-Paket.
+Monorepo mit **Design Tokens** (`@msqdx/tokens`) und **React-Komponenten** (`@msqdx/react`). Storybook läuft im React-Paket.
 
-## Repo auf GitHub pushen
+---
+
+## Quick Start
 
 ```bash
-# Abhängigkeiten installieren (aus Repo-Root)
 npm install
-
-# Packages bauen (tokens zuerst, dann react)
 npm run build
-
-# Änderungen committen und pushen
-git add .
-git commit -m "chore: design system as publishable packages"
-git push origin main
+npm run storybook
 ```
 
-Falls `origin` noch nicht gesetzt ist oder du ein neues Repo anlegen willst:
+Storybook startet unter **http://localhost:6006**.
 
-```bash
-gh repo create chbrdk/msqdx-design-system --private --source=. --push
-# oder öffentlich: --public
-```
+---
+
+## Struktur
+
+| Paket | Beschreibung |
+|-------|----------------|
+| `packages/tokens` | Design Tokens (Farben, Spacing, Typography, Effects, Icons, …) |
+| `packages/react` | React-Komponenten (Atoms, Molecules, Layout, AUDION), abhängig von `@msqdx/tokens` |
+
+**Scripts (Root):**
+
+- `npm run build` – baut zuerst Tokens, dann React
+- `npm run build:tokens` – nur Tokens bauen
+- `npm run storybook` – Storybook im React-Paket starten
+
+---
 
 ## In anderen Projekten verwenden
 
-### Option A: Lokaler Pfad (ohne Publish, z. B. AUDION)
+### Lokaler Pfad (z. B. AUDION)
 
 Wenn das Design-System neben deinem Projekt liegt:
 
 ```bash
-# Im Design-System zuerst bauen
 cd path/to/msqdx-design-system && npm install && npm run build
 ```
 
@@ -48,11 +54,11 @@ In der `package.json` des anderen Projekts:
 
 Dann im Projekt `npm install` ausführen.
 
-### Option B: Als npm-Pakete publizieren
+### Als npm-Pakete publizieren
 
-1. **Registrierung:** Für den Scope `@msqdx` brauchst du eine npm-Organisation „msqdx“ (oder du benennst die Packages z. B. in `@chbrdk/tokens` und `@chbrdk/react` um).
+1. Für den Scope `@msqdx` eine npm-Organisation anlegen (oder Packages z. B. als `@chbrdk/tokens` / `@chbrdk/react` benennen).
 
-2. **Build & Publish (aus Repo-Root):**
+2. Aus dem Repo-Root:
 
    ```bash
    npm run build
@@ -60,19 +66,17 @@ Dann im Projekt `npm install` ausführen.
    cd ../react && npm publish --access public
    ```
 
-   Beim ersten Publish von Scoped-Paketen (`@msqdx/...`) ist `--access public` nötig (oder vorher in der jeweiligen `package.json`: `"publishConfig": { "access": "public" }`).
+   Beim ersten Publish von Scoped-Paketen ist `--access public` nötig.
 
-3. **In anderen Projekten:**
+3. Im anderen Projekt:
 
    ```bash
    npm install @msqdx/tokens @msqdx/react
    ```
 
-### Option C: GitHub Packages (npm-kompatibel)
+### GitHub Packages
 
-Wenn du über GitHub Packages publizieren willst:
-
-1. In jeder `package.json` (tokens, react) ergänzen:
+1. In `packages/tokens/package.json` und `packages/react/package.json` ergänzen:
 
    ```json
    "publishConfig": {
@@ -80,28 +84,34 @@ Wenn du über GitHub Packages publizieren willst:
    }
    ```
 
-2. In der anderen App eine `.npmrc` anlegen (oder global):
+2. Paketnamen an Org anpassen (z. B. `@chbrdk/tokens`, `@chbrdk/react`). In der konsumierenden App `.npmrc`:
 
    ```
    @chbrdk:registry=https://npm.pkg.github.com
    ```
 
-3. Paketnamen für GitHub Packages müssen zum Org-Namen passen, z. B. `@chbrdk/tokens` und `@chbrdk/react`. Dann wie unter Option B bauen und in `packages/tokens` bzw. `packages/react` mit `npm publish` publizieren.
+3. Wie unter „Als npm-Pakete publizieren“ bauen und in den jeweiligen `packages/*`-Ordnern `npm publish` ausführen.
 
-## Lokale Entwicklung
+---
+
+## Repo auf GitHub pushen
 
 ```bash
-# Aus dem Repo-Root
-npm install
-npm run build    # baut @msqdx/tokens immer; @msqdx/react ggf. nach Behebung von TS-Fehlern
-npm run storybook
+git add .
+git commit -m "chore: monorepo with @msqdx/tokens and @msqdx/react, README"
+git push origin main
 ```
 
-Storybook startet für das React-Paket (z. B. Port 6006).
+Falls noch kein Remote gesetzt ist:
 
-**Hinweis:** Das React-Paket kann derzeit noch TypeScript-Fehler (z. B. doppelte Exports wie `BrandColor`/`MsqdxCard` aus atoms vs. molecules) melden. Bis dahin kannst du es in anderen Projekten per `file:../msqdx-design-system/packages/react` nutzen; für einen sauberen `npm publish` die Fehler in `packages/react` beheben.
+```bash
+gh repo create chbrdk/msqdx-design-system --private --source=. --push
+```
 
-## Struktur
+---
 
-- `packages/tokens` – Design Tokens (Farben, Spacing, Typography, …)
-- `packages/react` – React-Komponenten (Atoms, Molecules, AUDION-Komponenten), abhängig von `@msqdx/tokens`
+## Technik
+
+- **Workspaces:** `packages/tokens`, `packages/react` (npm workspaces)
+- **Build:** TypeScript (`tsc`), Stories für den Publish ausgeschlossen
+- **React:** MUI (Material UI), Emotion, Design Tokens aus `@msqdx/tokens`

@@ -157,10 +157,10 @@ export function MsqdxChatMessage({
             <Box
               sx={{
                 display: "flex",
-                flexDirection: MSQDX_LAYOUT.direction.column,
+                flexDirection: "column" as const,
                 gap: `${MSQDX_SPACING.gap.xs}px`,
                 width: "100%",
-                marginTop: senderLabel ? 0 : undefined,
+                ...(senderLabel ? {} : { marginTop: 0 }),
               }}
             >
               {images.map((img, i) => (

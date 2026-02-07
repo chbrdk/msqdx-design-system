@@ -188,10 +188,9 @@ export const MsqdxPhaseCard = ({
                   key={chip.label}
                   variant="glass"
                   size="small"
-                  icon={chip.icon}
-                >
-                  {chip.label}
-                </MsqdxChip>
+                  icon={chip.icon ? <MsqdxIcon name={chip.icon} /> : undefined}
+                  label={chip.label}
+                />
               ))}
             </Box>
             <Box

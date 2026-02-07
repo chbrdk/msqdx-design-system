@@ -9,7 +9,7 @@ import React from "react";
 export type BrandColor = 'purple' | 'yellow' | 'pink' | 'orange' | 'green' | 'black';
 export type TextareaSize = 'small' | 'medium' | 'large';
 
-export interface MsqdxTextareaFieldProps extends Omit<TextFieldProps, 'variant' | 'multiline'> {
+export interface MsqdxTextareaFieldProps extends Omit<TextFieldProps, 'variant' | 'multiline' | 'size'> {
   label: string;
   errorText?: string;
   icon?: string | React.ReactNode;

@@ -13,7 +13,7 @@ export interface MsqdxCheckboxOption {
   disabled?: boolean;
 }
 
-export interface MsqdxCheckboxFieldProps extends Omit<FormGroupProps, 'children'> {
+export interface MsqdxCheckboxFieldProps extends Omit<FormGroupProps, 'children' | 'onChange'> {
   label: string;
   options: MsqdxCheckboxOption[];
   errorText?: string;

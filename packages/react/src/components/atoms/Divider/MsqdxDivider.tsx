@@ -58,15 +58,15 @@ const StyledDividerRoot = styled(Box, {
     p !== "thickness" &&
     p !== "dividerColor" &&
     p !== "spacing" &&
-    p !== "flex",
+    p !== "grow",
 })<{
   orientation: DividerOrientation;
   variant: DividerVariant;
   thickness: DividerThickness;
   dividerColor: DividerColor;
   spacing: DividerSpacing;
-  flex: boolean;
-}>(({ orientation, variant, thickness, dividerColor, spacing, flex }) => {
+  grow: boolean;
+}>(({ orientation, variant, thickness, dividerColor, spacing, grow }) => {
   const borderWidth = MSQDX_EFFECTS.borderWidth[thickness];
   const color = getColor(dividerColor);
   const borderStyle = borderStyleMap[variant];
@@ -76,9 +76,9 @@ const StyledDividerRoot = styled(Box, {
     borderColor: color,
     borderStyle,
     borderWidth: 0,
-    flex: flex ? 1 : undefined,
-    minWidth: flex ? 0 : undefined,
-    minHeight: flex ? 0 : undefined,
+    flex: grow ? 1 : undefined,
+    minWidth: grow ? 0 : undefined,
+    minHeight: grow ? 0 : undefined,
   };
 
   if (orientation === "horizontal") {
@@ -156,7 +156,7 @@ export const MsqdxDivider = ({
         thickness={thickness}
         dividerColor={color}
         spacing={spacing}
-        flex={flex}
+        grow={flex}
         role="separator"
         aria-orientation={orientation}
       >
@@ -176,7 +176,7 @@ export const MsqdxDivider = ({
       thickness={thickness}
       dividerColor={color}
       spacing={spacing}
-      flex={flex}
+      grow={flex}
       role="separator"
       aria-orientation={orientation}
     >

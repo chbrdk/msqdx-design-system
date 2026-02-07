@@ -8,7 +8,7 @@ import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
 export type BrandColor = 'purple' | 'yellow' | 'pink' | 'orange' | 'green' | 'black';
 export type SelectSize = 'small' | 'medium' | 'large';
 
-export interface MsqdxSelectProps extends Omit<SelectProps, 'children'> {
+export interface MsqdxSelectProps extends Omit<SelectProps, 'children' | 'size'> {
   label: string;
   options: {
     value: string | number;
@@ -234,17 +234,17 @@ export const MsqdxSelect = ({
       },
     },
     anchorOrigin: {
-      vertical: 'bottom',
-      horizontal: 'left',
+      vertical: 'bottom' as const,
+      horizontal: 'left' as const,
     },
     transformOrigin: {
-      vertical: 'top',
-      horizontal: 'left',
+      vertical: 'top' as const,
+      horizontal: 'left' as const,
     },
   };
 
   return (
-    <StyledFormControl fullWidth={fullWidth} size={size} error={hasError}>
+    <StyledFormControl fullWidth={fullWidth} size={size === "large" ? "medium" : size} error={hasError}>
       <InputLabel
         id={labelId}
         sx={{

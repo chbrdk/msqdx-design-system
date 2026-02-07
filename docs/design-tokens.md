@@ -2,6 +2,28 @@
 
 Complete reference for all design tokens in the MSQDX Design System.
 
+---
+
+## Regel: Tokens immer verwenden
+
+**Bei der Umsetzung von UI und Komponenten immer die Design Tokens aus `@msqdx/tokens` verwenden – keine hardcodierten Werte für:**
+
+- **Farben** → `MSQDX_COLORS`, `MSQDX_THEME`
+- **Abstände, Radius** → `MSQDX_SPACING` (scale, padding, margin, borderRadius)
+- **Typografie** → `MSQDX_TYPOGRAPHY` (fontFamily, fontSize, lineHeight, fontWeight, letterSpacing)
+- **Effekte** → `MSQDX_EFFECTS` (shadows, opacity, borderWidth, doubleBorder, tripleBorder, zIndex, transitions)
+- **Animationen** → `MSQDX_ANIMATION_DURATION`, `MSQDX_ANIMATION_EASING`, `MSQDX_ANIMATIONS`, etc.
+- **Layout** → `MSQDX_LAYOUT` (grid, aspectRatio, maxWidth, alignment, overflow, cursor)
+- **Breakpoints** → `MSQDX_BREAKPOINTS`, `MSQDX_BREAKPOINT_LABELS`
+- **Interaction / A11y** → `MSQDX_INTERACTION` (minTouchTarget, focusOutline, reducedMotion)
+- **Komponenten** → `MSQDX_BUTTON`, `MSQDX_CHIP`, `MSQDX_INPUT`, etc. wo vorhanden
+
+**Import:** `import { MSQDX_COLORS, MSQDX_SPACING, ... } from '@msqdx/tokens';`
+
+Siehe auch: [Implementation Rules](./implementation-rules.md).
+
+---
+
 ## Colors
 
 ### Brand Colors

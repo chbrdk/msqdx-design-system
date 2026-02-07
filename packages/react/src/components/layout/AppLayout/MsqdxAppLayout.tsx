@@ -204,7 +204,7 @@ export const MsqdxAppLayout = ({
               borderBottomRightRadius: LAYOUT_RADIUS_1_5XL_CSS,
             }),
     border: widthPx ? `${widthPx}px solid ${color}` : "none",
-    borderLeft: hasSidebar ? "none" : undefined,
+    ...(hasSidebar ? { borderLeft: "none" as const } : {}),
     ...innerSx,
     overflow: "auto",
     display: "flex",

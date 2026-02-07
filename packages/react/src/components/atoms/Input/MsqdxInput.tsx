@@ -13,7 +13,7 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url'
 export type InputState = 'default' | 'error' | 'success' | 'disabled';
 export type BrandColor = 'purple' | 'yellow' | 'pink' | 'orange' | 'green' | 'black';
 
-export interface MsqdxInputProps extends Omit<InputBaseProps, 'size' | 'type'> {
+export interface MsqdxInputProps extends Omit<InputBaseProps, 'size' | 'type' | 'ref'> {
   /**
    * Input label
    */

@@ -34,7 +34,7 @@ export function MsqdxChatItem({ conversation, onSelect }: MsqdxChatItemProps) {
       <Box display="flex" alignItems="flex-start" gap={1}>
         <MsqdxIcon name="forum" size="sm" sx={{ mt: 0.25 }} />
         <Box flex={1} minWidth={0}>
-          <MsqdxTypography variant="body2" fontWeight={500} noWrap>
+          <MsqdxTypography variant="body2" weight="medium" sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {conversation.title}
           </MsqdxTypography>
           <Box display="flex" alignItems="center" gap={1} mt={0.5}>

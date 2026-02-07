@@ -4,9 +4,11 @@ import React from "react";
 import { MsqdxInput } from "../../atoms/Input/MsqdxInput";
 import type { MsqdxInputProps } from "../../atoms/Input/MsqdxInput";
 
-export type MsqdxSearchFieldProps = Omit<MsqdxInputProps, "type" | "startIcon"> & {
+export type MsqdxSearchFieldProps = Omit<MsqdxInputProps, "type"> & {
   /** Placeholder when empty. @default "Search…" */
   placeholder?: string;
+  /** Override start icon (default: Search). */
+  startIcon?: string;
 };
 
 /**
