@@ -1,62 +1,107 @@
 # MSQDX Design System
 
-Complete design system package for MSQDX projects, including design tokens, React components, theme configuration, and comprehensive documentation.
+Monorepo mit **Tokens** (`@msqdx/tokens`) und **React-Komponenten** (`@msqdx/react`). Storybook läuft im React-Paket.
 
-## Structure
+## Repo auf GitHub pushen
 
-```
-msqdx-design-system/
-├── packages/
-│   └── design-system/     # Main package
-│       ├── src/
-│       │   ├── tokens/     # Design tokens
-│       │   ├── components/ # React components
-│       │   ├── theme/      # MUI theme configuration
-│       │   └── styles/     # CSS variables and classes
-│       └── dist/           # Build output
-├── docs/                   # Documentation
-│   ├── design-tokens.md
-│   ├── components.md
-│   ├── usage-guide.md
-│   ├── migration-guide.md
-│   ├── css-classes.md
-│   └── accessibility.md
-└── dsil/                   # DSIL format for LLMs
-    ├── msqdx-design-system.dsil
-    └── msqdx-design-system-compact.dsil
+```bash
+# Abhängigkeiten installieren (aus Repo-Root)
+npm install
+
+# Packages bauen (tokens zuerst, dann react)
+npm run build
+
+# Änderungen committen und pushen
+git add .
+git commit -m "chore: design system as publishable packages"
+git push origin main
 ```
 
-## Quick Start
+Falls `origin` noch nicht gesetzt ist oder du ein neues Repo anlegen willst:
 
-See [packages/design-system/README.md](./packages/design-system/README.md) for installation and usage instructions.
+```bash
+gh repo create chbrdk/msqdx-design-system --private --source=. --push
+# oder öffentlich: --public
+```
 
-## Documentation
+## In anderen Projekten verwenden
 
-- [Design Tokens Documentation](./docs/design-tokens.md)
-- [Components Documentation](./docs/components.md)
-- [Usage Guide](./docs/usage-guide.md)
-- [Migration Guide](./docs/migration-guide.md)
-- [CSS Classes](./docs/css-classes.md)
-- [Accessibility Guidelines](./docs/accessibility.md)
+### Option A: Lokaler Pfad (ohne Publish, z. B. AUDION)
 
-## DSIL Format
+Wenn das Design-System neben deinem Projekt liegt:
 
-The design system is available in DSIL (Design System Interface Layer) format optimized for LLM consumption:
+```bash
+# Im Design-System zuerst bauen
+cd path/to/msqdx-design-system && npm install && npm run build
+```
 
-- [Full DSIL Manifest](./dsil/msqdx-design-system.dsil)
-- [Compact Format](./dsil/msqdx-design-system-compact.dsil)
+In der `package.json` des anderen Projekts:
 
-## Contributing
+```json
+{
+  "dependencies": {
+    "@msqdx/tokens": "file:../msqdx-design-system/packages/tokens",
+    "@msqdx/react": "file:../msqdx-design-system/packages/react"
+  }
+}
+```
 
-This design system is used across multiple MSQDX projects:
-- ECHON
-- UNION
-- AUDION
-- DEVON
+Dann im Projekt `npm install` ausführen.
 
-When making changes, ensure compatibility across all projects.
+### Option B: Als npm-Pakete publizieren
 
-## License
+1. **Registrierung:** Für den Scope `@msqdx` brauchst du eine npm-Organisation „msqdx“ (oder du benennst die Packages z. B. in `@chbrdk/tokens` und `@chbrdk/react` um).
 
-MIT
+2. **Build & Publish (aus Repo-Root):**
 
+   ```bash
+   npm run build
+   cd packages/tokens && npm publish --access public
+   cd ../react && npm publish --access public
+   ```
+
+   Beim ersten Publish von Scoped-Paketen (`@msqdx/...`) ist `--access public` nötig (oder vorher in der jeweiligen `package.json`: `"publishConfig": { "access": "public" }`).
+
+3. **In anderen Projekten:**
+
+   ```bash
+   npm install @msqdx/tokens @msqdx/react
+   ```
+
+### Option C: GitHub Packages (npm-kompatibel)
+
+Wenn du über GitHub Packages publizieren willst:
+
+1. In jeder `package.json` (tokens, react) ergänzen:
+
+   ```json
+   "publishConfig": {
+     "registry": "https://npm.pkg.github.com/chbrdk"
+   }
+   ```
+
+2. In der anderen App eine `.npmrc` anlegen (oder global):
+
+   ```
+   @chbrdk:registry=https://npm.pkg.github.com
+   ```
+
+3. Paketnamen für GitHub Packages müssen zum Org-Namen passen, z. B. `@chbrdk/tokens` und `@chbrdk/react`. Dann wie unter Option B bauen und in `packages/tokens` bzw. `packages/react` mit `npm publish` publizieren.
+
+## Lokale Entwicklung
+
+```bash
+# Aus dem Repo-Root
+npm install
+npm run build    # baut @msqdx/tokens immer; @msqdx/react ggf. nach Behebung von TS-Fehlern
+npm run storybook
+```
+
+Storybook startet für das React-Paket (z. B. Port 6006).
+
+**Hinweis:** Das React-Paket kann derzeit noch TypeScript-Fehler (z. B. doppelte Exports wie `BrandColor`/`MsqdxCard` aus atoms vs. molecules) melden. Bis dahin kannst du es in anderen Projekten per `file:../msqdx-design-system/packages/react` nutzen; für einen sauberen `npm publish` die Fehler in `packages/react` beheben.
+
+## Struktur
+
+- `packages/tokens` – Design Tokens (Farben, Spacing, Typography, …)
+- `packages/react` – React-Komponenten (Atoms, Molecules, AUDION-Komponenten), abhängig von `@msqdx/tokens`

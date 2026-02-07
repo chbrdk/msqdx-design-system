@@ -1,47 +1,27 @@
 # Dependencies
-node_modules/
-.pnp
-.pnp.js
+node_modules
 
-# Build outputs
-dist/
-build/
+# Build output
+dist
 *.tsbuildinfo
 
-# Testing
-coverage/
-.nyc_output
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Storybook
+storybook-static
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
+# IDE / misc
+.specstory
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+.env
+.env.local
+.env.*.local
 
-# Package manager
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Backup / copy folders (do not publish)
+packages copy/
+packages copy 2/
 
-# Temporary files
-*.tmp
-*.temp
-.cache/
-
+# Optional: uncomment to avoid committing lockfile (some prefer committing it for reproducibility)
+# package-lock.json
