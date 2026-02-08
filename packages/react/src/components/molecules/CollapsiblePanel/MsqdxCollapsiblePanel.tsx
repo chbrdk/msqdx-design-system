@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Box, IconButton, useMediaQuery, useTheme, alpha } from "@mui/material";
-import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
 import type { ReactNode } from "react";
 import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
@@ -147,7 +146,7 @@ export const MsqdxCollapsiblePanel = ({
           ...sx,
         }}
       >
-        {/* Desktop: Toggle button */}
+        {/* Desktop: Toggle button – compact variant (28x28) */}
         {mounted && (
           <Box
             sx={{
@@ -160,24 +159,29 @@ export const MsqdxCollapsiblePanel = ({
               transform: "translateX(50%)",
             }}
           >
-            <MsqdxButton
-              variant="outlined"
+            <IconButton
               size="small"
               onClick={handleToggle}
               aria-label={expanded ? "Collapse panel" : "Expand panel"}
               sx={{
-                minWidth: 0,
-                minHeight: 0,
                 width: 28,
                 height: 28,
+                minWidth: 28,
+                minHeight: 28,
                 p: 0,
+                border: "1px solid",
+                borderColor: "divider",
+                "&:hover": {
+                  backgroundColor: alpha(MSQDX_BRAND_PRIMARY.purple, 0.08),
+                  borderColor: MSQDX_BRAND_PRIMARY.purple,
+                },
               }}
             >
               <MsqdxIcon
                 name={expanded ? "chevron_left" : "chevron_right"}
                 size="sm"
               />
-            </MsqdxButton>
+            </IconButton>
           </Box>
         )}
 
