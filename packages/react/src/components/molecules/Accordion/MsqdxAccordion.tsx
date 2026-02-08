@@ -422,7 +422,7 @@ export const MsqdxAccordion = ({
   const tokenBg =
     theme.palette.mode === "dark"
       ? MSQDX_THEME.dark.surface.primary
-      : MSQDX_THEME.light.background.primary;
+      : MSQDX_THEME.light.background.primary; // #ffffff in light mode
 
   return (
     <AccordionContext.Provider value={contextValue}>
