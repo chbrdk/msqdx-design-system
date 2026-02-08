@@ -18,6 +18,8 @@ export type AdminNavItem = {
   path: string;
   icon: string;
   external?: boolean;
+  /** When true, active only when currentPath === path (exact match). Use for root/dashboard links. */
+  exact?: boolean;
 };
 
 export type MsqdxAdminNavProps = {
@@ -76,8 +78,8 @@ export const MsqdxAdminNav = ({
     setMounted(true);
   }, []);
 
-  const isActive = (path: string) => {
-    if (path === "/" || path === "") return currentPath === path;
+  const isActive = (path: string, exact?: boolean) => {
+    if (exact || path === "/" || path === "") return currentPath === path;
     return currentPath === path || (currentPath?.startsWith(path) ?? false);
   };
 
@@ -224,7 +226,7 @@ export const MsqdxAdminNav = ({
         ))}
 
         {items.map((item) => {
-          const active = isActive(item.path);
+          const active = isActive(item.path, item.exact);
           if (!isExpanded) {
             return (
               <IconButton
