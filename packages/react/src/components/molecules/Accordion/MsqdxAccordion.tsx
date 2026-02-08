@@ -259,7 +259,7 @@ export const MsqdxAccordionItem = ({
               id={`${id}-panel`}
               role="region"
               aria-labelledby={`${id}-summary`}
-              sx={{ padding: detailsPadding }}
+              sx={{ padding: `${detailsPadding}px` }}
             >
               {children}
             </DetailsInnerVertical>
@@ -302,7 +302,7 @@ export const MsqdxAccordionItem = ({
           id={`${id}-panel`}
           role="region"
           aria-labelledby={`${id}-summary`}
-          sx={{ padding: detailsPadding }}
+          sx={{ padding: `${detailsPadding}px` }}
         >
           {children}
         </DetailsInnerHorizontal>
