@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { MSQDX_SPACING, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
 import type { AccordionBrandColor, AccordionSize } from "../../molecules/Accordion/MsqdxAccordion";
 import { MsqdxAccordion, MsqdxAccordionItem } from "../../molecules/Accordion/MsqdxAccordion";
@@ -38,6 +38,7 @@ export function MsqdxDashboardCard({
   onToggle,
   children,
 }: MsqdxDashboardCardProps) {
+  const theme = useTheme();
   const summary = (
     <Box
       component="span"
@@ -64,12 +65,17 @@ export function MsqdxDashboardCard({
 
   return (
     <MsqdxAccordion
+      className="msqdx-dashboard-card"
       orientation="vertical"
       size={size}
       borderRadius={borderRadius}
       brandColor={brandColor}
       expanded={expanded ? [id] : []}
       onChange={() => onToggle(id)}
+      sx={{
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: "none",
+      }}
     >
       <MsqdxAccordionItem id={id} summary={summary}>
         {children}

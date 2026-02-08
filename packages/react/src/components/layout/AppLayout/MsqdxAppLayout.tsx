@@ -248,6 +248,7 @@ export const MsqdxAppLayout = ({
               <MsqdxCornerBox
                 logo={logo}
                 appName={appName}
+                headerColor={brandColor === "black" ? "white" : undefined}
                 padding="md"
                 borderRadius={LAYOUT_RADIUS_BUTTON_PX}
                 topLeft="square"

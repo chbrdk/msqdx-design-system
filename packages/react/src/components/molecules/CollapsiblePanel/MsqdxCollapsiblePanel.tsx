@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Box, IconButton, useMediaQuery, useTheme, alpha } from "@mui/material";
+import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
 import type { ReactNode } from "react";
 import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
@@ -21,10 +22,14 @@ export type MsqdxCollapsiblePanelProps = {
   className?: string;
   /** Optional sx for the desktop wrapper. */
   sx?: Record<string, unknown>;
+  /** Desktop: width when expanded. @default 280 */
+  expandedWidth?: number;
+  /** Desktop: width when collapsed. @default 64 */
+  collapsedWidth?: number;
 };
 
-const PANEL_WIDTH_EXPANDED = 280;
-const PANEL_WIDTH_COLLAPSED = 64;
+const PANEL_WIDTH_EXPANDED_DEFAULT = 280;
+const PANEL_WIDTH_COLLAPSED_DEFAULT = 64;
 const PANEL_MOBILE_MAX_WIDTH = 400;
 
 export const MsqdxCollapsiblePanel = ({
@@ -35,6 +40,8 @@ export const MsqdxCollapsiblePanel = ({
   onMobileClose,
   className,
   sx,
+  expandedWidth = PANEL_WIDTH_EXPANDED_DEFAULT,
+  collapsedWidth = PANEL_WIDTH_COLLAPSED_DEFAULT,
 }: MsqdxCollapsiblePanelProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
@@ -134,9 +141,9 @@ export const MsqdxCollapsiblePanel = ({
           position: "relative",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
-          width: expanded ? PANEL_WIDTH_EXPANDED : PANEL_WIDTH_COLLAPSED,
-          minWidth: expanded ? PANEL_WIDTH_EXPANDED : PANEL_WIDTH_COLLAPSED,
-          maxWidth: expanded ? PANEL_WIDTH_EXPANDED : PANEL_WIDTH_COLLAPSED,
+          width: expanded ? expandedWidth : collapsedWidth,
+          minWidth: expanded ? expandedWidth : collapsedWidth,
+          maxWidth: expanded ? expandedWidth : collapsedWidth,
           ...sx,
         }}
       >
@@ -153,29 +160,24 @@ export const MsqdxCollapsiblePanel = ({
               transform: "translateX(50%)",
             }}
           >
-            <IconButton
+            <MsqdxButton
+              variant="outlined"
+              size="small"
               onClick={handleToggle}
+              aria-label={expanded ? "Collapse panel" : "Expand panel"}
               sx={{
-                color: "text.primary",
-                padding: MSQDX_SPACING.scale.xxs,
-                backgroundColor: MSQDX_NEUTRAL[50],
-                border: `1px solid ${MSQDX_NEUTRAL[300]}`,
+                minWidth: 0,
+                minHeight: 0,
                 width: 28,
                 height: 28,
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  backgroundColor: alpha(MSQDX_BRAND_PRIMARY.purple, 0.1),
-                  boxShadow: "0 2px 8px rgba(182, 56, 255, 0.2)",
-                },
-                transition: "all 0.2s ease",
+                p: 0,
               }}
-              aria-label={expanded ? "Collapse panel" : "Expand panel"}
             >
               <MsqdxIcon
                 name={expanded ? "chevron_left" : "chevron_right"}
-                customSize={18}
+                size="sm"
               />
-            </IconButton>
+            </MsqdxButton>
           </Box>
         )}
 

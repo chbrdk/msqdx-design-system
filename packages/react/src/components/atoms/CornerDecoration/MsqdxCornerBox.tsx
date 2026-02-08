@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, type BoxProps } from "@mui/material";
-import { MSQDX_LAYOUT, MSQDX_SPACING, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
+import { MSQDX_COLORS, MSQDX_LAYOUT, MSQDX_SPACING, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
 import type { ReactNode } from "react";
 import { MsqdxDivider } from "../Divider/MsqdxDivider";
 import { MsqdxLogo, type MsqdxLogoProps } from "../Logo/MsqdxLogo";
@@ -69,6 +69,10 @@ export interface MsqdxCornerBoxProps
    * Optionaler App-Name rechts neben dem Logo (Typo-Tokens); zwischen Logo und App-Name wird ein vertikaler Divider gerendert.
    */
   appName?: string;
+  /**
+   * Farbe für Logo und App-Name. Bei brandColor="black" (dunkler Hintergrund) auf "white" setzen für Kontrast.
+   */
+  headerColor?: "black" | "white";
   /**
    * Ausrichtung Haupt-Inhalt (justify-content). Token aus MSQDX_LAYOUT.alignment.justify.
    */
@@ -185,6 +189,7 @@ export const MsqdxCornerBox = ({
   paddingY,
   logo,
   appName,
+  headerColor,
   justifyContent,
   alignItems,
   headerJustify,
@@ -214,6 +219,8 @@ export const MsqdxCornerBox = ({
 
   const showLogo = logo === true || (typeof logo === "object" && logo != null);
   const logoProps = typeof logo === "object" && logo != null ? logo : {};
+  const effectiveLogoColor = headerColor ?? logoProps.color ?? "black";
+  const headerTextColor = headerColor === "white" ? MSQDX_COLORS.brand.white : undefined;
   const hasHeader = showLogo || appName != null;
 
   const hasAlignment = justifyContent != null || alignItems != null;
@@ -278,6 +285,7 @@ export const MsqdxCornerBox = ({
                   fontSize: "1.3rem",
                   fontWeight: 200,
                   textTransform: "uppercase",
+                  ...(headerTextColor && { color: headerTextColor }),
                 }}
               >
                 {appName}
