@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useCallback, createContext, useContext, useMemo, useState } from "react";
-import { Box, Collapse, alpha, styled } from "@mui/material";
+import { Box, Collapse, alpha, styled, useTheme } from "@mui/material";
 import {
   MSQDX_COLORS,
   MSQDX_EFFECTS,
   MSQDX_NEUTRAL,
   MSQDX_SPACING,
+  MSQDX_THEME,
   MSQDX_TYPOGRAPHY,
 } from "@msqdx/tokens";
 import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
@@ -417,6 +418,11 @@ export const MsqdxAccordion = ({
   );
 
   const radiusValue = getBorderRadiusCss(borderRadiusProp);
+  const theme = useTheme();
+  const tokenBg =
+    theme.palette.mode === "dark"
+      ? MSQDX_THEME.dark.surface.primary
+      : MSQDX_THEME.light.background.primary;
 
   return (
     <AccordionContext.Provider value={contextValue}>
@@ -429,6 +435,7 @@ export const MsqdxAccordion = ({
           border: `1px solid ${borderColor}`,
           borderRadius: radiusValue,
           overflow: "hidden",
+          backgroundColor: tokenBg,
           "--accordion-separator": separatorColor,
           "--accordion-hover-bg": hoverBg,
           ...(sx as object),

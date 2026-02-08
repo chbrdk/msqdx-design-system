@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Box, useTheme } from "@mui/material";
-import { MSQDX_SPACING, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
+import { MSQDX_SPACING, MSQDX_THEME, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
 import type { AccordionBrandColor, AccordionSize } from "../../molecules/Accordion/MsqdxAccordion";
 import { MsqdxAccordion, MsqdxAccordionItem } from "../../molecules/Accordion/MsqdxAccordion";
 import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
@@ -63,6 +63,11 @@ export function MsqdxDashboardCard({
     </Box>
   );
 
+  const tokenBg =
+    theme.palette.mode === "dark"
+      ? MSQDX_THEME.dark.surface.primary
+      : MSQDX_THEME.light.background.primary;
+
   return (
     <MsqdxAccordion
       className="msqdx-dashboard-card"
@@ -73,7 +78,7 @@ export function MsqdxDashboardCard({
       expanded={expanded ? [id] : []}
       onChange={() => onToggle(id)}
       sx={{
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: tokenBg,
         boxShadow: "none",
       }}
     >
