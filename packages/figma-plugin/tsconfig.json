@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "lib": [
+            "DOM",
+            "ES6"
+        ],
+        "strict": true,
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "jsx": "react-jsx",
+        "resolveJsonModule": true,
+        "types": [
+            "@figma/plugin-typings",
+            "vite/client"
+        ]
+    },
+    "include": [
+        "src"
+    ]
+}

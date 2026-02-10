@@ -1,0 +1,12 @@
+{
+    "name": "MSQDX Sync",
+    "id": "msqdx-sync-plugin",
+    "api": "1.0.0",
+    "main": "dist/code.js",
+    "ui": "dist/index.html",
+    "capabilities": [],
+    "enableProposedApi": false,
+    "editorType": [
+        "figma"
+    ]
+}
