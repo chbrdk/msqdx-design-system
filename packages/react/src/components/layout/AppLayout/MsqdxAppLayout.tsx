@@ -130,6 +130,10 @@ export interface MsqdxAppLayoutProps extends Omit<BoxProps, "children"> {
    * Optionale Sidebar/Navigation links (z. B. MsqdxAdminNav). Wird außerhalb des inneren Containers in der Brand-Fläche gerendert.
    */
   sidebar?: ReactNode;
+  /**
+   * Optional: CSS-Farbe oder var() für äußeren Brand-Hintergrund. Überschreibt brandColor wenn gesetzt (z. B. für User-Preferences).
+   */
+  brandBackgroundColor?: string;
 }
 
 /**
@@ -151,10 +155,11 @@ export const MsqdxAppLayout = ({
   logo,
   appName,
   sidebar,
+  brandBackgroundColor,
   sx,
   ...props
 }: MsqdxAppLayoutProps) => {
-  const color = getBrandColor(brandColor);
+  const color = brandBackgroundColor ?? getBrandColor(brandColor);
   const widthPx = APP_LAYOUT_BORDER_WIDTH[borderWidth];
 
   const isChecker = innerBackground === "checker";
