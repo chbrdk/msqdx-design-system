@@ -1,53 +1,19 @@
+import { ATOM_DEFINITIONS } from './atoms';
 import { MsqdxComponent } from './schema';
-import { hexToRgb } from './utils';
-
-// Placeholder for components.json logic
-// In reality we would import it like tokens.json or fetch it.
-const components: MsqdxComponent[] = []; // Empty for now
+import { hexToRgb, parseColor } from './utils';
 
 export async function syncComponents() {
-    console.log('Syncing components...');
-    if (components.length === 0) {
-        figma.notify('No components definition found (placeholder active).');
-
-        // Create a demo component as proof of concept
-        const demo: MsqdxComponent = {
-            name: 'Demo Button',
-            type: 'COMPONENT',
-            width: 120,
-            height: 48,
-            fills: [{ color: '#00ca55' }],
-            autoLayout: {
-                direction: 'HORIZONTAL',
-                padding: 16,
-                gap: 8,
-                alignItems: 'CENTER',
-                justifyContent: 'CENTER'
-            },
-            children: [
-                {
-                    name: 'Label',
-                    type: 'TEXT',
-                    text: 'Click Me',
-                    fontSize: 16,
-                    fills: [{ color: '#ffffff' }]
-                }
-            ]
-        };
-
-        try {
-            await createNode(demo, figma.currentPage);
-            figma.notify('Created Demo Component!');
-        } catch (e) {
-            console.error(e);
-            figma.notify('Error creating component: ' + e);
-        }
-        return;
-    }
-
+    console.log('Syncing MSQDX atoms...');
     const page = figma.currentPage;
-    for (const comp of components) {
-        await createNode(comp, page);
+
+    try {
+        for (const comp of ATOM_DEFINITIONS) {
+            await createNode(comp, page);
+        }
+        figma.notify(`Created ${ATOM_DEFINITIONS.length} atom components`);
+    } catch (e) {
+        console.error(e);
+        figma.notify('Error creating components: ' + (e instanceof Error ? e.message : String(e)));
     }
 }
 
@@ -58,13 +24,21 @@ async function createNode(def: MsqdxComponent, parent: BaseNode & ChildrenMixin)
         const frame = def.type === 'COMPONENT' ? figma.createComponent() : figma.createFrame();
         frame.name = def.name;
         if (def.width && def.height) frame.resize(def.width, def.height);
+        if (def.cornerRadius !== undefined) frame.cornerRadius = def.cornerRadius;
 
         // Fills
         if (def.fills) {
-            frame.fills = def.fills.map(f => ({
-                type: 'SOLID',
-                color: hexToRgb(f.color)
-            }));
+            frame.fills = def.fills.map(f => {
+                const c = parseColor(f.color) ?? hexToRgb(f.color);
+                return { type: 'SOLID' as const, color: c, opacity: f.opacity ?? c.a ?? 1 };
+            });
+        }
+        if (def.strokes) {
+            frame.strokes = def.strokes.map(s => {
+                const c = parseColor(s.color) ?? hexToRgb(s.color);
+                return { type: 'SOLID' as const, color: c };
+            });
+            frame.strokeWeight = def.strokes[0]?.weight ?? 1;
         }
 
         // AutoLayout
@@ -115,11 +89,19 @@ async function createNode(def: MsqdxComponent, parent: BaseNode & ChildrenMixin)
     } else {
         const rect = figma.createRectangle();
         if (def.width && def.height) rect.resize(def.width, def.height);
+        if (def.cornerRadius !== undefined) rect.cornerRadius = def.cornerRadius;
         if (def.fills) {
-            rect.fills = def.fills.map(f => ({
-                type: 'SOLID',
-                color: hexToRgb(f.color)
-            }));
+            rect.fills = def.fills.map(f => {
+                const c = parseColor(f.color) ?? hexToRgb(f.color);
+                return { type: 'SOLID' as const, color: c, opacity: f.opacity ?? c.a ?? 1 };
+            });
+        }
+        if (def.strokes) {
+            rect.strokes = def.strokes.map(s => {
+                const c = parseColor(s.color) ?? hexToRgb(s.color);
+                return { type: 'SOLID' as const, color: c };
+            });
+            rect.strokeWeight = def.strokes[0]?.weight ?? 1;
         }
         node = rect;
     }

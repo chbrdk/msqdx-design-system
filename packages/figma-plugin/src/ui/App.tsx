@@ -10,10 +10,16 @@ function App() {
         setTimeout(() => setLoading(false), 1500);
     };
 
-    const handleSyncComponents = () => {
+    const handleSyncButton = () => {
         setLoading(true);
-        parent.postMessage({ pluginMessage: { type: 'sync-components' } }, '*');
-        setTimeout(() => setLoading(false), 1500);
+        parent.postMessage({ pluginMessage: { type: 'sync-button' } }, '*');
+        setTimeout(() => setLoading(false), 2000);
+    };
+
+    const handleSyncAllAtoms = () => {
+        setLoading(true);
+        parent.postMessage({ pluginMessage: { type: 'sync-atoms' } }, '*');
+        setTimeout(() => setLoading(false), 15000);
     };
 
     const btnStyle = {
@@ -49,11 +55,19 @@ function App() {
                 </button>
 
                 <button
-                    onClick={handleSyncComponents}
+                    onClick={handleSyncButton}
                     disabled={loading}
                     style={{ ...btnStyle, background: loading ? '#ccc' : '#333' }}
                 >
-                    Sync Components
+                    Sync Button (variants + variables)
+                </button>
+
+                <button
+                    onClick={handleSyncAllAtoms}
+                    disabled={loading}
+                    style={{ ...btnStyle, background: loading ? '#ccc' : '#0066cc' }}
+                >
+                    Sync All Atoms
                 </button>
             </div>
 

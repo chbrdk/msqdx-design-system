@@ -5,15 +5,16 @@ export interface MsqdxComponent {
     height?: number;
     x?: number;
     y?: number;
-    fills?: { color: string, opacity?: number }[]; // hex or token reference
-    strokes?: { color: string, weight: number }[];
+    fills?: { color: string; opacity?: number }[];
+    strokes?: { color: string; weight: number }[];
+    cornerRadius?: number;
     text?: string;
     fontFamily?: string;
     fontSize?: number;
     fontWeight?: string;
     autoLayout?: {
         direction: 'HORIZONTAL' | 'VERTICAL';
-        padding?: number | { top: number, right: number, bottom: number, left: number };
+        padding?: number | { top: number; right: number; bottom: number; left: number };
         gap?: number;
         alignItems?: 'MIN' | 'CENTER' | 'MAX' | 'STRETCH';
         justifyContent?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
