@@ -171,12 +171,32 @@ export interface MsqdxAccordionItemProps {
   summary: React.ReactNode;
   /** Panel content (details) */
   children: React.ReactNode;
+  /** Optional ref for the item wrapper (e.g. for scroll-into-view) */
+  wrapperRef?: (el: HTMLDivElement | null) => void;
+  /** When used with highlightColor: show highlighted state (e.g. synced from another view) */
+  highlighted?: boolean;
+  /** Accent color for highlighted and hover state; enables wrapper styling when set */
+  highlightColor?: string;
 }
+
+const itemWrapperSx = (highlightColor: string, highlighted: boolean) => ({
+  transition: "background-color 0.15s, border-color 0.15s",
+  backgroundColor: highlighted ? `${highlightColor}18` : "transparent",
+  borderRadius: "8px",
+  border: `1px solid ${highlighted ? highlightColor : "transparent"}`,
+  "&:hover": {
+    backgroundColor: `${highlightColor}18`,
+    borderColor: highlightColor,
+  },
+});
 
 export const MsqdxAccordionItem = ({
   id,
   summary,
   children,
+  wrapperRef,
+  highlighted = false,
+  highlightColor,
 }: MsqdxAccordionItemProps) => {
   const ctx = useContext(AccordionContext);
   if (!ctx) {
@@ -229,44 +249,56 @@ export const MsqdxAccordionItem = ({
     </>
   );
 
+  const useWrapper = Boolean(wrapperRef ?? highlightColor);
+  const wrapperSx = highlightColor ? itemWrapperSx(highlightColor, highlighted) : undefined;
+
+  const innerVertical = (
+    <Box component="div" role="presentation">
+      <SummaryButton
+        type="button"
+        className="summary-button"
+        accordionSize={accordionSize}
+        onClick={handleToggle}
+        aria-expanded={expanded}
+        aria-controls={`${id}-panel`}
+        id={`${id}-summary`}
+      >
+        {summaryContent}
+      </SummaryButton>
+      <Collapse
+        in={expanded}
+        timeout={{
+          enter: parseInt(MSQDX_EFFECTS.duration.slow, 10) || 420,
+          exit: parseInt(MSQDX_EFFECTS.duration.fast, 10) || 220,
+        }}
+        easing={{
+          enter: MSQDX_EFFECTS.easing.easeInOut,
+          exit: MSQDX_EFFECTS.easing.easeIn,
+        }}
+      >
+        <DetailsVertical>
+          <DetailsInnerVertical
+            id={`${id}-panel`}
+            role="region"
+            aria-labelledby={`${id}-summary`}
+            sx={{ padding: `${detailsPadding}px` }}
+          >
+            {children}
+          </DetailsInnerVertical>
+        </DetailsVertical>
+      </Collapse>
+    </Box>
+  );
+
   if (isVertical) {
-    return (
-      <Box component="div" role="presentation">
-        <SummaryButton
-          type="button"
-          className="summary-button"
-          accordionSize={accordionSize}
-          onClick={handleToggle}
-          aria-expanded={expanded}
-          aria-controls={`${id}-panel`}
-          id={`${id}-summary`}
-        >
-          {summaryContent}
-        </SummaryButton>
-        <Collapse
-          in={expanded}
-          timeout={{
-            enter: parseInt(MSQDX_EFFECTS.duration.slow, 10) || 420,
-            exit: parseInt(MSQDX_EFFECTS.duration.fast, 10) || 220,
-          }}
-          easing={{
-            enter: MSQDX_EFFECTS.easing.easeInOut,
-            exit: MSQDX_EFFECTS.easing.easeIn,
-          }}
-        >
-          <DetailsVertical>
-            <DetailsInnerVertical
-              id={`${id}-panel`}
-              role="region"
-              aria-labelledby={`${id}-summary`}
-              sx={{ padding: `${detailsPadding}px` }}
-            >
-              {children}
-            </DetailsInnerVertical>
-          </DetailsVertical>
-        </Collapse>
-      </Box>
-    );
+    if (useWrapper) {
+      return (
+        <Box ref={wrapperRef} sx={wrapperSx} id={`${id}-wrapper`}>
+          {innerVertical}
+        </Box>
+      );
+    }
+    return innerVertical;
   }
 
   const horizontalItemSx = horizontalEqualDistribution
@@ -275,7 +307,7 @@ export const MsqdxAccordionItem = ({
       ? { flex: "1 1 0%", minWidth: 0, width: "auto" }
       : { flex: "0 0 32px", minWidth: 32, width: 32 };
 
-  return (
+  const innerHorizontal = (
     <Box
       component="div"
       role="presentation"
@@ -309,6 +341,15 @@ export const MsqdxAccordionItem = ({
       </PanelHorizontal>
     </Box>
   );
+
+  if (useWrapper) {
+    return (
+      <Box ref={wrapperRef} sx={wrapperSx} id={`${id}-wrapper`}>
+        {innerHorizontal}
+      </Box>
+    );
+  }
+  return innerHorizontal;
 };
 
 function normalizeExpanded(
