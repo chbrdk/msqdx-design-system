@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, createContext, useContext, useMemo, useState } from "react";
+import React, { useCallback, createContext, useContext, useMemo, useState, useRef, useEffect } from "react";
 import { Box, Collapse, alpha, styled, useTheme } from "@mui/material";
 import {
   MSQDX_COLORS,
@@ -37,22 +37,48 @@ function getExpandIconBorderColor(brandColor?: AccordionBrandColor): string {
 }
 
 type AccordionContextValue = {
-  expandedSet: Set<string>;
-  /** True when at least one item is expanded (for horizontal: equal vs. narrow layout). */
-  hasExpanded: boolean;
-  /** True when no item is expanded – horizontal items use equal width (computed once in parent). */
-  horizontalEqualDistribution: boolean;
+  expandedRef: React.MutableRefObject<Set<string>>;
+  subscribe: (id: string, callback: () => void) => () => void;
+  /** Subscribe to any expand/collapse (for horizontal layout; only horizontal items use this). */
+  subscribeToAny: (callback: () => void) => () => void;
   onToggle: (id: string) => void;
   orientation: AccordionOrientation;
   size: AccordionSize;
   borderRadius: AccordionBorderRadius;
-  /** Resolved border color (accordion + expand icon). */
   borderColor: string;
-  /** Resolved expand-icon border color (can differ when no brand). */
   expandIconBorderColor: string;
 };
 
 const AccordionContext = createContext<AccordionContextValue | null>(null);
+
+function useExpanded(id: string): boolean {
+  const ctx = useContext(AccordionContext);
+  const [expanded, setExpanded] = useState(() => ctx?.expandedRef.current.has(id) ?? false);
+  useEffect(() => {
+    if (!ctx) return;
+    return ctx.subscribe(id, () => {
+      setExpanded(ctx.expandedRef.current.has(id));
+    });
+  }, [id, ctx]);
+  return expanded;
+}
+
+/** For horizontal layout only: re-render when any item expands/collapses. Vertical items skip subscribe to avoid re-renders. */
+function useHorizontalLayout(orientation: AccordionOrientation): { hasExpanded: boolean; horizontalEqualDistribution: boolean } {
+  const ctx = useContext(AccordionContext);
+  const [state, setState] = useState(() => ({
+    hasExpanded: (ctx?.expandedRef.current.size ?? 0) > 0,
+    horizontalEqualDistribution: (ctx?.expandedRef.current.size ?? 0) === 0,
+  }));
+  useEffect(() => {
+    if (!ctx || orientation !== "horizontal") return;
+    return ctx.subscribeToAny(() => {
+      const size = ctx.expandedRef.current.size;
+      setState({ hasExpanded: size > 0, horizontalEqualDistribution: size === 0 });
+    });
+  }, [ctx, orientation]);
+  return state;
+}
 
 const transitionExpand = MSQDX_EFFECTS.transitions.slow;
 const transitionChevron = MSQDX_EFFECTS.transitions.standard;
@@ -203,8 +229,11 @@ export const MsqdxAccordionItem = ({
     console.warn("MsqdxAccordionItem must be used inside MsqdxAccordion");
     return null;
   }
-  const { expandedSet, hasExpanded, horizontalEqualDistribution, onToggle, orientation, size: accordionSize, expandIconBorderColor } = ctx;
-  const expanded = expandedSet.has(id);
+  const { onToggle, orientation, size: accordionSize, expandIconBorderColor } = ctx;
+  const expanded = useExpanded(id);
+  const horizontalLayout = useHorizontalLayout(orientation);
+  const hasExpanded = orientation === "horizontal" ? horizontalLayout.hasExpanded : false;
+  const horizontalEqualDistribution = orientation === "horizontal" ? horizontalLayout.horizontalEqualDistribution : true;
   const isVertical = orientation === "vertical";
   const handleToggle = useCallback(() => onToggle(id), [id, onToggle]);
 
@@ -427,35 +456,55 @@ export const MsqdxAccordion = ({
     ? normalizeExpanded(expandedProp, allowMultiple)
     : internalExpanded;
 
-  const handleToggle = useCallback(
+  const effectiveExpanded = isControlled ? expandedList : internalExpanded;
+  const expandedRef = useRef<Set<string>>(new Set(effectiveExpanded));
+  const expandedListRef = useRef<string[]>(effectiveExpanded);
+  const listenersRef = useRef<Map<string, Set<() => void>>>(new Map());
+  const anyListenersRef = useRef<Set<() => void>>(new Set());
+
+  expandedRef.current = new Set(effectiveExpanded);
+  expandedListRef.current = effectiveExpanded;
+
+  const subscribe = useCallback((id: string, callback: () => void) => {
+    if (!listenersRef.current.has(id)) listenersRef.current.set(id, new Set());
+    listenersRef.current.get(id)!.add(callback);
+    return () => {
+      listenersRef.current.get(id)?.delete(callback);
+    };
+  }, []);
+
+  const subscribeToAny = useCallback((callback: () => void) => {
+    anyListenersRef.current.add(callback);
+    return () => {
+      anyListenersRef.current.delete(callback);
+    };
+  }, []);
+
+  const handleToggleStable = useCallback(
     (id: string) => {
-      const next = nextExpanded(expandedList, id, allowMultiple);
+      const next = nextExpanded(expandedListRef.current, id, allowMultiple);
+      expandedRef.current = new Set(next);
       if (!isControlled) setInternalExpanded(next);
       onChange?.(next);
+      listenersRef.current.get(id)?.forEach((cb) => cb());
+      anyListenersRef.current.forEach((cb) => cb());
     },
-    [expandedList, allowMultiple, isControlled, onChange]
+    [allowMultiple, isControlled, onChange]
   );
 
-  const effectiveExpanded = isControlled ? expandedList : internalExpanded;
-  const expandedSet = useMemo(
-    () => new Set(effectiveExpanded),
-    [effectiveExpanded]
-  );
-  const hasExpanded = expandedSet.size > 0;
-  const horizontalEqualDistribution = expandedSet.size === 0;
   const contextValue = useMemo<AccordionContextValue>(
     () => ({
-      expandedSet,
-      hasExpanded,
-      horizontalEqualDistribution,
-      onToggle: handleToggle,
+      expandedRef,
+      subscribe,
+      subscribeToAny,
+      onToggle: handleToggleStable,
       orientation,
       size,
       borderRadius: borderRadiusProp,
       borderColor,
       expandIconBorderColor,
     }),
-    [expandedSet, hasExpanded, horizontalEqualDistribution, handleToggle, orientation, size, borderRadiusProp, borderColor, expandIconBorderColor]
+    [handleToggleStable, orientation, size, borderRadiusProp, borderColor, expandIconBorderColor]
   );
 
   const radiusValue = getBorderRadiusCss(borderRadiusProp);
