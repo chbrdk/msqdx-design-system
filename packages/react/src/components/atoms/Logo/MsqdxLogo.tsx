@@ -37,7 +37,7 @@ const sizeMap = {
 };
 
 const StyledLogo = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'size' && prop !== 'logoSize',
+  shouldForwardProp: (prop) => prop !== 'size' && prop !== 'logoSize' && prop !== 'logoSvgColor',
 })<{ logoSize: { width: number; height: number }; logoSvgColor: string }>(({ logoSize, logoSvgColor }) => ({
   width: logoSize.width,
   height: logoSize.height,

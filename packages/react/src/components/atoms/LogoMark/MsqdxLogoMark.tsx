@@ -37,7 +37,7 @@ const sizeMap = {
 };
 
 const StyledLogoMark = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'size' && prop !== 'logoMarkSize',
+  shouldForwardProp: (prop) => prop !== 'size' && prop !== 'logoMarkSize' && prop !== 'logoSvgColor',
 })<{ logoMarkSize: { width: number; height: number }; logoSvgColor: string }>(({ logoMarkSize, logoSvgColor }) => ({
   width: logoMarkSize.width,
   height: logoMarkSize.height,
