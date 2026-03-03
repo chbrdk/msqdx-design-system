@@ -28,7 +28,7 @@ export function MsqdxInspectorPanel({
         top: 0,
         height: "100%",
         width,
-        backgroundColor: "background.paper",
+        backgroundColor: "#fff",
         borderLeft: `1px solid ${MSQDX_NEUTRAL[200]}`,
         boxShadow: MSQDX_EFFECTS.shadows.lg,
         zIndex: 40,

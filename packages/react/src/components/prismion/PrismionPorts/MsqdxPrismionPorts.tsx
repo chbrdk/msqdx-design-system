@@ -181,7 +181,7 @@ export function MsqdxPrismionPorts({
               : "Click: Create new prismion | Drag: Connect to existing"
           }
           sx={{
-            opacity: 0,
+            opacity: 1,
             "&:hover": { opacity: 1 },
             ".group:hover &": { opacity: 1 },
           }}

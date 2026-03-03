@@ -121,7 +121,7 @@ export function MsqdxPrismionToolbar({
             borderRadius: "50%",
             padding: 0,
             boxShadow: MSQDX_EFFECTS.shadows.sm,
-            backgroundColor: "background.paper",
+            backgroundColor: "#fff",
             border: `1px solid ${MSQDX_NEUTRAL[200]}`,
             ...(open && { boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}` }),
           }}

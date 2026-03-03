@@ -28,7 +28,7 @@ export function MsqdxMergeDrawer({
         left: 0,
         right: 0,
         height,
-        backgroundColor: "background.paper",
+        backgroundColor: "#fff",
         borderTop: `1px solid ${MSQDX_NEUTRAL[200]}`,
         boxShadow: MSQDX_EFFECTS.shadows.lg,
         zIndex: 40,

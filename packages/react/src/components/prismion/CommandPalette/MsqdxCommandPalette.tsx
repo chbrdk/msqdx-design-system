@@ -37,7 +37,7 @@ export function MsqdxCommandPalette({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          backgroundColor: "background.paper",
+          backgroundColor: "#fff",
           border: `1px solid ${MSQDX_NEUTRAL[200]}`,
           borderRadius: MSQDX_SPACING.borderRadius.lg,
           boxShadow: MSQDX_EFFECTS.shadows.xl,
