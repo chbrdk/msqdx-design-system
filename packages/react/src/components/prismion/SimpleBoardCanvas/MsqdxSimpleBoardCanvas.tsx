@@ -40,6 +40,8 @@ export interface MsqdxSimpleBoardCanvasProps {
   connections: Connection[];
   participants?: BoardParticipant[];
   onPrismionCreated?: (prismion: Prismion) => void;
+  /** When provided, called on card drag; parent can update prismions. When omitted, cards are still draggable via internal state. */
+  onPrismionMove?: (id: string, position: { x: number; y: number }) => void;
   className?: string;
 }
 
@@ -48,6 +50,7 @@ export function MsqdxSimpleBoardCanvas({
   prismions,
   connections,
   onPrismionCreated,
+  onPrismionMove,
   className,
 }: MsqdxSimpleBoardCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -56,10 +59,18 @@ export function MsqdxSimpleBoardCanvas({
   const [selectedPrismionId, setSelectedPrismionId] = useState<string | null>(null);
   const [isPanning, setIsPanning] = useState(false);
   const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 });
+  const [localPrismions, setLocalPrismions] = useState<Prismion[]>(prismions);
+  const [draggingPrismionId, setDraggingPrismionId] = useState<string | null>(null);
+  const [dragStartPosition, setDragStartPosition] = useState<{ x: number; y: number } | null>(null);
+  const [dragStartClient, setDragStartClient] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (onPrismionMove) setLocalPrismions(prismions);
+  }, [prismions, onPrismionMove]);
 
   const canvasSettings = getCanvasSettings(board);
   const connectors = connections.map(connectionToConnector);
-  const prismionsMap = prismionsToRecord(prismions);
+  const prismionsMap = prismionsToRecord(localPrismions);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.target === canvasRef.current) {
@@ -91,6 +102,48 @@ export function MsqdxSimpleBoardCanvas({
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     setZoom((prev) => Math.max(CANVAS_ZOOM.min, Math.min(CANVAS_ZOOM.max, prev * delta)));
   }, []);
+
+  const handleCardMouseDown = useCallback(
+    (e: React.MouseEvent, prismion: Prismion) => {
+      if (e.button !== 0 || e.metaKey) return;
+      const target = e.target as HTMLElement;
+      if (target.closest?.("input, button, [role='button'], a, [data-no-drag]")) return;
+      e.stopPropagation();
+      setDraggingPrismionId(prismion.id);
+      setDragStartPosition({ ...prismion.position });
+      setDragStartClient({ x: e.clientX, y: e.clientY });
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!draggingPrismionId || !dragStartPosition || !dragStartClient) return;
+    const onMove = (e: MouseEvent) => {
+      const dx = (e.clientX - dragStartClient.x) / zoom;
+      const dy = (e.clientY - dragStartClient.y) / zoom;
+      const newPos = { x: dragStartPosition.x + dx, y: dragStartPosition.y + dy };
+      if (onPrismionMove) {
+        onPrismionMove(draggingPrismionId, newPos);
+      } else {
+        setLocalPrismions((prev) =>
+          prev.map((p) =>
+            p.id === draggingPrismionId ? { ...p, position: { ...p.position, ...newPos } } : p
+          )
+        );
+      }
+    };
+    const onUp = () => {
+      setDraggingPrismionId(null);
+      setDragStartPosition(null);
+      setDragStartClient(null);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, [draggingPrismionId, dragStartPosition, dragStartClient, zoom, onPrismionMove]);
 
   const handleDoubleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -201,15 +254,17 @@ export function MsqdxSimpleBoardCanvas({
           </Box>
         )}
 
-        {prismions.map((prismion) => (
+        {localPrismions.map((prismion) => (
           <Box
             key={prismion.id}
             data-prismion-id={prismion.id}
+            onMouseDown={(e) => handleCardMouseDown(e, prismion)}
             sx={{
               position: "absolute",
               left: prismion.position.x,
               top: prismion.position.y,
-              zIndex: prismion.position.zIndex ?? 10,
+              zIndex: draggingPrismionId === prismion.id ? 20 : (prismion.position.zIndex ?? 10),
+              cursor: draggingPrismionId === prismion.id ? "grabbing" : "grab",
             }}
           >
             <MsqdxPrismionCard
@@ -217,6 +272,10 @@ export function MsqdxSimpleBoardCanvas({
               selected={selectedPrismionId === prismion.id}
               onSelect={(multiSelect) => {
                 if (!multiSelect) setSelectedPrismionId(prismion.id);
+              }}
+              onMove={(pos) => {
+                if (onPrismionMove) onPrismionMove(prismion.id, pos);
+                else setLocalPrismions((prev) => prev.map((p) => (p.id === prismion.id ? { ...p, position: { ...p.position, ...pos } } : p)));
               }}
             />
           </Box>

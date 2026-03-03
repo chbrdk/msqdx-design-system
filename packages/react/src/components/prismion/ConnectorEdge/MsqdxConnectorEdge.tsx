@@ -270,7 +270,7 @@ export function MsqdxConnectorEdge({
             id={`arrowhead-f-${connector.id}`}
             markerWidth="8"
             markerHeight="6"
-            refX="6"
+            refX="8"
             refY="3"
             orient="auto"
           >
@@ -280,7 +280,7 @@ export function MsqdxConnectorEdge({
             id={`arrowhead-b-${connector.id}`}
             markerWidth="8"
             markerHeight="6"
-            refX="2"
+            refX="0"
             refY="3"
             orient="auto"
           >
