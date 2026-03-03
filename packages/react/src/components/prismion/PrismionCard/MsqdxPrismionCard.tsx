@@ -82,8 +82,8 @@ export function MsqdxPrismionCard({
       className={`group ${className ?? ""}`.trim()}
       sx={{
         position: "absolute",
-        left: prismion.position.x,
-        top: prismion.position.y,
+        left: 0,
+        top: 0,
         width: prismion.size.w,
         minHeight: collapsed ? 60 : 120,
         zIndex: Math.max(prismion.position.zIndex ?? 1, 1),
@@ -124,7 +124,7 @@ export function MsqdxPrismionCard({
                   value={editTitle}
                   onChange={(e) => setEditTitle((e.target as HTMLInputElement).value)}
                   onBlur={handleTitleBlur}
-                  sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontWeight: 600, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono }}
+                  sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontWeight: 600, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono }}
                   onClick={(e) => e.stopPropagation()}
                 />
               ) : (
@@ -135,7 +135,7 @@ export function MsqdxPrismionCard({
                     setIsEditing(true);
                   }}
                   sx={{
-                    fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                    fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
                     fontWeight: 600,
                     fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
                     color: MSQDX_NEUTRAL[900],
@@ -178,13 +178,14 @@ export function MsqdxPrismionCard({
                     onKeyDown={(e) => e.key === "Enter" && handlePromptSubmit()}
                     placeholder="Enter your prompt..."
                     fullWidth
+                    sx={{ "& input": { fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"] } }}
                   />
-                  <MsqdxButton size="small" variant="contained" onClick={handlePromptSubmit}>
+                  <MsqdxButton size="small" variant="contained" onClick={handlePromptSubmit} sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"] }}>
                     Submit
                   </MsqdxButton>
                 </Box>
               ) : (
-                <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[700], whiteSpace: "pre-wrap" }}>
+                <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"], fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[700], whiteSpace: "pre-wrap" }}>
                   {prismion.prompt}
                 </Box>
               )}

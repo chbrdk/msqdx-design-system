@@ -34,7 +34,7 @@ function labelFor(item: PrismionResultItem, idx: number): string {
 }
 
 const ContentBox = styled(Box)(() => ({
-  fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+  fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
   fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
   color: MSQDX_NEUTRAL[800],
   whiteSpace: "pre-wrap" as const,
@@ -42,7 +42,7 @@ const ContentBox = styled(Box)(() => ({
 }));
 
 const RichContentBox = styled(Box)(() => ({
-  fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+  fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
   fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
   "& p": { margin: 0 },
   "& a": { color: MSQDX_NEUTRAL[700], textDecoration: "underline" },
@@ -60,6 +60,7 @@ export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrism
         value={activeTab}
         onChange={(v) => setActiveTab(String(v))}
         tabs={tabs.map((t, idx) => ({ value: t.value, label: labelFor(t.item, idx) }))}
+        compact
       />
       <Box sx={{ mt: 0 }}>
         {tabs.map((t) => (
@@ -114,7 +115,7 @@ export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrism
                 sx={{
                   color: MSQDX_NEUTRAL[700],
                   textDecoration: "underline",
-                  fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+                  fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
                   fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
                 }}
               >

@@ -234,8 +234,12 @@ export function MsqdxConnectorEdge({
     connector.to.prismionId,
     prismions[connector.from.prismionId]?.position.x,
     prismions[connector.from.prismionId]?.position.y,
+    prismions[connector.from.prismionId]?.size?.w,
+    prismions[connector.from.prismionId]?.size?.h,
     prismions[connector.to.prismionId]?.position.x,
     prismions[connector.to.prismionId]?.position.y,
+    prismions[connector.to.prismionId]?.size?.w,
+    prismions[connector.to.prismionId]?.size?.h,
   ]);
 
   return (

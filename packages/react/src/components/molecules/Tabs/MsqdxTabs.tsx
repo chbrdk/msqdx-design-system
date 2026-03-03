@@ -8,6 +8,8 @@ export interface MsqdxTabsProps {
   value: string | number;
   onChange: (value: any) => void;
   tabs: { value: string | number; label: string; icon?: React.ReactElement }[];
+  /** Smaller tab labels (e.g. inside cards). */
+  compact?: boolean;
 }
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -20,12 +22,14 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   },
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
+const StyledTab = styled(Tab, {
+  shouldForwardProp: (p) => p !== 'compact',
+})<{ compact?: boolean }>(({ theme, compact }) => ({
   textTransform: 'none',
   minWidth: 0,
-  padding: '12px 20px',
+  padding: compact ? '6px 12px' : '12px 20px',
   fontWeight: MSQDX_TYPOGRAPHY.fontWeight.medium,
-  fontSize: '0.875rem',
+  fontSize: compact ? MSQDX_TYPOGRAPHY.fontSize['2xs'] : '0.875rem',
   color: alpha(theme.palette.text.primary, 0.6),
   transition: 'all 0.2s ease-in-out',
   minHeight: 'auto',
@@ -46,7 +50,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
  * 
  * High-end tab navigation for the msqdx-glass design system.
  */
-export const MsqdxTabs = ({ value, onChange, tabs }: MsqdxTabsProps) => {
+export const MsqdxTabs = ({ value, onChange, tabs, compact }: MsqdxTabsProps) => {
   return (
     <StyledTabs 
       value={value} 
@@ -61,6 +65,7 @@ export const MsqdxTabs = ({ value, onChange, tabs }: MsqdxTabsProps) => {
           label={tab.label} 
           icon={tab.icon}
           iconPosition="start"
+          compact={compact}
         />
       ))}
     </StyledTabs>
