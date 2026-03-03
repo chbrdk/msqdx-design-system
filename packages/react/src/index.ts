@@ -5,3 +5,4 @@
  */
 export * from '@msqdx/tokens';
 export * from './components';
+export * from './types/prismion';

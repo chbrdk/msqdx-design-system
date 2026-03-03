@@ -32,3 +32,4 @@ export {
   type MsqdxTextareaFieldProps,
   type TextareaSize,
 } from './TextareaField';
+export { MsqdxSwitchField, type MsqdxSwitchFieldProps, type SwitchSize } from './Switch';

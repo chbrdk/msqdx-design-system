@@ -14,3 +14,4 @@ export * from './LogoMark';
 export * from './Progress';
 export * from './Scrollbar';
 export * from './Typography';
+export * from './UserBadge';

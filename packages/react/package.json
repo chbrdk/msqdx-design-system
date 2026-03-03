@@ -11,14 +11,17 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/chbrdk/msqdx-design-system.git",
     "directory": "packages/react"
   },
   "dependencies": {
-    "@msqdx/tokens": "^1.0.0"
+    "@msqdx/tokens": "^1.0.0",
+    "lucide-react": "^0.460.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.0.0",
@@ -33,8 +36,6 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
     "@chromatic-com/storybook": "^5.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -44,6 +45,8 @@
     "@storybook/addon-vitest": "^10.2.7",
     "@storybook/react": "^10.2.0",
     "@storybook/react-vite": "^10.2.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@vitest/browser-playwright": "^4.0.18",
     "@vitest/coverage-v8": "^4.0.18",
     "playwright": "^1.58.2",
