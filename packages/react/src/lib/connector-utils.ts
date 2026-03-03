@@ -4,42 +4,34 @@
  */
 import type { Prismion, Connection } from '../types/prismion';
 
+const PORTS: ('top' | 'right' | 'bottom' | 'left')[] = ['top', 'right', 'bottom', 'left'];
+
+/**
+ * Chooses the port pair (fromPort, toPort) that gives the shortest straight-line
+ * distance between the two cards. When the user moves cards, the connector
+ * automatically uses the best ports so the line stays minimal.
+ */
 export function findOptimalPorts(
   fromPrismion: Prismion,
   toPrismion: Prismion
 ): { fromPort: 'top' | 'right' | 'bottom' | 'left'; toPort: 'top' | 'right' | 'bottom' | 'left' } {
-  const fromCenter = {
-    x: fromPrismion.position.x + fromPrismion.size.w / 2,
-    y: fromPrismion.position.y + fromPrismion.size.h / 2,
-  };
-  const toCenter = {
-    x: toPrismion.position.x + toPrismion.size.w / 2,
-    y: toPrismion.position.y + toPrismion.size.h / 2,
-  };
-  const dx = toCenter.x - fromCenter.x;
-  const dy = toCenter.y - fromCenter.y;
+  let bestFrom: 'top' | 'right' | 'bottom' | 'left' = 'right';
+  let bestTo: 'top' | 'right' | 'bottom' | 'left' = 'left';
+  let bestDist = Infinity;
 
-  let fromPort: 'top' | 'right' | 'bottom' | 'left';
-  let toPort: 'top' | 'right' | 'bottom' | 'left';
-
-  if (Math.abs(dx) > Math.abs(dy)) {
-    if (dx > 0) {
-      fromPort = 'right';
-      toPort = 'left';
-    } else {
-      fromPort = 'left';
-      toPort = 'right';
-    }
-  } else {
-    if (dy > 0) {
-      fromPort = 'bottom';
-      toPort = 'top';
-    } else {
-      fromPort = 'top';
-      toPort = 'bottom';
+  for (const fromPort of PORTS) {
+    for (const toPort of PORTS) {
+      const fromPos = calculatePortPosition(fromPrismion, fromPort);
+      const toPos = calculatePortPosition(toPrismion, toPort);
+      const dist = Math.hypot(toPos.x - fromPos.x, toPos.y - fromPos.y);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestFrom = fromPort;
+        bestTo = toPort;
+      }
     }
   }
-  return { fromPort, toPort };
+  return { fromPort: bestFrom, toPort: bestTo };
 }
 
 /** Offset so the connector line meets the visible port circle (PrismionPorts: 32px button, -14px outside edge). */

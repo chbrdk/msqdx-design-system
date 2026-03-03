@@ -8,6 +8,7 @@ import {
   calculatePortPosition,
   getConnectorBounds,
   findPathAvoidingObstacles,
+  findOptimalPorts,
   type Point,
   type Obstacle,
 } from "../../../lib/connector-utils";
@@ -166,8 +167,12 @@ export function MsqdxConnectorEdge({
     strokeDasharray: isSelected ? "none" : "5,5",
   };
 
-  const fromPos = calculatePortPosition(fromPrismion, connector.from.port);
-  const toPos = calculatePortPosition(toPrismion, connector.to.port);
+  const { fromPort: effectiveFromPort, toPort: effectiveToPort } = findOptimalPorts(
+    fromPrismion,
+    toPrismion
+  );
+  const fromPos = calculatePortPosition(fromPrismion, effectiveFromPort);
+  const toPos = calculatePortPosition(toPrismion, effectiveToPort);
   const obstacles: Obstacle[] = Object.values(prismions)
     .filter((p) => p.id !== fromPrismion.id && p.id !== toPrismion.id)
     .map((p) => ({
@@ -182,8 +187,8 @@ export function MsqdxConnectorEdge({
     toPos,
     obstacles,
     [fromPrismion.id, toPrismion.id],
-    connector.from.port,
-    connector.to.port
+    effectiveFromPort,
+    effectiveToPort
   );
   const bounds = getConnectorBounds(fromPos, toPos, path);
 
