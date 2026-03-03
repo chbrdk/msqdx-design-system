@@ -30,3 +30,12 @@ So wird die Theme-Multiplikation umgangen und die Tokens bleiben konsistent.
 
 - MUI: [sx prop](https://mui.com/system/getting-started/the-sx-prop/)
 - Tokens: `@msqdx/tokens` → `MSQDX_SPACING.borderRadius`, `MSQDX_SPACING.padding`, etc.
+
+---
+
+## Typography: kleinere Schrift, Mono
+
+In Board- und Prismion-Komponenten gilt:
+- **Schriftgrößen** eine Stufe kleiner: z. B. `fontSize.sm` → `fontSize.xs`, `fontSize.xs` → `fontSize["2xs"]`.
+- **Schriftart** überall **Mono** aus den Tokens: `fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono` (IBM Plex Mono).
+- Neuer Token: `MSQDX_TYPOGRAPHY.fontSize["2xs"]` = 11px (0.6875rem) für sehr kompakte UI.

@@ -141,10 +141,10 @@ export function MsqdxBoardOnboarding({ boardId, onComplete }: MsqdxBoardOnboardi
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, textAlign: "center" }}>
-            <Box component="h2" sx={{ fontSize: "1.5rem", fontWeight: 700, color: MSQDX_NEUTRAL[900], margin: 0 }}>
+            <Box component="h2" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, fontWeight: 700, color: MSQDX_NEUTRAL[900], margin: 0 }}>
               {stepData.title}
             </Box>
-            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[600], lineHeight: 1.6, margin: 0 }}>
+            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[600], lineHeight: 1.6, margin: 0 }}>
               {stepData.description}
             </Box>
           </Box>
@@ -171,7 +171,8 @@ export function MsqdxBoardOnboarding({ boardId, onComplete }: MsqdxBoardOnboardi
             component="button"
             onClick={handleComplete}
             sx={{
-              fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+              fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+              fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
               color: MSQDX_NEUTRAL[500],
               background: "none",
               border: "none",

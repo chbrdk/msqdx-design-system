@@ -49,9 +49,10 @@ export function MsqdxContextMenu({
       >
         <Box
           sx={{
-            fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+            fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+            fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
             color: MSQDX_NEUTRAL[500],
-            padding: `${MSQDX_SPACING.padding.xs}px ${MSQDX_SPACING.padding.sm}px`,
+            padding: "8px 12px",
           }}
         >
           {title}

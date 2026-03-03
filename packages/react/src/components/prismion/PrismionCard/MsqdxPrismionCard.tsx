@@ -124,7 +124,7 @@ export function MsqdxPrismionCard({
                   value={editTitle}
                   onChange={(e) => setEditTitle((e.target as HTMLInputElement).value)}
                   onBlur={handleTitleBlur}
-                  sx={{ fontSize: "1.125rem", fontWeight: 600 }}
+                  sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontWeight: 600, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono }}
                   onClick={(e) => e.stopPropagation()}
                 />
               ) : (
@@ -135,8 +135,9 @@ export function MsqdxPrismionCard({
                     setIsEditing(true);
                   }}
                   sx={{
-                    fontSize: "1.125rem",
+                    fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
                     fontWeight: 600,
+                    fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
                     color: MSQDX_NEUTRAL[900],
                     margin: 0,
                     overflow: "hidden",
@@ -183,7 +184,7 @@ export function MsqdxPrismionCard({
                   </MsqdxButton>
                 </Box>
               ) : (
-                <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[700], whiteSpace: "pre-wrap" }}>
+                <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[700], whiteSpace: "pre-wrap" }}>
                   {prismion.prompt}
                 </Box>
               )}

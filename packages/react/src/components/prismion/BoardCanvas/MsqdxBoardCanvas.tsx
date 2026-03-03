@@ -282,13 +282,13 @@ export function MsqdxBoardCanvas({
               >
                 <Sparkles size={32} color="#fff" />
               </Box>
-              <Box component="h3" sx={{ fontSize: "1.25rem", fontWeight: 600, color: MSQDX_NEUTRAL[900], margin: "0 0 8px" }}>
+              <Box component="h3" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontWeight: 600, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[900], margin: "0 0 8px" }}>
                 Bereit für deine Ideen!
               </Box>
-              <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[600], margin: "0 0 16px" }}>
+              <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[600], margin: "0 0 16px" }}>
                 Doppelklick auf das Canvas, um dein erstes Prismion zu erstellen.
               </Box>
-              <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, color: MSQDX_NEUTRAL[500] }}>
+              <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"], fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[500] }}>
                 Tipp: Prismions verschieben, bearbeiten und verbinden.
               </Box>
             </Box>
@@ -349,7 +349,8 @@ export function MsqdxBoardCanvas({
                       px: 1,
                       py: 0.5,
                       borderRadius: 1,
-                      fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+                      fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
+                      fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
                       color: "#fff",
                       fontWeight: 500,
                       whiteSpace: "nowrap",

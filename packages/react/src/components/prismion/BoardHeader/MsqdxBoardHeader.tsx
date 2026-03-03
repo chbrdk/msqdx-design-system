@@ -81,7 +81,7 @@ export function MsqdxBoardHeader({
             >
               <Sparkles size={16} color="#fff" />
             </Box>
-            <Box component="span" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontWeight: 500, color: MSQDX_NEUTRAL[500] }}>
+            <Box component="span" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, fontWeight: 500, color: MSQDX_NEUTRAL[500] }}>
               PRISMORA
             </Box>
             <Box sx={{ width: 1, height: 24, backgroundColor: MSQDX_NEUTRAL[300] }} />
@@ -97,7 +97,7 @@ export function MsqdxBoardHeader({
                       setIsEditingTitle(false);
                     }
                   }}
-                  sx={{ minWidth: 200, fontSize: "1.125rem", fontWeight: 600 }}
+                  sx={{ minWidth: 200, fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, fontWeight: 600 }}
                   autoFocus
                 />
                 <IconButton size="small" onClick={handleTitleSave} aria-label="Save title">
@@ -119,7 +119,8 @@ export function MsqdxBoardHeader({
                 component="button"
                 onClick={() => setIsEditingTitle(true)}
                 sx={{
-                  fontSize: "1.125rem",
+                  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                  fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
                   fontWeight: 600,
                   color: MSQDX_NEUTRAL[900],
                   background: "none",
@@ -176,11 +177,11 @@ export function MsqdxBoardHeader({
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Box>
-            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[600], marginBottom: 1 }}>
+            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[600], marginBottom: 1 }}>
               Teile diesen Link, damit andere deinem Board beitreten können:
             </Box>
             <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <MsqdxInput value={displayUrl} readOnly fullWidth sx={{ fontFamily: "monospace", fontSize: MSQDX_TYPOGRAPHY.fontSize.sm }} />
+              <MsqdxInput value={displayUrl} readOnly fullWidth sx={{ fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }} />
               <MsqdxButton variant="outlined" onClick={handleCopyLink} disabled={!boardShareUrl}>
                 {copied ? (
                   <>
@@ -200,10 +201,10 @@ export function MsqdxBoardHeader({
               padding: "16px",
             }}
           >
-            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontWeight: 500, color: MSQDX_NEUTRAL[900], marginBottom: 0.5 }}>
+            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, fontWeight: 500, color: MSQDX_NEUTRAL[900], marginBottom: 0.5 }}>
               Öffentlicher Zugang
             </Box>
-            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[700] }}>
+            <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[700] }}>
               Jeder mit diesem Link kann dem Board beitreten und mitarbeiten. Du kannst die Berechtigung in den Board-Einstellungen ändern.
             </Box>
           </Box>

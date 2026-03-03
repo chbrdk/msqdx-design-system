@@ -108,26 +108,39 @@ export function MsqdxPrismionToolbar({
         sx={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center", overflow: "visible" }}
         data-open={open ? "true" : "false"}
       >
-        <MsqdxButton
-          size="small"
-          variant="text"
-          onClick={toggle}
-          onMouseDown={blockMouseDown}
-          title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
+        <Box
           sx={{
-            minWidth: 32,
             width: 32,
             height: 32,
             borderRadius: "50%",
-            padding: 0,
+            overflow: "hidden",
             boxShadow: MSQDX_EFFECTS.shadows.sm,
             backgroundColor: "#fff",
             border: `1px solid ${MSQDX_NEUTRAL[200]}`,
             ...(open && { boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}` }),
           }}
         >
-          {open ? <X size={18} /> : <MoreHorizontal size={18} />}
-        </MsqdxButton>
+          <MsqdxButton
+            size="small"
+            variant="text"
+            onClick={toggle}
+            onMouseDown={blockMouseDown}
+            title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
+            sx={{
+              minWidth: 32,
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              padding: 0,
+              backgroundColor: "transparent",
+              border: "none",
+              boxShadow: "none",
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" },
+            }}
+          >
+            {open ? <X size={18} /> : <MoreHorizontal size={18} />}
+          </MsqdxButton>
+        </Box>
 
         {variant === "bar" && open && (
           <Box
@@ -140,17 +153,17 @@ export function MsqdxPrismionToolbar({
               pointerEvents: "auto",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                backgroundColor: "rgba(255,255,255,0.95)",
-                border: `1px solid ${MSQDX_NEUTRAL[200]}`,
-                borderRadius: 9999,
-                padding: `${MSQDX_SPACING.padding.xxs}px ${MSQDX_SPACING.padding.xs}px`,
-                boxShadow: MSQDX_EFFECTS.shadows.lg,
-              }}
+<Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              backgroundColor: "#fff",
+              border: `1px solid ${MSQDX_NEUTRAL[200]}`,
+              borderRadius: "9999px",
+              padding: "6px 10px",
+              boxShadow: MSQDX_EFFECTS.shadows.lg,
+            }}
             >
               {actions.map((a) => (
                 <MsqdxButton
@@ -163,8 +176,10 @@ export function MsqdxPrismionToolbar({
                   sx={{
                     minWidth: 32,
                     height: 32,
-                    padding: 1,
+                    padding: "0 6px",
+                    borderRadius: "9999px",
                     color: a.isDanger ? MSQDX_STATUS.error.base : undefined,
+                    "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" },
                   }}
                 >
                   <a.Icon size={16} style={{ marginRight: 4 }} />

@@ -11,7 +11,7 @@ import {
   type Point,
   type Obstacle,
 } from "../../../lib/connector-utils";
-import { MSQDX_COLORS, MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_EFFECTS } from "@msqdx/tokens";
+import { MSQDX_COLORS, MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
 
 export interface MsqdxConnectorEdgeProps {
   connector: Connector;
@@ -339,7 +339,7 @@ export function MsqdxConnectorEdge({
             gap: 2,
           }}
         >
-          <Box component="span" sx={{ fontSize: 14, color: MSQDX_NEUTRAL[600], fontWeight: 500 }}>
+          <Box component="span" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[600], fontWeight: 500 }}>
             Richtung
           </Box>
           <MsqdxSwitchField

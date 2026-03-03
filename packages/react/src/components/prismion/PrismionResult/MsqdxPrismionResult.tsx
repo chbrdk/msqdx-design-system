@@ -34,14 +34,16 @@ function labelFor(item: PrismionResultItem, idx: number): string {
 }
 
 const ContentBox = styled(Box)(() => ({
-  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+  fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+  fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
   color: MSQDX_NEUTRAL[800],
   whiteSpace: "pre-wrap" as const,
   maxWidth: "100%",
 }));
 
 const RichContentBox = styled(Box)(() => ({
-  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+  fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+  fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
   "& p": { margin: 0 },
   "& a": { color: MSQDX_NEUTRAL[700], textDecoration: "underline" },
 }));
@@ -112,7 +114,8 @@ export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrism
                 sx={{
                   color: MSQDX_NEUTRAL[700],
                   textDecoration: "underline",
-                  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                  fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+                  fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
                 }}
               >
                 {t.item.label ?? t.item.url}

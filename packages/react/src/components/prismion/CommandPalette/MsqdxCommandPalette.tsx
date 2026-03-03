@@ -45,10 +45,10 @@ export function MsqdxCommandPalette({
           minWidth: "384px",
         }}
       >
-        <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[500], marginBottom: 1 }}>
+        <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[500], marginBottom: 1 }}>
           {title}
         </Box>
-        {children ?? <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, color: MSQDX_NEUTRAL[500] }}>Coming soon...</Box>}
+        {children ?? <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"], fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[500] }}>Coming soon...</Box>}
       </Box>
     </Box>
   );
