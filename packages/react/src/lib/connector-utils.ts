@@ -42,6 +42,9 @@ export function findOptimalPorts(
   return { fromPort, toPort };
 }
 
+/** Offset so the connector line meets the visible port circle (PrismionPorts: 32px button, -14px outside edge). */
+const PORT_CENTER_INSET = 2;
+
 export function calculatePortPosition(
   prismion: Prismion,
   port: 'top' | 'right' | 'bottom' | 'left'
@@ -50,13 +53,13 @@ export function calculatePortPosition(
   const { w, h } = prismion.size;
   switch (port) {
     case 'top':
-      return { x: x + w / 2, y };
+      return { x: x + w / 2, y: y + PORT_CENTER_INSET };
     case 'right':
-      return { x: x + w, y: y + h / 2 };
+      return { x: x + w - PORT_CENTER_INSET, y: y + h / 2 };
     case 'bottom':
-      return { x: x + w / 2, y: y + h };
+      return { x: x + w / 2, y: y + h - PORT_CENTER_INSET };
     case 'left':
-      return { x, y: y + h / 2 };
+      return { x: x + PORT_CENTER_INSET, y: y + h / 2 };
   }
 }
 

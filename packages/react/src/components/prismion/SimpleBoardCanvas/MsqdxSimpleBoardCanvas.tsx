@@ -189,7 +189,7 @@ export function MsqdxSimpleBoardCanvas({
         />
 
         {connectors.length > 0 && (
-          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
+          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 15 }}>
             {connectors.map((connector) => (
               <MsqdxConnectorEdge
                 key={connector.id}
