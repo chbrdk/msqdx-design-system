@@ -39,10 +39,10 @@ export function MsqdxCommandPalette({
           transform: "translate(-50%, -50%)",
           backgroundColor: "#fff",
           border: `1px solid ${MSQDX_NEUTRAL[200]}`,
-          borderRadius: MSQDX_SPACING.borderRadius.lg,
+          borderRadius: "40px",
           boxShadow: MSQDX_EFFECTS.shadows.xl,
-          padding: MSQDX_SPACING.padding.md,
-          minWidth: 384,
+          padding: "16px",
+          minWidth: "384px",
         }}
       >
         <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[500], marginBottom: 1 }}>

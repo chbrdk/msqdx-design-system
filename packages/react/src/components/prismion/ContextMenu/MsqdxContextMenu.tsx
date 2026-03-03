@@ -41,10 +41,10 @@ export function MsqdxContextMenu({
           top: y,
           backgroundColor: "#fff",
           border: `1px solid ${MSQDX_NEUTRAL[200]}`,
-          borderRadius: MSQDX_SPACING.borderRadius.lg,
+          borderRadius: "40px",
           boxShadow: MSQDX_EFFECTS.shadows.lg,
-          padding: MSQDX_SPACING.padding.xs,
-          minWidth: 192,
+          padding: "8px",
+          minWidth: "192px",
         }}
       >
         <Box

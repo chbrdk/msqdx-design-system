@@ -34,7 +34,7 @@ export function MsqdxInspectorPanel({
         zIndex: 40,
       }}
     >
-      <Box sx={{ padding: MSQDX_SPACING.padding.md }}>
+      <Box sx={{ padding: "16px" }}>
         <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, color: MSQDX_NEUTRAL[500], marginBottom: 1 }}>
           {title}
         </Box>

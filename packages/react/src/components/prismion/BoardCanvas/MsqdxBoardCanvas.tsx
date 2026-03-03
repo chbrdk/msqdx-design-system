@@ -259,9 +259,9 @@ export function MsqdxBoardCanvas({
           >
             <Box
               sx={{
-                backgroundColor: "rgba(255,255,255,0.9)",
-                borderRadius: MSQDX_SPACING.borderRadius.xl,
-                padding: MSQDX_SPACING.padding.xxl,
+                backgroundColor: "#fff",
+                borderRadius: "32px",
+                padding: "32px",
                 maxWidth: 448,
                 textAlign: "center",
                 boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",

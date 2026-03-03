@@ -89,7 +89,7 @@ export function MsqdxBoardOnboarding({ boardId, onComplete }: MsqdxBoardOnboardi
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: MSQDX_SPACING.padding.md,
+        padding: "16px",
       }}
     >
       <MsqdxCard
@@ -97,7 +97,7 @@ export function MsqdxBoardOnboarding({ boardId, onComplete }: MsqdxBoardOnboardi
         sx={{
           maxWidth: 512,
           width: "100%",
-          padding: MSQDX_SPACING.padding.xxl,
+          padding: "32px",
           position: "relative",
         }}
       >

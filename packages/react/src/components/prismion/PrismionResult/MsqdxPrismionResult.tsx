@@ -81,7 +81,7 @@ export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrism
                 sx={{
                   width: "100%",
                   height: "auto",
-                  borderRadius: MSQDX_SPACING.borderRadius.sm,
+                  borderRadius: "8px",
                   border: `1px solid ${MSQDX_NEUTRAL[200]}`,
                   overflow: "hidden",
                 }}
@@ -97,7 +97,7 @@ export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrism
                   width: "100%",
                   height: "auto",
                   display: "block",
-                  borderRadius: MSQDX_SPACING.borderRadius.sm,
+                  borderRadius: "8px",
                   border: `1px solid ${MSQDX_NEUTRAL[200]}`,
                   overflow: "hidden",
                 }}

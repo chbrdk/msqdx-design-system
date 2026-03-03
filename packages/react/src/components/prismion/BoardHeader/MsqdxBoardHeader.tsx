@@ -75,7 +75,7 @@ export function MsqdxBoardHeader({
                 gap: 1,
                 width: 32,
                 height: 32,
-                borderRadius: MSQDX_SPACING.borderRadius.sm,
+                borderRadius: "8px",
                 background: `linear-gradient(to right, ${MSQDX_BRAND_PRIMARY.purple}, #9333ea)`,
               }}
             >
@@ -196,8 +196,8 @@ export function MsqdxBoardHeader({
           <Box
             sx={{
               backgroundColor: `${MSQDX_COLORS.brand.green}14`,
-              borderRadius: MSQDX_SPACING.borderRadius.sm,
-              padding: MSQDX_SPACING.padding.md,
+              borderRadius: "8px",
+              padding: "16px",
             }}
           >
             <Box component="p" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.sm, fontWeight: 500, color: MSQDX_NEUTRAL[900], marginBottom: 0.5 }}>

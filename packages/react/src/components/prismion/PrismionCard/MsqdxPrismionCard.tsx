@@ -98,9 +98,11 @@ export function MsqdxPrismionCard({
         variant="flat"
         sx={{
           height: "100%",
-          borderRadius: MSQDX_SPACING.borderRadius.button, // 32px
+          minHeight: collapsed ? 60 : 120,
+          borderRadius: "32px",
+          backgroundColor: "#fff",
           boxShadow: MSQDX_EFFECTS.shadows.lg,
-          border: selected ? `2px solid ${MSQDX_COLORS.brand.green}` : undefined,
+          border: selected ? `2px solid ${MSQDX_COLORS.brand.green}` : `1px solid ${MSQDX_NEUTRAL[200]}`,
           opacity: prismion.state === "archived" ? 0.7 : prismion.state === "locked" ? 0.9 : 1,
           transition: "box-shadow 0.2s, border 0.2s",
           overflow: "visible",
@@ -114,7 +116,7 @@ export function MsqdxPrismionCard({
           onAttachToExisting={() => {}}
         />
 
-        <Box sx={{ position: "relative", height: "100%", padding: MSQDX_SPACING.padding.sm, display: "flex", flexDirection: "column" }}>
+        <Box sx={{ position: "relative", height: "100%", padding: "12px", display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 1 }}>
             <Box sx={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 1 }}>
               {isEditing ? (
