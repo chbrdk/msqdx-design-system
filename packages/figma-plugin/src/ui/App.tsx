@@ -55,19 +55,23 @@ function App() {
                 </button>
 
                 <button
-                    onClick={handleSyncButton}
-                    disabled={loading}
-                    style={{ ...btnStyle, background: loading ? '#ccc' : '#333' }}
-                >
-                    Sync Button (variants + variables)
-                </button>
-
-                <button
                     onClick={handleSyncAllAtoms}
                     disabled={loading}
                     style={{ ...btnStyle, background: loading ? '#ccc' : '#0066cc' }}
                 >
                     Sync All Atoms
+                </button>
+
+                <button
+                    onClick={() => {
+                        setLoading(true);
+                        parent.postMessage({ pluginMessage: { type: 'sync-components' } }, '*');
+                        setTimeout(() => setLoading(false), 2000);
+                    }}
+                    disabled={loading}
+                    style={{ ...btnStyle, background: loading ? '#ccc' : '#8b5cf6' }} // Purple for molecules
+                >
+                    Sync Molecules
                 </button>
             </div>
 

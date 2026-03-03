@@ -11,18 +11,18 @@ export interface MsqdxLogoMarkProps extends Omit<BoxProps, 'component'> {
    * @default 'medium'
    */
   size?: LogoMarkSize;
-  
+
   /**
    * Logo mark color - can be 'black', 'white', or any brand color
    * @default 'black'
    */
   color?: 'black' | 'white' | string;
-  
+
   /**
    * Custom width (overrides size)
    */
   width?: number | string;
-  
+
   /**
    * Custom height (overrides size)
    */
@@ -76,12 +76,12 @@ export const MsqdxLogoMark = ({
   ...props
 }: MsqdxLogoMarkProps) => {
   const logoMarkSize = width && height
-    ? { 
-        width: typeof width === 'number' ? width : parseInt(String(width)), 
-        height: typeof height === 'number' ? height : parseInt(String(height)) 
-      }
+    ? {
+      width: typeof width === 'number' ? width : parseInt(String(width)),
+      height: typeof height === 'number' ? height : parseInt(String(height))
+    }
     : sizeMap[size];
-  
+
   const logoSvgColor = color === 'black' ? '#000000' : color === 'white' ? '#ffffff' : color;
 
   return (

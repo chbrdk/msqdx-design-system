@@ -1,6 +1,5 @@
 import { syncTokens } from './tokens';
-import { syncButton } from './syncButton';
-import { syncAllAtoms } from './syncAtoms';
+import { syncComponents } from './components';
 
 figma.showUI(__html__, { width: 400, height: 600 });
 
@@ -13,6 +12,9 @@ figma.ui.onmessage = async (msg) => {
     }
     if (msg.type === 'sync-atoms') {
         await syncAllAtoms();
+    }
+    if (msg.type === 'sync-components') {
+        await syncComponents();
     }
     if (msg.type === 'cancel') {
         figma.closePlugin();
