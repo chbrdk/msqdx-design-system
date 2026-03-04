@@ -39,7 +39,7 @@ export interface MsqdxPrismionCardProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   mediaSize?: "sm" | "md" | "lg";
-  /** When true, only the first result text is shown (no prompt, no tabs, minimal layout). */
+  /** When true, only the first result text is shown (no prompt, no tabs, minimal layout). Also enabled when prismion.id starts with "result-". */
   resultOnly?: boolean;
 }
 
@@ -58,8 +58,9 @@ export function MsqdxPrismionCard({
   collapsed = false,
   onToggleCollapse,
   className,
-  resultOnly = false,
+  resultOnly: resultOnlyProp = false,
 }: MsqdxPrismionCardProps) {
+  const resultOnly = resultOnlyProp || prismion.id.startsWith("result-");
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(prismion.title);
   const [promptInput, setPromptInput] = useState("");
