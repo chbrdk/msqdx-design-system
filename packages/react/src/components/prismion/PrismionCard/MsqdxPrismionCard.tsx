@@ -88,6 +88,7 @@ export function MsqdxPrismionCard({
         left: 0,
         top: 0,
         width: prismion.size.w,
+        height: prismion.size.h,
         minHeight: collapsed ? 60 : 120,
         zIndex: Math.max(prismion.position.zIndex ?? 1, 1),
         display: "inline-block",
@@ -111,6 +112,9 @@ export function MsqdxPrismionCard({
         sx={{
           height: "100%",
           minHeight: collapsed ? 60 : 120,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
           borderRadius: "32px",
           backgroundColor: "#fff",
           boxShadow: MSQDX_EFFECTS.shadows.lg,
@@ -224,7 +228,7 @@ export function MsqdxPrismionCard({
               </Box>
 
               {!collapsed && (
-                <Box sx={{ flex: 1, minHeight: 0 }} onClick={(e) => e.stopPropagation()}>
+                <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }} onClick={(e) => e.stopPropagation()}>
                   {isInitialState ? (
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <MsqdxInput
