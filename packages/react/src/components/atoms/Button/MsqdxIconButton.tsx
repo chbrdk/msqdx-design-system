@@ -24,11 +24,14 @@ const SIZE_PX: Record<MsqdxIconButtonSize, number> = {
   large: 44,
 };
 
+type StyledIconButtonProps = Omit<IconButtonProps, "size"> & { size?: MsqdxIconButtonSize };
+
 const StyledIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "size",
-})<{ size?: MsqdxIconButtonSize }>(({ theme, size = "small" }) => {
-  const px = SIZE_PX[size ?? "small"];
-  const minPx = size === "xs" ? px : Math.max(px, minTouchTarget);
+})<StyledIconButtonProps>(({ theme, size }) => {
+  const s = size ?? "small";
+  const px = SIZE_PX[s];
+  const minPx = s === "xs" ? px : Math.max(px, minTouchTarget);
   return {
     width: px,
     height: px,
