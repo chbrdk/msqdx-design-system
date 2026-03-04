@@ -68,12 +68,13 @@ export function MsqdxPrismionCard({
   useEffect(() => {
     const el = rootRef.current;
     if (!el || !onResize) return;
+    const minH = prismion.size.minH ?? 120;
     const ro = new ResizeObserver(() => {
-      const w = Math.round(el.getBoundingClientRect().width);
-      const h = Math.round(el.getBoundingClientRect().height);
-      if (w > 0 && h > 0) {
-        onResize({ w, h: Math.max(h, prismion.size.minH ?? 120) });
-      }
+      const rect = el.getBoundingClientRect();
+      const w = Math.round(rect.width);
+      const h = Math.round(rect.height);
+      if (w < 20 || h < 20) return;
+      onResize({ w, h: Math.max(h, minH) });
     });
     ro.observe(el);
     return () => ro.disconnect();

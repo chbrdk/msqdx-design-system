@@ -372,11 +372,17 @@ export function MsqdxBoardCanvas({
               onMove={(pos) => onPrismionMove?.(prismion.id, pos)}
               onResize={
                 onPrismionResize
-                  ? (size) =>
+                  ? (size) => {
+                      const minW = prismion.size.minW ?? 200;
+                      const minH = prismion.size.minH ?? 120;
+                      const logicalW = Math.round(size.w / zoom);
+                      const logicalH = Math.round(size.h / zoom);
+                      if (logicalW < 10 || logicalH < 10) return;
                       onPrismionResize(prismion.id, {
-                        w: Math.round(size.w / zoom),
-                        h: Math.round(size.h / zoom),
-                      })
+                        w: Math.max(minW, logicalW),
+                        h: Math.max(minH, logicalH),
+                      });
+                    }
                   : undefined
               }
               onPromptSubmit={(prompt) => onPrismionPromptSubmit?.(prismion.id, prompt)}
