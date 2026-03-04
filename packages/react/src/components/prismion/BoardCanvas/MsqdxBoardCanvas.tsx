@@ -370,7 +370,15 @@ export function MsqdxBoardCanvas({
               selected={selectedPrismionId === prismion.id}
               onSelect={() => onSelectPrismion?.(prismion.id)}
               onMove={(pos) => onPrismionMove?.(prismion.id, pos)}
-              onResize={(size) => onPrismionResize?.(prismion.id, size)}
+              onResize={
+                onPrismionResize
+                  ? (size) =>
+                      onPrismionResize(prismion.id, {
+                        w: Math.round(size.w / zoom),
+                        h: Math.round(size.h / zoom),
+                      })
+                  : undefined
+              }
               onPromptSubmit={(prompt) => onPrismionPromptSubmit?.(prismion.id, prompt)}
               onConnectorCreatePrismion={(port, type) => onPrismionConnectorCreate?.(prismion.id, port, type)}
               onLockToggle={() => onPrismionLockToggle?.(prismion.id)}
