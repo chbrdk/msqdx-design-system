@@ -221,8 +221,10 @@ export const MsqdxAppLayout = ({
       sx={{
         position: "fixed",
         inset: 0,
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
+        maxWidth: "100vw",
+        maxHeight: "100vh",
         overflow: "hidden",
         display: "flex",
         alignItems: "stretch",
