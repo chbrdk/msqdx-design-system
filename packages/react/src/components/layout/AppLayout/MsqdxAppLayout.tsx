@@ -249,7 +249,7 @@ export const MsqdxAppLayout = ({
           backgroundColor: color,
         }}
       >
-        <Box component="div" sx={innerBoxSx}>
+        <Box component="div" sx={{ ...innerBoxSx, overflowX: "hidden" as const }}>
           {hasCornerBox && (
             <Box sx={{ flexShrink: 0, display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
               <MsqdxCornerBox
@@ -266,7 +266,7 @@ export const MsqdxAppLayout = ({
               />
             </Box>
           )}
-          <Box sx={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "auto" }}>
+          <Box sx={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column", overflow: "auto" }}>
             {children}
           </Box>
         </Box>
