@@ -7,7 +7,18 @@ import {
   MSQDX_SPACING,
   MSQDX_NEUTRAL,
   MSQDX_TYPOGRAPHY,
+  MSQDX_BRAND_COLOR_CSS,
 } from "@msqdx/tokens";
+
+const toolbarButtonSx = {
+  color: MSQDX_BRAND_COLOR_CSS,
+  borderColor: MSQDX_BRAND_COLOR_CSS,
+  "&:hover": {
+    color: MSQDX_BRAND_COLOR_CSS,
+    borderColor: MSQDX_BRAND_COLOR_CSS,
+    backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 12%, transparent)",
+  },
+};
 
 export interface MsqdxBoardToolbarProps {
   className?: string;
@@ -51,7 +62,7 @@ export function MsqdxBoardToolbar({
         variant="outlined"
         onClick={() => onZoomChange(Math.min(3, zoom * 1.2))}
         aria-label="Zoom in"
-        sx={{ minWidth: 32, height: 32, padding: 0 }}
+        sx={{ ...toolbarButtonSx, minWidth: 32, height: 32, padding: 0 }}
       >
         +
       </MsqdxButton>
@@ -60,7 +71,7 @@ export function MsqdxBoardToolbar({
         variant="outlined"
         onClick={() => onZoomChange(Math.max(0.1, zoom * 0.8))}
         aria-label="Zoom out"
-        sx={{ minWidth: 32, height: 32, padding: 0 }}
+        sx={{ ...toolbarButtonSx, minWidth: 32, height: 32, padding: 0 }}
       >
         −
       </MsqdxButton>
@@ -72,7 +83,7 @@ export function MsqdxBoardToolbar({
           onPanChange({ x: 0, y: 0 });
         }}
         aria-label="Reset view"
-        sx={{ height: 32, padding: "0 8px", fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }}
+        sx={{ ...toolbarButtonSx, height: 32, padding: "0 8px", fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }}
       >
         Reset
       </MsqdxButton>
@@ -82,7 +93,7 @@ export function MsqdxBoardToolbar({
           size="small"
           variant="outlined"
           onClick={() => onPresenterModeChange(!presenterMode)}
-          sx={{ height: 32, padding: "0 8px", fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }}
+          sx={{ ...toolbarButtonSx, height: 32, padding: "0 8px", fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }}
         >
           {presenterMode ? "Stop Present" : "Present"}
         </MsqdxButton>
@@ -92,12 +103,12 @@ export function MsqdxBoardToolbar({
           size="small"
           variant="outlined"
           onClick={() => onFollowingPresenterChange(!followingPresenter)}
-          sx={{ height: 32, padding: "0 8px", fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }}
+          sx={{ ...toolbarButtonSx, height: 32, padding: "0 8px", fontSize: MSQDX_TYPOGRAPHY.fontSize.xs }}
         >
           {followingPresenter ? "Unfollow" : "Follow"}
         </MsqdxButton>
       )}
-      <Box component="span" sx={{ marginLeft: 0.5, fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, color: MSQDX_NEUTRAL[500], userSelect: "none" }}>
+      <Box component="span" sx={{ marginLeft: 0.5, fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, color: MSQDX_BRAND_COLOR_CSS, userSelect: "none" }}>
         {Math.round(zoom * 100)}%
       </Box>
     </Box>
