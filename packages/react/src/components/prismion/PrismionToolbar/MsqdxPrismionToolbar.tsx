@@ -110,14 +110,14 @@ export function MsqdxPrismionToolbar({
         data-open={open ? "true" : "false"}
       >
         <MsqdxIconButton
-          size="small"
+          size="xs"
           onClick={toggle}
           onMouseDown={blockMouseDown}
           title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
           aria-label={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
           sx={open ? { boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}` } : undefined}
         >
-          {open ? <X size={18} /> : <MoreHorizontal size={18} />}
+          {open ? <X size={14} /> : <MoreHorizontal size={14} />}
         </MsqdxIconButton>
 
         {variant === "bar" && open && (

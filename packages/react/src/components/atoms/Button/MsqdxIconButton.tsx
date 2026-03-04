@@ -10,24 +10,25 @@ import {
 } from "@msqdx/tokens";
 import { minTouchTarget } from "../../../utils/atomA11y";
 
-export type MsqdxIconButtonSize = "small" | "medium" | "large";
+export type MsqdxIconButtonSize = "xs" | "small" | "medium" | "large";
 
 export interface MsqdxIconButtonProps extends Omit<IconButtonProps, "size"> {
   /** Size of the circular button (width/height). */
   size?: MsqdxIconButtonSize;
 }
 
-const SIZE_PX = {
+const SIZE_PX: Record<MsqdxIconButtonSize, number> = {
+  xs: 20,
   small: 32,
   medium: 36,
   large: 44,
-} as const;
+};
 
 const StyledIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "size",
 })<{ size?: MsqdxIconButtonSize }>(({ theme, size = "small" }) => {
-  const px = SIZE_PX[size];
-  const minPx = Math.max(px, minTouchTarget);
+  const px = SIZE_PX[size ?? "small"];
+  const minPx = size === "xs" ? px : Math.max(px, minTouchTarget);
   return {
     width: px,
     height: px,
