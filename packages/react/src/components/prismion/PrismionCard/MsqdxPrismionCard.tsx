@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Box, IconButton } from "@mui/material";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Prismion, Position, Size, PortSide } from "../../../types/prismion";
@@ -97,10 +97,54 @@ export function MsqdxPrismionCard({
     }
   };
 
+  const resizeStartRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const handleResizeStart = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.button !== 0 || !onResize) return;
+      e.preventDefault();
+      e.stopPropagation();
+      setIsResizing(true);
+      resizeStartRef.current = {
+        x: e.clientX,
+        y: e.clientY,
+        w: prismion.size.w,
+        h: prismion.size.h,
+      };
+    },
+    [onResize, prismion.size.w, prismion.size.h]
+  );
+
+  useEffect(() => {
+    if (!isResizing || !onResize) return;
+    const minW = prismion.size.minW ?? 200;
+    const minH = prismion.size.minH ?? 120;
+    const onMove = (e: MouseEvent) => {
+      const s = resizeStartRef.current;
+      if (!s) return;
+      const newW = Math.max(minW, Math.round(s.w + (e.clientX - s.x)));
+      const newH = Math.max(minH, Math.round(s.h + (e.clientY - s.y)));
+      onResize({ w: newW, h: newH });
+    };
+    const onUp = () => {
+      setIsResizing(false);
+      resizeStartRef.current = null;
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, [isResizing, onResize, prismion.size.minW, prismion.size.minH]);
+
   return (
     <Box
       ref={rootRef}
       className={`group ${className ?? ""}`.trim()}
+      data-resizing={isResizing || undefined}
       sx={{
         position: "absolute",
         left: 0,
@@ -118,12 +162,45 @@ export function MsqdxPrismionCard({
           opacity: 1,
           /* Keep pointer-events: none on wrapper so input/buttons in card stay clickable; port buttons have pointer-events: auto and still receive clicks */
         },
+        "& .resize-handle": {
+          opacity: 0,
+          transition: "opacity 0.2s ease",
+        },
+        "&:hover .resize-handle, &[data-resizing] .resize-handle": {
+          opacity: 1,
+        },
       }}
       onClick={(e) => {
         e.stopPropagation();
         onSelect?.(e.shiftKey);
       }}
     >
+      {onResize && (
+        <Box
+          className="resize-handle"
+          onMouseDown={handleResizeStart}
+          aria-label="Größe ändern"
+          title="Ziehen zum Vergrößern oder Verkleinern"
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            width: 20,
+            height: 20,
+            cursor: "nwse-resize",
+            zIndex: 11,
+            pointerEvents: "auto",
+            borderRight: `2px solid ${MSQDX_BRAND_COLOR_CSS}`,
+            borderBottom: `2px solid ${MSQDX_BRAND_COLOR_CSS}`,
+            borderBottomRightRadius: 6,
+            boxSizing: "border-box",
+            "&:hover": {
+              borderColor: MSQDX_NEUTRAL[400],
+              backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 12%, transparent)",
+            },
+          }}
+        />
+      )}
       <MsqdxCard
         variant="flat"
         sx={{
