@@ -9,7 +9,7 @@ import {
   MSQDX_SPACING,
   MSQDX_NEUTRAL,
   MSQDX_TYPOGRAPHY,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_BRAND_PRIMARY,
 } from "@msqdx/tokens";
 
@@ -26,14 +26,14 @@ const steps = [
     title: "Willkommen bei PRISMORA!",
     description: "Dein kollaboratives Whiteboard für Ideen und Workflows ist bereit.",
     action: "Los geht's!",
-    iconColor: MSQDX_COLORS.brand.green,
+    iconColor: MSQDX_BRAND_COLOR_CSS,
   },
   {
     icon: MousePointer2,
     title: "Prismions erstellen",
     description: "Doppelklick auf das Canvas, um ein neues Prismion zu erstellen.",
     action: "Verstanden",
-    iconColor: MSQDX_COLORS.brand.green,
+    iconColor: MSQDX_BRAND_COLOR_CSS,
   },
   {
     icon: Move,
@@ -119,7 +119,7 @@ export function MsqdxBoardOnboarding({ boardId, onComplete }: MsqdxBoardOnboardi
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  backgroundColor: index <= currentStep ? MSQDX_COLORS.brand.green : MSQDX_NEUTRAL[300],
+                  backgroundColor: index <= currentStep ? MSQDX_BRAND_COLOR_CSS : MSQDX_NEUTRAL[300],
                   transition: "background-color 0.2s",
                 }}
               />

@@ -13,7 +13,7 @@ import {
   MSQDX_SPACING,
   MSQDX_NEUTRAL,
   MSQDX_TYPOGRAPHY,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_BRAND_PRIMARY,
 } from "@msqdx/tokens";
 
@@ -101,7 +101,7 @@ export function MsqdxBoardHeader({
                   autoFocus
                 />
                 <IconButton size="small" onClick={handleTitleSave} aria-label="Save title">
-                  <Check size={18} color={MSQDX_COLORS.brand.green} />
+                  <Check size={18} color={MSQDX_BRAND_COLOR_CSS} />
                 </IconButton>
                 <IconButton
                   size="small"
@@ -127,7 +127,7 @@ export function MsqdxBoardHeader({
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
-                  "&:hover": { color: MSQDX_COLORS.brand.green },
+                  "&:hover": { color: MSQDX_BRAND_COLOR_CSS },
                 }}
               >
                 {board.title}
@@ -196,7 +196,7 @@ export function MsqdxBoardHeader({
           </Box>
           <Box
             sx={{
-              backgroundColor: `${MSQDX_COLORS.brand.green}14`,
+              backgroundColor: "color-mix(in srgb, var(--msqdx-brand-color, #00ca55) 8%, transparent)",
               borderRadius: "8px",
               padding: "16px",
             }}

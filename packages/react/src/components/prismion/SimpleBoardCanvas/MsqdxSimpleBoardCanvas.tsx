@@ -8,7 +8,7 @@ import { MsqdxPrismionCard } from "../PrismionCard";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
 import { MsqdxBoardToolbar } from "../BoardToolbar";
 import { getCanvasSettings, CANVAS_ZOOM, wouldOverlap } from "../../../lib/board-utils";
-import { MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_COLORS } from "@msqdx/tokens";
+import { MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_BRAND_COLOR_CSS } from "@msqdx/tokens";
 
 function connectionToConnector(c: Connection): Connector {
   return {
@@ -162,7 +162,7 @@ export function MsqdxSimpleBoardCanvas({
         boardId: board.id,
         title: "New Prismion",
         prompt: "",
-        colorToken: MSQDX_COLORS.brand.green,
+        colorToken: MSQDX_BRAND_COLOR_CSS,
         tags: [],
         position: { x, y, zIndex: 10 },
         size: { w: 300, h: 200, minW: 200, minH: 100 },
@@ -189,7 +189,7 @@ export function MsqdxSimpleBoardCanvas({
       boardId: board.id,
       title: "New Prismion",
       prompt: "",
-      colorToken: MSQDX_COLORS.brand.green,
+      colorToken: MSQDX_BRAND_COLOR_CSS,
       tags: [],
       position: { x: 100, y: 100, zIndex: 10 },
       size: { w: 300, h: 200, minW: 200, minH: 100 },
@@ -296,7 +296,7 @@ export function MsqdxSimpleBoardCanvas({
             width: 48,
             height: 48,
             borderRadius: "50%",
-            backgroundColor: MSQDX_COLORS.brand.green,
+            backgroundColor: MSQDX_BRAND_COLOR_CSS,
             color: "#fff",
             border: "none",
             cursor: "pointer",

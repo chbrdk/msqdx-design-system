@@ -4,7 +4,7 @@ import { IconButton, styled } from "@mui/material";
 import type { IconButtonProps } from "@mui/material";
 import {
   MSQDX_NEUTRAL,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_EFFECTS,
   MSQDX_BUTTON,
 } from "@msqdx/tokens";
@@ -52,7 +52,7 @@ const StyledIconButton = styled(IconButton, {
     },
     "&:focus-visible": {
       outline: "none",
-      boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}`,
+      boxShadow: `0 0 0 2px ${MSQDX_BRAND_COLOR_CSS}`,
     },
     "&.Mui-disabled": {
       opacity: MSQDX_BUTTON.opacity.disabled,

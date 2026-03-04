@@ -121,6 +121,13 @@ export const MSQDX_TINTS = {
   greyLight: "#d4d2d280", // grey-light-tint from msqdx.com
 } as const;
 
+/**
+ * CSS variable for the user-configured brand color.
+ * Host app should set e.g. :root { --msqdx-brand-color: #00ca55; } so all components use it.
+ * Use this constant wherever the primary brand color is needed (borders, focus rings, accents).
+ */
+export const MSQDX_BRAND_COLOR_CSS = `var(--msqdx-brand-color, ${MSQDX_BRAND_PRIMARY.green})`;
+
 // Legacy export for backward compatibility
 export const MSQDX_COLORS = {
   // Brand Colors (legacy)

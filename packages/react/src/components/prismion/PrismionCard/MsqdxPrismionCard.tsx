@@ -15,7 +15,7 @@ import {
   MSQDX_SPACING,
   MSQDX_NEUTRAL,
   MSQDX_TYPOGRAPHY,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_EFFECTS,
 } from "@msqdx/tokens";
 
@@ -102,7 +102,7 @@ export function MsqdxPrismionCard({
           borderRadius: "32px",
           backgroundColor: "#fff",
           boxShadow: MSQDX_EFFECTS.shadows.lg,
-          border: selected ? `2px solid ${MSQDX_COLORS.brand.green}` : `1px solid ${MSQDX_NEUTRAL[200]}`,
+          border: selected ? `2px solid ${MSQDX_BRAND_COLOR_CSS}` : `1px solid ${MSQDX_NEUTRAL[200]}`,
           opacity: prismion.state === "archived" ? 0.7 : prismion.state === "locked" ? 0.9 : 1,
           transition: "box-shadow 0.2s, border 0.2s",
           overflow: "visible",

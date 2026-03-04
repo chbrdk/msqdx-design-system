@@ -9,7 +9,7 @@ import {
   MSQDX_SPACING,
   MSQDX_EFFECTS,
   MSQDX_NEUTRAL,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_STATUS,
 } from "@msqdx/tokens";
 
@@ -115,7 +115,7 @@ export function MsqdxPrismionToolbar({
           onMouseDown={blockMouseDown}
           title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
           aria-label={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
-          sx={open ? { boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}` } : undefined}
+          sx={open ? { boxShadow: `0 0 0 2px ${MSQDX_BRAND_COLOR_CSS}` } : undefined}
         >
           {open ? <X size={14} /> : <MoreHorizontal size={14} />}
         </MsqdxIconButton>

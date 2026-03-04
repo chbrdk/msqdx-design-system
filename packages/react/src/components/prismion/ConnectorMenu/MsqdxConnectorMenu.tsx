@@ -8,7 +8,7 @@ import {
   MSQDX_SPACING,
   MSQDX_EFFECTS,
   MSQDX_NEUTRAL,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_BRAND_PRIMARY,
 } from "@msqdx/tokens";
 
@@ -27,7 +27,7 @@ const CenterButton = styled(Box)(() => ({
   height: 40,
   borderRadius: "50%",
   backgroundColor: "rgba(255,255,255,0.95)",
-  border: `2px solid ${MSQDX_COLORS.brand.green}`,
+  border: `2px solid ${MSQDX_BRAND_COLOR_CSS}`,
   boxShadow: MSQDX_EFFECTS.shadows.lg,
   display: "flex",
   alignItems: "center",
@@ -60,7 +60,7 @@ const ActionButton = styled(Box)(() => ({
 const actions = [
   { key: "prompt", label: "Prompt", Icon: MessageSquare, color: "#2563eb", fn: "create" as const, type: "prompt" as const },
   { key: "file", label: "Dokument", Icon: FileText, color: MSQDX_NEUTRAL[600], fn: "attach" as const, type: "file" as const },
-  { key: "image", label: "Bild", Icon: Image, color: MSQDX_COLORS.brand.green, fn: "attach" as const, type: "image" as const },
+  { key: "image", label: "Bild", Icon: Image, color: MSQDX_BRAND_COLOR_CSS, fn: "attach" as const, type: "image" as const },
   { key: "video", label: "Video", Icon: Video, color: MSQDX_BRAND_PRIMARY.purple, fn: "attach" as const, type: "video" as const },
   { key: "link", label: "Link", Icon: LinkIcon, color: MSQDX_BRAND_PRIMARY.orange, fn: "attach" as const, type: "link" as const },
 ];
@@ -135,9 +135,9 @@ export function MsqdxConnectorMenu({
           onClick={onClose}
           onMouseDown={blockMouseDown}
           title="Schließen"
-          sx={{ borderColor: MSQDX_COLORS.brand.green, boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}33` }}
+          sx={{ borderColor: MSQDX_BRAND_COLOR_CSS, boxShadow: "0 0 0 2px color-mix(in srgb, var(--msqdx-brand-color, #00ca55) 20%, transparent)" }}
         >
-          <X size={20} color={MSQDX_COLORS.brand.green} />
+          <X size={20} color={MSQDX_BRAND_COLOR_CSS} />
         </CenterButton>
 
         <Box sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 9999, pointerEvents: "auto" }}>

@@ -9,7 +9,7 @@ import { MsqdxPrismionCard } from "../PrismionCard";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
 import { MsqdxBoardToolbar } from "../BoardToolbar";
 import { MsqdxUserToolbar } from "../UserToolbar";
-import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_COLORS, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
+import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_BRAND_COLOR_CSS, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
 
 function connectionToConnector(c: Connection): Connector {
   return {
@@ -310,7 +310,7 @@ export function MsqdxBoardCanvas({
                 maxWidth: 448,
                 textAlign: "center",
                 boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
-                border: `2px dashed ${MSQDX_COLORS.brand.green}`,
+                border: `2px dashed ${MSQDX_BRAND_COLOR_CSS}`,
               }}
             >
               <Box

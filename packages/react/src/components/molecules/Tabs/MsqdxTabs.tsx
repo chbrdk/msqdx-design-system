@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, Tab, styled, alpha } from "@mui/material";
-import { MSQDX_COLORS, MSQDX_TYPOGRAPHY, MSQDX_SPACING } from "@msqdx/tokens";
+import { MSQDX_BRAND_COLOR_CSS, MSQDX_TYPOGRAPHY, MSQDX_SPACING } from "@msqdx/tokens";
 import React from "react";
 
 export interface MsqdxTabsProps {
@@ -18,7 +18,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& .MuiTabs-indicator': {
     height: '3px',
     borderRadius: MSQDX_SPACING.borderRadius.tabIndicator,
-    background: MSQDX_COLORS.brand.green,
+    background: MSQDX_BRAND_COLOR_CSS,
   },
 }));
 
@@ -35,7 +35,7 @@ const StyledTab = styled(Tab, {
   minHeight: 'auto',
 
   '&.Mui-selected': {
-    color: MSQDX_COLORS.brand.green,
+    color: MSQDX_BRAND_COLOR_CSS,
     fontWeight: MSQDX_TYPOGRAPHY.fontWeight.semibold,
   },
 

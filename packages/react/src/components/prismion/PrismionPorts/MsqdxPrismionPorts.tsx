@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import {
   MSQDX_EFFECTS,
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_BRAND_PRIMARY,
   MSQDX_NEUTRAL,
 } from "@msqdx/tokens";
@@ -41,7 +41,7 @@ const PortButton = styled(Box, {
   width: PORT_SIZE,
   height: PORT_SIZE,
   borderRadius: "50%",
-  backgroundColor: MSQDX_COLORS.brand.green,
+  backgroundColor: MSQDX_BRAND_COLOR_CSS,
   border: `2px solid ${MSQDX_NEUTRAL[100]}`,
   cursor: "pointer",
   pointerEvents: "auto",
@@ -54,7 +54,7 @@ const PortButton = styled(Box, {
     opacity: 1,
   },
   ...(isActive && {
-    boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}33`,
+    boxShadow: "0 0 0 2px color-mix(in srgb, var(--msqdx-brand-color, #00ca55) 20%, transparent)",
   }),
 }));
 

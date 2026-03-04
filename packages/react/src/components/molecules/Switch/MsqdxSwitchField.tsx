@@ -4,7 +4,7 @@ import React from "react";
 import { Switch, FormControlLabel, FormHelperText, Box, styled } from "@mui/material";
 import type { SwitchProps as MuiSwitchProps } from "@mui/material";
 import {
-  MSQDX_COLORS,
+  MSQDX_BRAND_COLOR_CSS,
   MSQDX_SPACING,
   MSQDX_TYPOGRAPHY,
   MSQDX_EFFECTS,
@@ -51,7 +51,7 @@ const StyledSwitch = styled(Switch, {
       "&.Mui-checked": {
         transform: `translateX(${translateX}px)`,
         "& + .MuiSwitch-track": {
-          backgroundColor: MSQDX_COLORS.brand.green,
+          backgroundColor: MSQDX_BRAND_COLOR_CSS,
           opacity: 1,
         },
       },

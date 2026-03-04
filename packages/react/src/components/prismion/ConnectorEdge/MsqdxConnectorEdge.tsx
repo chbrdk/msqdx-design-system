@@ -12,7 +12,7 @@ import {
   type Point,
   type Obstacle,
 } from "../../../lib/connector-utils";
-import { MSQDX_COLORS, MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
+import { MSQDX_BRAND_COLOR_CSS, MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
 
 export interface MsqdxConnectorEdgeProps {
   connector: Connector;
@@ -160,7 +160,7 @@ export function MsqdxConnectorEdge({
   const isSelected =
     selectedPrismionIds.includes(fromPrismion.id) ||
     selectedPrismionIds.includes(toPrismion.id);
-  const strokeColor = isSelected ? MSQDX_COLORS.brand.green : MSQDX_NEUTRAL[400];
+  const strokeColor = isSelected ? MSQDX_BRAND_COLOR_CSS : MSQDX_NEUTRAL[400];
   const lineStyle = {
     stroke: strokeColor,
     strokeWidth: 2,
@@ -316,7 +316,7 @@ export function MsqdxConnectorEdge({
         {isDragging && dragStartPos && dragCurrentPos && (
           <path
             d={`M ${dragStartPos.x} ${dragStartPos.y} L ${dragCurrentPos.x} ${dragCurrentPos.y}`}
-            stroke={MSQDX_COLORS.brand.green}
+            stroke={MSQDX_BRAND_COLOR_CSS}
             strokeWidth={2}
             strokeDasharray="5,5"
             fill="none"
