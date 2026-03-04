@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import { Sparkles } from "lucide-react";
 import type { Board, Prismion, Connection, BoardParticipant, Connector } from "../../../types/prismion";
 import { getCanvasSettings, CANVAS_ZOOM, wouldOverlap } from "../../../lib/board-utils";
+import { calculatePortPosition } from "../../../lib/connector-utils";
 import { MsqdxPrismionCard } from "../PrismionCard";
 import type { PrismionResultItem } from "../PrismionResult";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
@@ -56,6 +57,8 @@ export interface MsqdxBoardCanvasProps {
   onPrismionResize?: (id: string, size: { w: number; h: number }) => void;
   onConnectorDirectionChange?: (connectorId: string, direction: "forward" | "backward") => void;
   onConnectorDelete?: (connectorId: string) => void;
+  /** Called when user drags from a port and drops on another card's port. Creates a new connection. */
+  onConnectorDrop?: (fromPrismionId: string, fromPort: "top" | "right" | "bottom" | "left", toPrismionId: string, toPort: "top" | "right" | "bottom" | "left") => void;
   showToolbars?: boolean;
   /** When false, hides the user toolbar (avatar, Presenter, Follow me). @default true when showToolbars is true */
   showUserToolbar?: boolean;
@@ -84,6 +87,7 @@ export function MsqdxBoardCanvas({
   onPrismionResize,
   onConnectorDirectionChange,
   onConnectorDelete,
+  onConnectorDrop,
   showToolbars = true,
   showUserToolbar = true,
   prismionResults,
@@ -95,6 +99,18 @@ export function MsqdxBoardCanvas({
   const [draggingPrismionId, setDraggingPrismionId] = useState<string | null>(null);
   const [dragStartPosition, setDragStartPosition] = useState<{ x: number; y: number } | null>(null);
   const [dragStartClient, setDragStartClient] = useState<{ x: number; y: number } | null>(null);
+  const [pendingConnectorDrag, setPendingConnectorDrag] = useState<{
+    fromId: string;
+    fromPort: "top" | "right" | "bottom" | "left";
+    clientX: number;
+    clientY: number;
+  } | null>(null);
+  const [connectorDragFrom, setConnectorDragFrom] = useState<{
+    fromId: string;
+    fromPort: "top" | "right" | "bottom" | "left";
+  } | null>(null);
+  const [connectorDragEnd, setConnectorDragEnd] = useState<{ x: number; y: number } | null>(null);
+  const DRAG_THRESHOLD_PX = 5;
 
   const canvasSettings = getCanvasSettings(board);
   const connectors = connections.map(connectionToConnector);
@@ -174,6 +190,67 @@ export function MsqdxBoardCanvas({
     },
     [onPrismionMove]
   );
+
+  const handleConnectorDragStart = useCallback(
+    (fromId: string, fromPort: "top" | "right" | "bottom" | "left", e: React.MouseEvent) => {
+      const fromPrismion = prismionsMap[fromId];
+      if (!fromPrismion || !onConnectorDrop) return;
+      e.preventDefault();
+      e.stopPropagation();
+      setPendingConnectorDrag({ fromId, fromPort, clientX: e.clientX, clientY: e.clientY });
+    },
+    [prismionsMap, onConnectorDrop]
+  );
+
+  useEffect(() => {
+    const active = pendingConnectorDrag || connectorDragFrom;
+    if (!active || !onConnectorDrop) return;
+    const rect = canvasRef.current?.getBoundingClientRect();
+    const clientToCanvas = (clientX: number, clientY: number) => {
+      if (!rect) return { x: 0, y: 0 };
+      return {
+        x: (clientX - rect.left - pan.x) / zoom,
+        y: (clientY - rect.top - pan.y) / zoom,
+      };
+    };
+    const onMove = (e: MouseEvent) => {
+      if (pendingConnectorDrag) {
+        const dx = e.clientX - pendingConnectorDrag.clientX;
+        const dy = e.clientY - pendingConnectorDrag.clientY;
+        if (Math.sqrt(dx * dx + dy * dy) >= DRAG_THRESHOLD_PX && prismionsMap[pendingConnectorDrag.fromId]) {
+          const startPos = calculatePortPosition(prismionsMap[pendingConnectorDrag.fromId], pendingConnectorDrag.fromPort);
+          setConnectorDragFrom({ fromId: pendingConnectorDrag.fromId, fromPort: pendingConnectorDrag.fromPort });
+          setConnectorDragEnd(clientToCanvas(e.clientX, e.clientY));
+          setPendingConnectorDrag(null);
+        }
+      } else if (connectorDragFrom) {
+        setConnectorDragEnd(clientToCanvas(e.clientX, e.clientY));
+      }
+    };
+    const onUp = (e: MouseEvent) => {
+      if (connectorDragFrom) {
+        const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+        const portEl = el?.closest?.("[data-port-side]") as HTMLElement | null;
+        const cardEl = portEl?.closest?.("[data-prismion-id]") as HTMLElement | null;
+        const toPort = portEl?.getAttribute("data-port-side") as "top" | "right" | "bottom" | "left" | null;
+        const toId = cardEl?.getAttribute("data-prismion-id") ?? null;
+        if (toId && toPort && toId !== connectorDragFrom.fromId) {
+          onConnectorDrop(connectorDragFrom.fromId, connectorDragFrom.fromPort, toId, toPort);
+        }
+      }
+      setPendingConnectorDrag(null);
+      setConnectorDragFrom(null);
+      setConnectorDragEnd(null);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, [pendingConnectorDrag, connectorDragFrom, onConnectorDrop, pan, zoom, prismionsMap]);
 
   useEffect(() => {
     if (!draggingPrismionId || !dragStartPosition || !dragStartClient || !onPrismionMove) return;
@@ -295,7 +372,7 @@ export function MsqdxBoardCanvas({
           transformOrigin: "0 0",
         }}
       >
-        {connectors.length > 0 && (
+        {(connectors.length > 0 || (connectorDragFrom && connectorDragEnd)) && (
           <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 15 }}>
             {connectors.map((connector) => (
               <MsqdxConnectorEdge
@@ -307,6 +384,36 @@ export function MsqdxBoardCanvas({
                 onDelete={onConnectorDelete}
               />
             ))}
+            {connectorDragFrom && connectorDragEnd && prismionsMap[connectorDragFrom.fromId] && (() => {
+              const start = calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
+              const end = connectorDragEnd;
+              const minX = Math.min(start.x, end.x) - 4;
+              const minY = Math.min(start.y, end.y) - 4;
+              const w = Math.max(Math.abs(end.x - start.x) + 8, 2);
+              const h = Math.max(Math.abs(end.y - start.y) + 8, 2);
+              return (
+                <Box sx={{ position: "absolute", left: minX, top: minY, width: w, height: h, zIndex: 16 }}>
+                  <Box
+                    component="svg"
+                    width="100%"
+                    height="100%"
+                    viewBox={`0 0 ${w} ${h}`}
+                    preserveAspectRatio="none"
+                    sx={{ overflow: "visible" }}
+                  >
+                    <line
+                      x1={start.x - minX}
+                      y1={start.y - minY}
+                      x2={end.x - minX}
+                      y2={end.y - minY}
+                      stroke={MSQDX_BRAND_COLOR_CSS}
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                    />
+                  </Box>
+                </Box>
+              );
+            })()}
           </Box>
         )}
 
@@ -393,6 +500,7 @@ export function MsqdxBoardCanvas({
                   : undefined
               }
               onPromptSubmit={(prompt) => onPrismionPromptSubmit?.(prismion.id, prompt)}
+              onConnectorDrag={onConnectorDrop ? (port, e) => handleConnectorDragStart(prismion.id, port, e) : undefined}
               onConnectorCreatePrismion={(port, type) => onPrismionConnectorCreate?.(prismion.id, port, type)}
               onLockToggle={() => onPrismionLockToggle?.(prismion.id)}
               onDelete={() => onPrismionDelete?.(prismion.id)}

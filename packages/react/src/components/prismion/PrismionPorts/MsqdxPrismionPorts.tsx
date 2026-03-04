@@ -165,7 +165,7 @@ export function MsqdxPrismionPorts({
     const startDeg = getStartDeg(side);
 
     return (
-      <Box key={side} sx={{ position: "absolute", ...style }} data-port-container>
+      <Box key={side} sx={{ position: "absolute", ...style }} data-port-container data-port-side={side}>
         <PortButton
           isActive={isActive}
           side={side}
