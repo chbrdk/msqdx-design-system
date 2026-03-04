@@ -120,8 +120,8 @@ export function MsqdxPrismionCard({
           <Box
             sx={{
               position: "absolute",
-              top: "4px",
-              right: "4px",
+              top: "-4px",
+              right: "-4px",
               zIndex: 10,
               pointerEvents: "auto",
             }}
