@@ -54,7 +54,7 @@ const PortButton = styled(Box, {
     opacity: 1,
   },
   ...(isActive && {
-    boxShadow: "0 0 0 2px color-mix(in srgb, var(--msqdx-brand-color, #00ca55) 20%, transparent)",
+    boxShadow: "0 0 0 2px color-mix(in srgb, var(--color-theme-accent, #00ca55) 20%, transparent)",
   }),
 }));
 

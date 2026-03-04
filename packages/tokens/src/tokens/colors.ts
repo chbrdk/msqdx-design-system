@@ -122,11 +122,11 @@ export const MSQDX_TINTS = {
 } as const;
 
 /**
- * CSS variable for the user-configured brand color.
- * Host app should set e.g. :root { --msqdx-brand-color: #00ca55; } so all components use it.
- * Use this constant wherever the primary brand color is needed (borders, focus rings, accents).
+ * CSS variable for the user-configured brand/theme accent color.
+ * Same variable as PLEXON Sidebar (lib/theme-accent: --color-theme-accent). Host app sets
+ * e.g. :root { --color-theme-accent: #00ca55; } so Sidebar and all MSQDX components use it.
  */
-export const MSQDX_BRAND_COLOR_CSS = `var(--msqdx-brand-color, ${MSQDX_BRAND_PRIMARY.green})`;
+export const MSQDX_BRAND_COLOR_CSS = `var(--color-theme-accent, ${MSQDX_BRAND_PRIMARY.green})`;
 
 // Legacy export for backward compatibility
 export const MSQDX_COLORS = {

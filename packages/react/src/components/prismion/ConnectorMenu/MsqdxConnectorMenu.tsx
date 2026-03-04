@@ -135,7 +135,7 @@ export function MsqdxConnectorMenu({
           onClick={onClose}
           onMouseDown={blockMouseDown}
           title="Schließen"
-          sx={{ borderColor: MSQDX_BRAND_COLOR_CSS, boxShadow: "0 0 0 2px color-mix(in srgb, var(--msqdx-brand-color, #00ca55) 20%, transparent)" }}
+          sx={{ borderColor: MSQDX_BRAND_COLOR_CSS, boxShadow: "0 0 0 2px color-mix(in srgb, var(--color-theme-accent, #00ca55) 20%, transparent)" }}
         >
           <X size={20} color={MSQDX_BRAND_COLOR_CSS} />
         </CenterButton>

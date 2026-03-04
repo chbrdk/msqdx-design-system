@@ -196,7 +196,7 @@ export function MsqdxBoardHeader({
           </Box>
           <Box
             sx={{
-              backgroundColor: "color-mix(in srgb, var(--msqdx-brand-color, #00ca55) 8%, transparent)",
+              backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 8%, transparent)",
               borderRadius: "8px",
               padding: "16px",
             }}
