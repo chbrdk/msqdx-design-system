@@ -151,26 +151,24 @@ export function MsqdxPrismionCard({
         </Box>
 
         <Box sx={{ position: "relative", height: "100%", padding: "12px", display: "flex", flexDirection: "column" }}>
-          {!resultOnly && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-4px",
-                right: "-4px",
-                zIndex: 10,
-                pointerEvents: "auto",
-              }}
-            >
-              <MsqdxPrismionToolbar
-                locked={prismion.state === "locked"}
-                onLockToggle={onLockToggle}
-                onDelete={onDelete}
-                onBranch={() => {}}
-                onMerge={onOpenMerge}
-                onArchive={() => {}}
-              />
-            </Box>
-          )}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "-4px",
+              right: "-4px",
+              zIndex: 10,
+              pointerEvents: "auto",
+            }}
+          >
+            <MsqdxPrismionToolbar
+              locked={prismion.state === "locked"}
+              onLockToggle={onLockToggle}
+              onDelete={onDelete}
+              onBranch={() => {}}
+              onMerge={onOpenMerge}
+              onArchive={() => {}}
+            />
+          </Box>
           {resultOnly ? (
             /* Result-only: only show the first result text, no title/prompt/tabs */
             <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }} onClick={(e) => e.stopPropagation()}>
