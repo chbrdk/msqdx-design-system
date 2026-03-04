@@ -24,12 +24,13 @@ const SIZE_PX: Record<MsqdxIconButtonSize, number> = {
   large: 44,
 };
 
-type StyledIconButtonProps = Omit<IconButtonProps, "size"> & { size?: MsqdxIconButtonSize };
+/** Internal prop to avoid conflict with MUI IconButton's built-in size type. */
+type StyledIconButtonProps = IconButtonProps & { sizeVariant?: MsqdxIconButtonSize };
 
 const StyledIconButton = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== "size",
-})<StyledIconButtonProps>(({ theme, size }) => {
-  const s = size ?? "small";
+  shouldForwardProp: (prop) => prop !== "sizeVariant",
+})<StyledIconButtonProps>(({ theme, sizeVariant }) => {
+  const s: MsqdxIconButtonSize = sizeVariant ?? "small";
   const px = SIZE_PX[s];
   const minPx = s === "xs" ? px : Math.max(px, minTouchTarget);
   return {
@@ -68,7 +69,7 @@ export function MsqdxIconButton({
   ...props
 }: MsqdxIconButtonProps) {
   return (
-    <StyledIconButton size={size} {...props}>
+    <StyledIconButton sizeVariant={size} {...props}>
       {children}
     </StyledIconButton>
   );
