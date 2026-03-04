@@ -73,11 +73,7 @@ const MenuButton = styled(Box)(() => ({
   justifyContent: "center",
   cursor: "pointer",
   pointerEvents: "auto",
-  transition: "all 220ms ease-out",
-  "&:hover": {
-    transform: "scale(1.1)",
-    boxShadow: MSQDX_EFFECTS.shadows.xl,
-  },
+  transition: "transform 220ms ease-out, box-shadow 220ms ease-out, opacity 220ms ease-out",
 }));
 
 const iconColorMap: Record<string, string> = {
@@ -228,6 +224,10 @@ export function MsqdxPrismionPorts({
                     transitionProperty: "transform, opacity",
                     transitionDelay: delay,
                     color,
+                    "&:hover": {
+                      transform: `translate(${tx}px, ${ty}px) scale(1.05)`,
+                      boxShadow: MSQDX_EFFECTS.shadows.xl,
+                    },
                   }}
                 >
                   <action.Icon size={16} />

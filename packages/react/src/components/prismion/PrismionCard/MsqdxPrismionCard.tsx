@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, IconButton } from "@mui/material";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Prismion, Position, Size, PortSide } from "../../../types/prismion";
@@ -54,6 +54,7 @@ export function MsqdxPrismionCard({
   onOpenMerge,
   onLockToggle,
   onDelete,
+  onResize,
   results,
   collapsed = false,
   onToggleCollapse,
@@ -61,7 +62,22 @@ export function MsqdxPrismionCard({
   resultOnly: resultOnlyProp = false,
 }: MsqdxPrismionCardProps) {
   const resultOnly = resultOnlyProp || prismion.id.startsWith("result-");
+  const rootRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || !onResize) return;
+    const ro = new ResizeObserver(() => {
+      const w = Math.round(el.getBoundingClientRect().width);
+      const h = Math.round(el.getBoundingClientRect().height);
+      if (w > 0 && h > 0) {
+        onResize({ w, h: Math.max(h, prismion.size.minH ?? 120) });
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [onResize, prismion.size.minW, prismion.size.minH]);
   const [editTitle, setEditTitle] = useState(prismion.title);
   const [promptInput, setPromptInput] = useState("");
 
@@ -82,13 +98,13 @@ export function MsqdxPrismionCard({
 
   return (
     <Box
+      ref={rootRef}
       className={`group ${className ?? ""}`.trim()}
       sx={{
         position: "absolute",
         left: 0,
         top: 0,
         width: prismion.size.w,
-        height: prismion.size.h,
         minHeight: collapsed ? 60 : 120,
         zIndex: Math.max(prismion.position.zIndex ?? 1, 1),
         display: "inline-block",

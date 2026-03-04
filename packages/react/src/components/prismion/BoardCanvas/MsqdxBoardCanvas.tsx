@@ -52,6 +52,7 @@ export interface MsqdxBoardCanvasProps {
   onPrismionConnectorCreate?: (fromId: string, port: "top" | "right" | "bottom" | "left", type: "prompt" | "file" | "image" | "video" | "link") => void;
   onPrismionLockToggle?: (id: string) => void;
   onPrismionDelete?: (id: string) => void;
+  onPrismionResize?: (id: string, size: { w: number; h: number }) => void;
   showToolbars?: boolean;
   /** When false, hides the user toolbar (avatar, Presenter, Follow me). @default true when showToolbars is true */
   showUserToolbar?: boolean;
@@ -77,6 +78,7 @@ export function MsqdxBoardCanvas({
   onPrismionConnectorCreate,
   onPrismionLockToggle,
   onPrismionDelete,
+  onPrismionResize,
   showToolbars = true,
   showUserToolbar = true,
   prismionResults,
@@ -97,7 +99,7 @@ export function MsqdxBoardCanvas({
   const gridOffsetY = pan.y % gridSize;
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button === 1 || (e.button === 0 && e.metaKey)) {
+    if (e.button === 1 || e.button === 0) {
       setIsPanning(true);
       setLastPanPoint({ x: e.clientX, y: e.clientY });
       e.preventDefault();
@@ -365,6 +367,7 @@ export function MsqdxBoardCanvas({
               selected={selectedPrismionId === prismion.id}
               onSelect={() => onSelectPrismion?.(prismion.id)}
               onMove={(pos) => onPrismionMove?.(prismion.id, pos)}
+              onResize={(size) => onPrismionResize?.(prismion.id, size)}
               onPromptSubmit={(prompt) => onPrismionPromptSubmit?.(prismion.id, prompt)}
               onConnectorCreatePrismion={(port, type) => onPrismionConnectorCreate?.(prismion.id, port, type)}
               onLockToggle={() => onPrismionLockToggle?.(prismion.id)}
