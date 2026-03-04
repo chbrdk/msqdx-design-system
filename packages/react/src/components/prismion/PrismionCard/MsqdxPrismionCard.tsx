@@ -112,7 +112,6 @@ export function MsqdxPrismionCard({
         sx={{
           height: "100%",
           minHeight: collapsed ? 60 : 120,
-          overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           borderRadius: "32px",
