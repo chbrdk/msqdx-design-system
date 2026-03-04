@@ -15,3 +15,12 @@ Die Linien zwischen Prismion-Cards wählen automatisch das **Port-Paar mit dem k
 ## Erweiterung
 
 `findPathAvoidingObstacles` kann später um Hindernis-Umfahrung erweitert werden; aktuell liefert es eine Gerade zwischen den optimalen Port-Positionen.
+
+---
+
+## Collision Detection (Cards)
+
+Damit keine Card beim Ziehen über eine andere gelegt werden kann, wird **wouldOverlap** aus `lib/board-utils.ts` genutzt:
+
+- **wouldOverlap(excludePrismionId, position, size, allPrismions)** prüft, ob ein Rechteck an `position` mit `size` eines der anderen Prismions überlappt (Rechteck-Überlappung).
+- **BoardCanvas** und **SimpleBoardCanvas** rufen vor jedem **onPrismionMove** bzw. vor **setLocalPrismions** diese Prüfung auf; bei Kollision wird die Bewegung nicht übernommen (Card bleibt an der letzten gültigen Position).

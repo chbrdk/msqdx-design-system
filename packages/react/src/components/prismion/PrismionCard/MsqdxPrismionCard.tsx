@@ -117,6 +117,24 @@ export function MsqdxPrismionCard({
         />
 
         <Box sx={{ position: "relative", height: "100%", padding: "12px", display: "flex", flexDirection: "column" }}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "12px",
+              right: "12px",
+              zIndex: 10,
+              pointerEvents: "auto",
+            }}
+          >
+            <MsqdxPrismionToolbar
+              locked={prismion.state === "locked"}
+              onLockToggle={onLockToggle}
+              onDelete={onDelete}
+              onBranch={() => {}}
+              onMerge={onOpenMerge}
+              onArchive={() => {}}
+            />
+          </Box>
           <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 1 }}>
             <Box sx={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 1 }}>
               {isEditing ? (
@@ -197,17 +215,6 @@ export function MsqdxPrismionCard({
               )}
             </Box>
           )}
-
-          <Box sx={{ marginTop: "auto", paddingTop: 1 }}>
-            <MsqdxPrismionToolbar
-              locked={prismion.state === "locked"}
-              onLockToggle={onLockToggle}
-              onDelete={onDelete}
-              onBranch={() => {}}
-              onMerge={onOpenMerge}
-              onArchive={() => {}}
-            />
-          </Box>
         </Box>
       </MsqdxCard>
     </Box>

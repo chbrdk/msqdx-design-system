@@ -4,8 +4,7 @@ import React, { useRef, useCallback, useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { Sparkles } from "lucide-react";
 import type { Board, Prismion, Connection, BoardParticipant, Connector } from "../../../types/prismion";
-import { getCanvasSettings } from "../../../lib/board-utils";
-import { CANVAS_ZOOM } from "../../../lib/board-utils";
+import { getCanvasSettings, CANVAS_ZOOM, wouldOverlap } from "../../../lib/board-utils";
 import { MsqdxPrismionCard } from "../PrismionCard";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
 import { MsqdxBoardToolbar } from "../BoardToolbar";
@@ -164,10 +163,17 @@ export function MsqdxBoardCanvas({
     const onMove = (e: MouseEvent) => {
       const dx = (e.clientX - dragStartClient.x) / zoom;
       const dy = (e.clientY - dragStartClient.y) / zoom;
-      onPrismionMove(draggingPrismionId, {
+      const newPos = {
         x: dragStartPosition.x + dx,
         y: dragStartPosition.y + dy,
-      });
+      };
+      const moving = prismionsMap[draggingPrismionId];
+      if (
+        moving &&
+        wouldOverlap(draggingPrismionId, newPos, moving.size, prismions)
+      )
+        return;
+      onPrismionMove(draggingPrismionId, newPos);
     };
     const onUp = () => {
       setDraggingPrismionId(null);
@@ -180,7 +186,7 @@ export function MsqdxBoardCanvas({
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
     };
-  }, [draggingPrismionId, dragStartPosition, dragStartClient, zoom, onPrismionMove]);
+  }, [draggingPrismionId, dragStartPosition, dragStartClient, zoom, onPrismionMove, prismionsMap, prismions]);
 
   return (
     <Box

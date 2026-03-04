@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Box, styled } from "@mui/material";
 import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
+import { MsqdxIconButton } from "../../atoms/Button/MsqdxIconButton";
 import { GitBranch, ArrowRight, Lock, Unlock, Archive, Trash2, MoreHorizontal, X } from "lucide-react";
 import {
   MSQDX_SPACING,
@@ -108,39 +109,16 @@ export function MsqdxPrismionToolbar({
         sx={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center", overflow: "visible" }}
         data-open={open ? "true" : "false"}
       >
-        <Box
-          sx={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            overflow: "hidden",
-            boxShadow: MSQDX_EFFECTS.shadows.sm,
-            backgroundColor: "#fff",
-            border: `1px solid ${MSQDX_NEUTRAL[200]}`,
-            ...(open && { boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}` }),
-          }}
+        <MsqdxIconButton
+          size="small"
+          onClick={toggle}
+          onMouseDown={blockMouseDown}
+          title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
+          aria-label={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
+          sx={open ? { boxShadow: `0 0 0 2px ${MSQDX_COLORS.brand.green}` } : undefined}
         >
-          <MsqdxButton
-            size="small"
-            variant="text"
-            onClick={toggle}
-            onMouseDown={blockMouseDown}
-            title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
-            sx={{
-              minWidth: 32,
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              padding: 0,
-              backgroundColor: "transparent",
-              border: "none",
-              boxShadow: "none",
-              "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" },
-            }}
-          >
-            {open ? <X size={18} /> : <MoreHorizontal size={18} />}
-          </MsqdxButton>
-        </Box>
+          {open ? <X size={18} /> : <MoreHorizontal size={18} />}
+        </MsqdxIconButton>
 
         {variant === "bar" && open && (
           <Box
