@@ -39,6 +39,8 @@ export interface MsqdxPrismionCardProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   mediaSize?: "sm" | "md" | "lg";
+  /** When true, only the first result text is shown (no prompt, no tabs, minimal layout). */
+  resultOnly?: boolean;
 }
 
 export function MsqdxPrismionCard({
@@ -56,6 +58,7 @@ export function MsqdxPrismionCard({
   collapsed = false,
   onToggleCollapse,
   className,
+  resultOnly = false,
 }: MsqdxPrismionCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(prismion.title);
@@ -127,96 +130,128 @@ export function MsqdxPrismionCard({
         </Box>
 
         <Box sx={{ position: "relative", height: "100%", padding: "12px", display: "flex", flexDirection: "column" }}>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "-4px",
-              right: "-4px",
-              zIndex: 10,
-              pointerEvents: "auto",
-            }}
-          >
-            <MsqdxPrismionToolbar
-              locked={prismion.state === "locked"}
-              onLockToggle={onLockToggle}
-              onDelete={onDelete}
-              onBranch={() => {}}
-              onMerge={onOpenMerge}
-              onArchive={() => {}}
-            />
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 1 }}>
-            <Box sx={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 1 }}>
-              {isEditing ? (
-                <MsqdxInput
-                  value={editTitle}
-                  onChange={(e) => setEditTitle((e.target as HTMLInputElement).value)}
-                  onBlur={handleTitleBlur}
-                  sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontWeight: 600, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono }}
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : (
+          {!resultOnly && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-4px",
+                right: "-4px",
+                zIndex: 10,
+                pointerEvents: "auto",
+              }}
+            >
+              <MsqdxPrismionToolbar
+                locked={prismion.state === "locked"}
+                onLockToggle={onLockToggle}
+                onDelete={onDelete}
+                onBranch={() => {}}
+                onMerge={onOpenMerge}
+                onArchive={() => {}}
+              />
+            </Box>
+          )}
+          {resultOnly ? (
+            /* Result-only: only show the first result text, no title/prompt/tabs */
+            <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }} onClick={(e) => e.stopPropagation()}>
+              {hasResults && results![0].type === "text" ? (
                 <Box
-                  component="h3"
-                  onDoubleClick={(e) => {
-                    e.stopPropagation();
-                    setIsEditing(true);
-                  }}
                   sx={{
-                    fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
-                    fontWeight: 600,
+                    fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
                     fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
-                    color: MSQDX_NEUTRAL[900],
-                    margin: 0,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
+                    color: MSQDX_NEUTRAL[800],
+                    whiteSpace: "pre-wrap",
                   }}
                 >
-                  {prismion.title}
+                  {results![0].content}
                 </Box>
-              )}
+              ) : hasResults && results![0].type === "richtext" ? (
+                <Box
+                  sx={{
+                    fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
+                    fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
+                    "& p": { margin: 0 },
+                    "& a": { color: MSQDX_NEUTRAL[700], textDecoration: "underline" },
+                  }}
+                  dangerouslySetInnerHTML={{ __html: results![0].content }}
+                />
+              ) : null}
             </Box>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleCollapse?.();
-              }}
-              aria-label={collapsed ? "Expand" : "Collapse"}
-            >
-              {collapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-            </IconButton>
-          </Box>
-
-          {!collapsed && (
-            <Box sx={{ flex: 1, minHeight: 0 }} onClick={(e) => e.stopPropagation()}>
-              {isInitialState ? (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <MsqdxInput
-                    value={promptInput}
-                    onChange={(e) => setPromptInput((e.target as HTMLInputElement).value)}
-                    onKeyDown={(e) => e.key === "Enter" && handlePromptSubmit()}
-                    placeholder="Enter your prompt..."
-                    fullWidth
-                    sx={{ "& input": { fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"] } }}
-                  />
-                  <MsqdxButton size="small" variant="contained" onClick={handlePromptSubmit} sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"] }}>
-                    Submit
-                  </MsqdxButton>
+          ) : (
+            <>
+              <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 1 }}>
+                <Box sx={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 1 }}>
+                  {isEditing ? (
+                    <MsqdxInput
+                      value={editTitle}
+                      onChange={(e) => setEditTitle((e.target as HTMLInputElement).value)}
+                      onBlur={handleTitleBlur}
+                      sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontWeight: 600, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  ) : (
+                    <Box
+                      component="h3"
+                      onDoubleClick={(e) => {
+                        e.stopPropagation();
+                        setIsEditing(true);
+                      }}
+                      sx={{
+                        fontSize: MSQDX_TYPOGRAPHY.fontSize.xs,
+                        fontWeight: 600,
+                        fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
+                        color: MSQDX_NEUTRAL[900],
+                        margin: 0,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {prismion.title}
+                    </Box>
+                  )}
                 </Box>
-              ) : (
-                <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"], fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[700], whiteSpace: "pre-wrap" }}>
-                  {prismion.prompt}
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleCollapse?.();
+                  }}
+                  aria-label={collapsed ? "Expand" : "Collapse"}
+                >
+                  {collapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+                </IconButton>
+              </Box>
+
+              {!collapsed && (
+                <Box sx={{ flex: 1, minHeight: 0 }} onClick={(e) => e.stopPropagation()}>
+                  {isInitialState ? (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <MsqdxInput
+                        value={promptInput}
+                        onChange={(e) => setPromptInput((e.target as HTMLInputElement).value)}
+                        onKeyDown={(e) => e.key === "Enter" && handlePromptSubmit()}
+                        placeholder="Enter your prompt..."
+                        fullWidth
+                        sx={{ "& input": { fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"] } }}
+                      />
+                      <MsqdxButton size="small" variant="contained" onClick={handlePromptSubmit} sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"] }}>
+                        Submit
+                      </MsqdxButton>
+                    </Box>
+                  ) : (
+                    <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"], fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[700], whiteSpace: "pre-wrap" }}>
+                      {prismion.prompt}
+                    </Box>
+                  )}
+
+                  {hasResults && (
+                    <Box sx={{ marginTop: 2 }}>
+                      <MsqdxPrismionResult items={results} defaultTab="text" />
+                    </Box>
+                  )}
                 </Box>
               )}
-
-              {hasResults && (
-                <Box sx={{ marginTop: 2 }}>
-                  <MsqdxPrismionResult items={results} defaultTab="text" />
-                </Box>
-              )}
-            </Box>
+            </>
           )}
         </Box>
       </MsqdxCard>

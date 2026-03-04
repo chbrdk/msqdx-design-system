@@ -57,6 +57,8 @@ export interface MsqdxBoardCanvasProps {
   showUserToolbar?: boolean;
   /** Optional results per prismion id (e.g. AI response items for result cards). */
   prismionResults?: Record<string, PrismionResultItem[]>;
+  /** When set, cards with ids in this array render in result-only mode (only first result text, no prompt/tabs). */
+  prismionResultOnlyIds?: string[];
   className?: string;
 }
 
@@ -80,6 +82,7 @@ export function MsqdxBoardCanvas({
   showToolbars = true,
   showUserToolbar = true,
   prismionResults,
+  prismionResultOnlyIds,
   className,
 }: MsqdxBoardCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -370,6 +373,7 @@ export function MsqdxBoardCanvas({
               onLockToggle={() => onPrismionLockToggle?.(prismion.id)}
               onDelete={() => onPrismionDelete?.(prismion.id)}
               results={prismionResults?.[prismion.id]}
+              resultOnly={prismionResultOnlyIds?.includes(prismion.id)}
             />
           </Box>
         ))}
