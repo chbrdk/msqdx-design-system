@@ -34,8 +34,14 @@ export function findOptimalPorts(
   return { fromPort: bestFrom, toPort: bestTo };
 }
 
-/** Offset so the connector line meets the visible port circle (PrismionPorts: 32px button, -14px outside edge). */
-const PORT_CENTER_INSET = 2;
+/**
+ * Match PrismionPorts: PORT_SIZE=32, port positioned with bottom/top/left/right: -14.
+ * Port center from card edge: 14 - 16 = 2 (2px inside card edge).
+ */
+const PORT_INSET_TOP = 2;
+const PORT_INSET_RIGHT = 2;
+const PORT_INSET_BOTTOM = 2;
+const PORT_INSET_LEFT = 2;
 
 export function calculatePortPosition(
   prismion: Prismion,
@@ -45,13 +51,13 @@ export function calculatePortPosition(
   const { w, h } = prismion.size;
   switch (port) {
     case 'top':
-      return { x: x + w / 2, y: y + PORT_CENTER_INSET };
+      return { x: x + w / 2, y: y + PORT_INSET_TOP };
     case 'right':
-      return { x: x + w - PORT_CENTER_INSET, y: y + h / 2 };
+      return { x: x + w - PORT_INSET_RIGHT, y: y + h / 2 };
     case 'bottom':
-      return { x: x + w / 2, y: y + h - PORT_CENTER_INSET };
+      return { x: x + w / 2, y: y + h - PORT_INSET_BOTTOM };
     case 'left':
-      return { x: x + PORT_CENTER_INSET, y: y + h / 2 };
+      return { x: x + PORT_INSET_LEFT, y: y + h / 2 };
   }
 }
 
@@ -114,15 +120,19 @@ export function findPathAvoidingObstacles(
   return [from, to];
 }
 
+/** Padding around path for SVG bounds so path and markers are fully visible. */
+const CONNECTOR_BOUNDS_PADDING = 16;
+
 export function getConnectorBounds(
   from: Point,
   to: Point,
   _path?: Point[]
 ): { x: number; y: number; width: number; height: number } {
-  const minX = Math.min(from.x, to.x) - 10;
-  const minY = Math.min(from.y, to.y) - 10;
-  const maxX = Math.max(from.x, to.x) + 10;
-  const maxY = Math.max(from.y, to.y) + 10;
+  const p = CONNECTOR_BOUNDS_PADDING;
+  const minX = Math.min(from.x, to.x) - p;
+  const minY = Math.min(from.y, to.y) - p;
+  const maxX = Math.max(from.x, to.x) + p;
+  const maxY = Math.max(from.y, to.y) + p;
   return {
     x: minX,
     y: minY,

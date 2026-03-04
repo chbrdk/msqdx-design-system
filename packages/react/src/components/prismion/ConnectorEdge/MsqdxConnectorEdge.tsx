@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import { Trash2 } from "lucide-react";
 import type { Connector, Prismion } from "../../../types/prismion";
 import { MsqdxSwitchField } from "../../molecules/Switch/MsqdxSwitchField";
 import {
@@ -12,13 +13,14 @@ import {
   type Point,
   type Obstacle,
 } from "../../../lib/connector-utils";
-import { MSQDX_BRAND_COLOR_CSS, MSQDX_NEUTRAL, MSQDX_SPACING, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY } from "@msqdx/tokens";
+import { MSQDX_BRAND_COLOR_CSS, MSQDX_NEUTRAL, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY, MSQDX_STATUS } from "@msqdx/tokens";
 
 export interface MsqdxConnectorEdgeProps {
   connector: Connector;
   prismions: Record<string, Prismion>;
   selectedPrismionIds?: string[];
   onDirectionChange?: (connectorId: string, newDirection: "forward" | "backward") => void;
+  onDelete?: (connectorId: string) => void;
   onNewConnection?: (
     fromConnectorId: string,
     toConnectorId: string,
@@ -86,6 +88,7 @@ export function MsqdxConnectorEdge({
   prismions,
   selectedPrismionIds = [],
   onDirectionChange,
+  onDelete,
   onNewConnection,
 }: MsqdxConnectorEdgeProps) {
   const [, setForceUpdate] = useState(0);
@@ -258,7 +261,7 @@ export function MsqdxConnectorEdge({
           top: bounds.y,
           width: bounds.width,
           height: bounds.height,
-          pointerEvents: "none",
+          pointerEvents: "auto",
           zIndex: 0,
         }}
         viewBox={`0 0 ${bounds.width} ${bounds.height}`}
@@ -332,29 +335,49 @@ export function MsqdxConnectorEdge({
           onClick={(e) => e.stopPropagation()}
           sx={{
             position: "absolute",
-            left: midpoint.x - 40,
-            top: midpoint.y - 20,
+            left: midpoint.x - 56,
+            top: midpoint.y - 24,
             zIndex: 20,
             pointerEvents: "all",
             backgroundColor: "rgba(255,255,255,0.95)",
             borderRadius: "8px",
-            padding: "12px",
+            padding: "8px 12px",
             boxShadow: MSQDX_EFFECTS.shadows.lg,
             border: `1px solid ${MSQDX_NEUTRAL[200]}`,
-            minWidth: "80px",
+            minWidth: "120px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: 2,
+            gap: 1,
           }}
         >
-          <Box component="span" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[600], fontWeight: 500 }}>
-            Richtung
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box component="span" sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[600], fontWeight: 500 }}>
+              Richtung
+            </Box>
+            <MsqdxSwitchField
+              checked={currentDirection === "forward"}
+              onChange={(_e, checked) => handleDirectionChange(checked)}
+            />
           </Box>
-          <MsqdxSwitchField
-            checked={currentDirection === "forward"}
-            onChange={(_e, checked) => handleDirectionChange(checked)}
-          />
+          {onDelete && (
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(connector.id);
+              }}
+              aria-label="Verbindung löschen"
+              title="Verbindung löschen"
+              sx={{
+                color: MSQDX_STATUS.error.base,
+                padding: "4px",
+                "&:hover": { backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 8%, transparent)" },
+              }}
+            >
+              <Trash2 size={16} />
+            </IconButton>
+          )}
         </Box>
       )}
     </>

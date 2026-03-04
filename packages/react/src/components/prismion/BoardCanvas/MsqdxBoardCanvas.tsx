@@ -12,7 +12,7 @@ import { MsqdxBoardToolbar } from "../BoardToolbar";
 import { MsqdxUserToolbar } from "../UserToolbar";
 import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_BRAND_COLOR_CSS, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
 
-function connectionToConnector(c: Connection): Connector {
+function connectionToConnector(c: Connection): Connector & { direction?: "forward" | "backward" } {
   return {
     id: c.id,
     boardId: c.boardId,
@@ -26,6 +26,7 @@ function connectionToConnector(c: Connection): Connector {
     },
     createdBy: "user",
     createdAt: c.createdAt ?? new Date().toISOString(),
+    direction: c.direction,
   };
 }
 
@@ -53,6 +54,8 @@ export interface MsqdxBoardCanvasProps {
   onPrismionLockToggle?: (id: string) => void;
   onPrismionDelete?: (id: string) => void;
   onPrismionResize?: (id: string, size: { w: number; h: number }) => void;
+  onConnectorDirectionChange?: (connectorId: string, direction: "forward" | "backward") => void;
+  onConnectorDelete?: (connectorId: string) => void;
   showToolbars?: boolean;
   /** When false, hides the user toolbar (avatar, Presenter, Follow me). @default true when showToolbars is true */
   showUserToolbar?: boolean;
@@ -79,6 +82,8 @@ export function MsqdxBoardCanvas({
   onPrismionLockToggle,
   onPrismionDelete,
   onPrismionResize,
+  onConnectorDirectionChange,
+  onConnectorDelete,
   showToolbars = true,
   showUserToolbar = true,
   prismionResults,
@@ -298,6 +303,8 @@ export function MsqdxBoardCanvas({
                 connector={connector}
                 prismions={prismionsMap}
                 selectedPrismionIds={selectedPrismionId ? [selectedPrismionId] : []}
+                onDirectionChange={onConnectorDirectionChange}
+                onDelete={onConnectorDelete}
               />
             ))}
           </Box>

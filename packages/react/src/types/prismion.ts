@@ -114,6 +114,8 @@ export interface Connection {
   toPrismionId: string;
   fromPort?: string;
   toPort?: string;
+  /** Arrow direction: forward = arrow at target, backward = arrow at source. @default "forward" */
+  direction?: 'forward' | 'backward';
   label?: string;
   color?: string;
   strokeWidth: number;
