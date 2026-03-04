@@ -9,7 +9,6 @@ import { MsqdxPrismionToolbar } from "../PrismionToolbar";
 import { MsqdxPrismionResult, type PrismionResultItem } from "../PrismionResult";
 import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import { MsqdxInput } from "../../atoms/Input/MsqdxInput";
-import { MsqdxBadge } from "../../atoms/Badge/MsqdxBadge";
 import { MsqdxCard } from "../../atoms/Card/MsqdxCard";
 import {
   MSQDX_SPACING,
@@ -88,6 +87,15 @@ export function MsqdxPrismionCard({
         minHeight: collapsed ? 60 : 120,
         zIndex: Math.max(prismion.position.zIndex ?? 1, 1),
         display: "inline-block",
+        "& .ports-wrapper": {
+          opacity: 0,
+          transition: "opacity 0.2s ease",
+          pointerEvents: "none",
+        },
+        "&:hover .ports-wrapper": {
+          opacity: 1,
+          pointerEvents: "auto",
+        },
       }}
       onClick={(e) => {
         e.stopPropagation();
@@ -109,12 +117,14 @@ export function MsqdxPrismionCard({
           "&:hover": { boxShadow: MSQDX_EFFECTS.shadows.xl },
         }}
       >
-        <MsqdxPrismionPorts
-          onConnectorClick={onConnectorClick}
-          onConnectorDrag={onConnectorDrag}
-          onCreatePrismion={(port, type) => onConnectorCreatePrismion?.(port, type)}
-          onAttachToExisting={() => {}}
-        />
+        <Box className="ports-wrapper" sx={{ position: "absolute", inset: 0, zIndex: 1 }}>
+          <MsqdxPrismionPorts
+            onConnectorClick={onConnectorClick}
+            onConnectorDrag={onConnectorDrag}
+            onCreatePrismion={(port, type) => onConnectorCreatePrismion?.(port, type)}
+            onAttachToExisting={() => {}}
+          />
+        </Box>
 
         <Box sx={{ position: "relative", height: "100%", padding: "12px", display: "flex", flexDirection: "column" }}>
           <Box
@@ -167,13 +177,6 @@ export function MsqdxPrismionCard({
                 </Box>
               )}
             </Box>
-            {!collapsed && (
-              <MsqdxBadge
-                color={prismion.state === "active" ? "primary" : "secondary"}
-                label={prismion.state}
-                size="small"
-              />
-            )}
             <IconButton
               size="small"
               onClick={(e) => {

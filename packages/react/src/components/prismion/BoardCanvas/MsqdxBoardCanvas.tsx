@@ -6,6 +6,7 @@ import { Sparkles } from "lucide-react";
 import type { Board, Prismion, Connection, BoardParticipant, Connector } from "../../../types/prismion";
 import { getCanvasSettings, CANVAS_ZOOM, wouldOverlap } from "../../../lib/board-utils";
 import { MsqdxPrismionCard } from "../PrismionCard";
+import type { PrismionResultItem } from "../PrismionResult";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
 import { MsqdxBoardToolbar } from "../BoardToolbar";
 import { MsqdxUserToolbar } from "../UserToolbar";
@@ -52,6 +53,10 @@ export interface MsqdxBoardCanvasProps {
   onPrismionLockToggle?: (id: string) => void;
   onPrismionDelete?: (id: string) => void;
   showToolbars?: boolean;
+  /** When false, hides the user toolbar (avatar, Presenter, Follow me). @default true when showToolbars is true */
+  showUserToolbar?: boolean;
+  /** Optional results per prismion id (e.g. AI response items for result cards). */
+  prismionResults?: Record<string, PrismionResultItem[]>;
   className?: string;
 }
 
@@ -73,6 +78,8 @@ export function MsqdxBoardCanvas({
   onPrismionLockToggle,
   onPrismionDelete,
   showToolbars = true,
+  showUserToolbar = true,
+  prismionResults,
   className,
 }: MsqdxBoardCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -362,6 +369,7 @@ export function MsqdxBoardCanvas({
               onConnectorCreatePrismion={(port, type) => onPrismionConnectorCreate?.(prismion.id, port, type)}
               onLockToggle={() => onPrismionLockToggle?.(prismion.id)}
               onDelete={() => onPrismionDelete?.(prismion.id)}
+              results={prismionResults?.[prismion.id]}
             />
           </Box>
         ))}
@@ -422,14 +430,16 @@ export function MsqdxBoardCanvas({
               onPanChange={onPanChange}
             />
           </Box>
-          <Box sx={{ position: "absolute", top: 16, right: 16, pointerEvents: "auto" }}>
-            <MsqdxUserToolbar
-              displayName="User"
-              onChangeName={() => {}}
-              onChangeAvatar={() => {}}
-              onToggleFollow={() => {}}
-            />
-          </Box>
+          {showUserToolbar && (
+            <Box sx={{ position: "absolute", top: 16, right: 16, pointerEvents: "auto" }}>
+              <MsqdxUserToolbar
+                displayName="User"
+                onChangeName={() => {}}
+                onChangeAvatar={() => {}}
+                onToggleFollow={() => {}}
+              />
+            </Box>
+          )}
         </>
       )}
     </Box>
