@@ -158,7 +158,10 @@ export function MsqdxBoardCanvas({
     (e: React.MouseEvent, prismion: Prismion) => {
       if (e.button !== 0 || e.metaKey || !onPrismionMove) return;
       const target = e.target as HTMLElement;
-      if (target.closest?.("input, button, [role='button'], a, [data-no-drag]")) return;
+      if (target.closest?.("input, button, [role='button'], a, [data-no-drag]")) {
+        e.stopPropagation();
+        return;
+      }
       e.stopPropagation();
       setDraggingPrismionId(prismion.id);
       setDragStartPosition({ ...prismion.position });
