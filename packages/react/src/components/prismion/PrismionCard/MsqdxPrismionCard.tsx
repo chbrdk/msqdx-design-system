@@ -94,7 +94,7 @@ export function MsqdxPrismionCard({
         },
         "&:hover .ports-wrapper": {
           opacity: 1,
-          pointerEvents: "auto",
+          /* Keep pointer-events: none on wrapper so input/buttons in card stay clickable; port buttons have pointer-events: auto and still receive clicks */
         },
       }}
       onClick={(e) => {
