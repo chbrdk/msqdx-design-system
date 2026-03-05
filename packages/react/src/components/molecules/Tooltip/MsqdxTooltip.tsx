@@ -34,7 +34,7 @@ function getBrandColor(color?: TooltipBrandColor): string {
   return MSQDX_COLORS.brand[color];
 }
 
-const StyledTooltip = styled(MuiTooltip)({});
+const StyledTooltip = styled(MuiTooltip)({}) as React.ComponentType<any>;
 
 export interface MsqdxTooltipProps {
   /** Tooltip content (shown on hover/focus). */

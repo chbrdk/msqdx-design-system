@@ -56,7 +56,7 @@ const PortButton = styled(Box, {
   ...(isActive && {
     boxShadow: "0 0 0 2px color-mix(in srgb, var(--color-theme-accent, #00ca55) 20%, transparent)",
   }),
-}));
+})) as React.ComponentType<any>;
 
 const MenuButton = styled(Box)(() => ({
   position: "absolute",
@@ -74,7 +74,7 @@ const MenuButton = styled(Box)(() => ({
   cursor: "pointer",
   pointerEvents: "auto",
   transition: "transform 220ms ease-out, box-shadow 220ms ease-out, opacity 220ms ease-out",
-}));
+})) as React.ComponentType<any>;
 
 const iconColorMap: Record<string, string> = {
   prompt: "#2563eb",
@@ -169,8 +169,8 @@ export function MsqdxPrismionPorts({
         <PortButton
           isActive={isActive}
           side={side}
-          onClick={(e) => handleClick(side, e)}
-          onMouseDown={(e) => handleMouseDown(side, e)}
+          onClick={(e: React.MouseEvent<HTMLElement>) => handleClick(side, e)}
+          onMouseDown={(e: React.MouseEvent<HTMLElement>) => handleMouseDown(side, e)}
           title={
             isActive
               ? "Schließen"

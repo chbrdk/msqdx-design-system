@@ -39,7 +39,7 @@ const RichContentBox = styled(Box)(() => ({
   fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
   "& p": { margin: 0 },
   "& a": { color: MSQDX_NEUTRAL[700], textDecoration: "underline" },
-}));
+})) as React.ComponentType<any>;
 
 export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrismionResultProps) {
   const tabs = items.map((item, idx) => ({ value: `${item.type}-${idx}`, item }));

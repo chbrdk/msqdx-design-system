@@ -20,7 +20,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     borderRadius: MSQDX_SPACING.borderRadius.tabIndicator,
     background: MSQDX_BRAND_COLOR_CSS,
   },
-}));
+})) as React.ComponentType<any>;
 
 const StyledTab = styled(Tab, {
   shouldForwardProp: (p) => p !== 'compact',
@@ -43,7 +43,7 @@ const StyledTab = styled(Tab, {
     color: theme.palette.text.primary,
     backgroundColor: alpha(theme.palette.mode === 'dark' ? "#ffffff" : "#000000", 0.03),
   },
-}));
+})) as React.ComponentType<any>;
 
 /**
  * MsqdxTabs
@@ -54,7 +54,7 @@ export const MsqdxTabs = ({ value, onChange, tabs, compact }: MsqdxTabsProps) =>
   return (
     <StyledTabs 
       value={value} 
-      onChange={(_, newValue) => onChange(newValue)}
+      onChange={(_: React.SyntheticEvent, newValue: string | number) => onChange(newValue)}
       variant="scrollable"
       scrollButtons="auto"
     >

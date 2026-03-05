@@ -127,7 +127,7 @@ const SummaryButton = styled("button", {
       },
     };
   }
-);
+) as React.ComponentType<any>;
 
 const SummaryButtonHorizontal = styled(SummaryButton)({
   flexDirection: "column",
@@ -138,7 +138,7 @@ const SummaryButtonHorizontal = styled(SummaryButton)({
   minWidth: 48,
   borderBottom: "none",
   borderRight: `1px solid var(--accordion-separator, ${MSQDX_NEUTRAL[200]})`,
-});
+}) as React.ComponentType<any>;
 
 /** Outline-style wrapper for the expand icon – round, border via sx from context. */
 const ExpandIconButton = styled(Box)({
@@ -157,18 +157,18 @@ const ExpandIconButton = styled(Box)({
   "& .msqdx-material-symbol": {
     transition: `transform ${transitionChevron}`,
   },
-});
+}) as React.ComponentType<any>;
 
 const DetailsVertical = styled(Box)({
   borderBottom: `1px solid var(--accordion-separator, ${MSQDX_NEUTRAL[200]})`,
   overflow: "hidden",
-});
+}) as React.ComponentType<any>;
 
 const DetailsInnerVertical = styled(Box)({
   fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
   lineHeight: MSQDX_TYPOGRAPHY.lineHeight.relaxed,
   color: "inherit",
-});
+}) as React.ComponentType<any>;
 
 const PanelHorizontal = styled(Box)<{ expanded: boolean; transition: string }>(
   ({ expanded, transition }) => ({
@@ -179,7 +179,7 @@ const PanelHorizontal = styled(Box)<{ expanded: boolean; transition: string }>(
     transition: `flex ${transition}, min-width ${transition}, opacity ${transition}`,
     opacity: expanded ? 1 : 0,
   })
-);
+) as React.ComponentType<any>;
 
 const DetailsInnerHorizontal = styled(Box)({
   fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
@@ -188,7 +188,7 @@ const DetailsInnerHorizontal = styled(Box)({
   whiteSpace: "normal",
   width: "100%",
   minWidth: 200,
-});
+}) as React.ComponentType<any>;
 
 export interface MsqdxAccordionItemProps {
   /** Unique id for this item */

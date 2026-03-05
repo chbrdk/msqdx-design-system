@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { Box, styled } from '@mui/material';
 import type { BoxProps } from '@mui/material';
 
@@ -52,7 +53,7 @@ const StyledLogoMark = styled(Box, {
   '& path': {
     fill: logoSvgColor || 'currentColor',
   },
-}));
+})) as React.ComponentType<any>;
 
 /**
  * MsqdxLogoMark

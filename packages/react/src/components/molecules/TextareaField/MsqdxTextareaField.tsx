@@ -28,7 +28,7 @@ const StyledInputWrapper = styled(Box)(() => ({
   flexDirection: "column",
   gap: MSQDX_INPUT.label.gap,
   width: "100%",
-}));
+})) as React.ComponentType<any>;
 
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'success' && prop !== 'borderColor' && prop !== 'textareaSize',
@@ -102,7 +102,7 @@ const StyledTextField = styled(TextField, {
       },
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxTextareaField

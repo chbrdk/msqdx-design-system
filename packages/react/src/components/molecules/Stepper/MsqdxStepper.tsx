@@ -41,7 +41,7 @@ const StyledStepper = styled(Stepper)(({ theme }) => ({
       },
     },
   },
-}));
+})) as React.ComponentType<any>;
 
 const StyledStepIcon = styled(Box)(({ theme }) => ({
   width: 24,
@@ -64,7 +64,7 @@ const StyledStepIcon = styled(Box)(({ theme }) => ({
     backgroundColor: MSQDX_COLORS.status.success,
     color: '#ffffff',
   },
-}));
+})) as React.ComponentType<any>;
 
 export interface MsqdxStepperProps extends Omit<StepperProps, 'children'> {
   steps: Array<{

@@ -239,7 +239,7 @@ const StyledToolbar = styled(MuiToolbar, {
         }
       : {}),
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxToolbar

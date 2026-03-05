@@ -43,7 +43,7 @@ const RadialButton = styled(Box)(() => ({
   "&:hover": {
     transform: "scale(1.05)",
   },
-}));
+})) as React.ComponentType<any>;
 
 export function MsqdxPrismionToolbar({
   className,
@@ -193,7 +193,7 @@ export function MsqdxPrismionToolbar({
               return (
                 <RadialButton
                   key={a.key}
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLElement>) => {
                     e.stopPropagation();
                     a.onClick?.();
                   }}

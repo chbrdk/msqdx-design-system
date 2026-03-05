@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { IconButton, styled } from "@mui/material";
 import type { IconButtonProps } from "@mui/material";
 import {
@@ -58,7 +59,7 @@ const StyledIconButton = styled(IconButton, {
       opacity: MSQDX_BUTTON.opacity.disabled,
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * Round icon-only button using MSQDX tokens. Use for toolbar triggers, actions, etc.

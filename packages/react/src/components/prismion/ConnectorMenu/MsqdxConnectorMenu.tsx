@@ -34,7 +34,7 @@ const CenterButton = styled(Box)(() => ({
   justifyContent: "center",
   cursor: "pointer",
   "&:hover": { opacity: 0.9 },
-}));
+})) as React.ComponentType<any>;
 
 const ActionButton = styled(Box)(() => ({
   position: "absolute",
@@ -55,7 +55,7 @@ const ActionButton = styled(Box)(() => ({
     transform: "scale(1.1)",
     boxShadow: MSQDX_EFFECTS.shadows.xl,
   },
-}));
+})) as React.ComponentType<any>;
 
 const actions = [
   { key: "prompt", label: "Prompt", Icon: MessageSquare, color: "#2563eb", fn: "create" as const, type: "prompt" as const },
@@ -150,7 +150,7 @@ export function MsqdxConnectorMenu({
             return (
               <ActionButton
                 key={action.key}
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
                   e.stopPropagation();
                   if (action.fn === "create") onCreatePrismion(action.type);
                   else onAttachToExisting(action.type);

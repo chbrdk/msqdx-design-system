@@ -55,7 +55,7 @@ const StyledWrapper = styled(Box, {
     opacity: 0.6,
     filter: "grayscale(1)",
   }),
-}));
+})) as React.ComponentType<any>;
 
 const LiveBadge = styled(Box)(() => ({
   position: "absolute",
@@ -69,7 +69,7 @@ const LiveBadge = styled(Box)(() => ({
   borderRadius: MSQDX_SPACING.borderRadius.xs,
   boxShadow: MSQDX_EFFECTS.shadows.sm,
   pointerEvents: "none",
-}));
+})) as React.ComponentType<any>;
 
 const TooltipBox = styled(Box)(() => ({
   position: "absolute",
@@ -85,7 +85,7 @@ const TooltipBox = styled(Box)(() => ({
   boxShadow: MSQDX_EFFECTS.shadows.md,
   pointerEvents: "none",
   zIndex: 1,
-}));
+})) as React.ComponentType<any>;
 
 const INACTIVE_THRESHOLD_MS = 5 * 60 * 1000;
 

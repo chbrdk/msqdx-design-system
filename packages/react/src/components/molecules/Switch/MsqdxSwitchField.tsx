@@ -83,7 +83,7 @@ const StyledSwitch = styled(Switch, {
       },
     },
   };
-});
+}) as React.ComponentType<any>;
 
 export function MsqdxSwitchField({
   size = "medium",
