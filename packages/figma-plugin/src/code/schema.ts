@@ -31,6 +31,7 @@ export interface MsqdxComponent {
   fontFamily?: string;
   fontSize?: number;
   fontWeight?: string;
+  lineHeight?: number;
   autoLayout?: {
     direction: 'HORIZONTAL' | 'VERTICAL';
     padding?: number | { top: number, right: number, bottom: number, left: number };
