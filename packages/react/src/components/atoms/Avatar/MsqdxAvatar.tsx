@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { Avatar, styled } from '@mui/material';
 import type { AvatarProps } from '@mui/material';
 import { MSQDX_AVATAR, MSQDX_EFFECTS, getAvatarSize } from '@msqdx/tokens';
@@ -110,7 +111,7 @@ const StyledAvatar = styled(Avatar, {
       boxShadow: avatarShadow !== 'none' ? MSQDX_EFFECTS.shadows.md : 'none',
     },
   };
-});
+}) as React.ComponentType<MsqdxAvatarProps & { avatarSize: ReturnType<typeof getAvatarSize>; avatarVariant: AvatarVariant; bordered: boolean; avatarShadow: 'none' | 'sm' | 'md' }>;
 
 /**
  * MsqdxAvatar
