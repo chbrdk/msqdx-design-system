@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Box, styled, alpha } from "@mui/material";
 import type { BoxProps } from "@mui/material";
 import { MSQDX_COLORS, MSQDX_SPACING, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY, MSQDX_LAYOUT } from "@msqdx/tokens";
@@ -87,7 +88,7 @@ const StyledCard = styled(Box, {
       },
     }),
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxCard

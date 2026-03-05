@@ -127,7 +127,7 @@ const StyledDividerRoot = styled(Box, {
       textAlign: "center",
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxDivider

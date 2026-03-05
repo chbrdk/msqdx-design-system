@@ -328,7 +328,7 @@ const InputWrapper = styled(Box, {
         : MSQDX_COLORS.light.textSecondary,
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxInput

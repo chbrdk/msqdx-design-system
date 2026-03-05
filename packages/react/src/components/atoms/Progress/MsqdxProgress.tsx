@@ -18,7 +18,7 @@ const ProgressContainer = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   gap: MSQDX_SPACING.scale.xxs,
-}));
+})) as React.ComponentType<any>;
 
 const StyledLinearProgress = styled(LinearProgress, {
   shouldForwardProp: (prop) => prop !== 'height' && prop !== 'color' && prop !== 'customColor',
@@ -34,7 +34,7 @@ const StyledLinearProgress = styled(LinearProgress, {
     transition: MSQDX_EFFECTS.transitions.standard,
     ...reducedMotionStyles,
   },
-}));
+})) as React.ComponentType<any>;
 
 /**
  * MsqdxProgress

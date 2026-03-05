@@ -101,7 +101,7 @@ const StyledLabel = styled(Box, {
     margin: 0,
     display: 'inline-block',
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxLabel

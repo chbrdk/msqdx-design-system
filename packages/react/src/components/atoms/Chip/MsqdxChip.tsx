@@ -212,7 +212,7 @@ const StyledChip = styled(Chip, {
       },
     }),
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxChip
