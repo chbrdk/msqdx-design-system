@@ -17,7 +17,7 @@ export interface MsqdxComponent {
   x?: number;
   y?: number;
   fills?: { color: string, opacity?: number }[]; // hex or token reference
-  strokes?: { color: string, weight: number }[];
+  strokes?: { color: string, weight?: number, opacity?: number }[];
   cornerRadius?: number;
   effects?: {
     type: 'DROP_SHADOW' | 'INNER_SHADOW' | 'LAYER_BLUR' | 'BACKGROUND_BLUR';
