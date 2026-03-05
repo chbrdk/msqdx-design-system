@@ -601,7 +601,7 @@ export const COMPONENT_DEFINITIONS: MsqdxComponent[] = [
         autoLayout: {
             direction: 'HORIZONTAL',
             gap: 0,
-            alignItems: 'END',
+            alignItems: 'MAX',
             justifyContent: 'MIN'
         },
         children: [
