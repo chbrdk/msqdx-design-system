@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Box } from "@mui/material";
+import { SquareDashedBottomCode } from "lucide-react";
 import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import {
   MSQDX_SPACING,
@@ -30,6 +31,10 @@ export interface MsqdxBoardToolbarProps {
   onPresenterModeChange?: (enabled: boolean) => void;
   followingPresenter?: boolean;
   onFollowingPresenterChange?: (enabled: boolean) => void;
+  /** When true, next drag on empty canvas will draw a selection rectangle. */
+  marqueeSelectActive?: boolean;
+  /** Call when user clicks the "Select area" tool to toggle marquee mode. */
+  onMarqueeSelectClick?: () => void;
 }
 
 export function MsqdxBoardToolbar({
@@ -41,6 +46,8 @@ export function MsqdxBoardToolbar({
   onPresenterModeChange,
   followingPresenter = false,
   onFollowingPresenterChange,
+  marqueeSelectActive = false,
+  onMarqueeSelectClick,
 }: MsqdxBoardToolbarProps) {
   return (
     <Box
@@ -87,6 +94,26 @@ export function MsqdxBoardToolbar({
       >
         Reset
       </MsqdxButton>
+      {onMarqueeSelectClick && (
+        <MsqdxButton
+          size="small"
+          variant="outlined"
+          onClick={onMarqueeSelectClick}
+          aria-label="Select area (draw rectangle to select cards and connections)"
+          title="Select area"
+          sx={{
+            ...toolbarButtonSx,
+            minWidth: 32,
+            height: 32,
+            padding: 0,
+            ...(marqueeSelectActive && {
+              backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 18%, transparent)",
+            }),
+          }}
+        >
+          <SquareDashedBottomCode size={18} strokeWidth={2} />
+        </MsqdxButton>
+      )}
       <Box sx={{ width: 1, height: 24, backgroundColor: MSQDX_NEUTRAL[200], marginX: 0.5 }} />
       {onPresenterModeChange && (
         <MsqdxButton

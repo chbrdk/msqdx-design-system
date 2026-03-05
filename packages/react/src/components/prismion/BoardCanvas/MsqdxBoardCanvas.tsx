@@ -59,6 +59,14 @@ export interface MsqdxBoardCanvasProps {
   onConnectorDelete?: (connectorId: string) => void;
   /** Called when user drags from a port and drops on another card's port. Creates a new connection. */
   onConnectorDrop?: (fromPrismionId: string, fromPort: "top" | "right" | "bottom" | "left", toPrismionId: string, toPort: "top" | "right" | "bottom" | "left") => void;
+  /** When true, drag on empty canvas draws a selection rectangle; on release, cards and connections in the rect are reported. */
+  marqueeSelectMode?: boolean;
+  /** Called when marquee mode should be turned off (e.g. after a marquee selection is done). */
+  onMarqueeSelectModeChange?: (active: boolean) => void;
+  /** Called when user finishes drawing a marquee with the list of card ids and connection ids inside the rectangle. */
+  onMarqueeSelect?: (cardIds: string[], connectionIds: string[]) => void;
+  /** Multi-select: when provided, cards (and connectors between them) with these ids are shown as selected. */
+  selectedPrismionIds?: string[];
   showToolbars?: boolean;
   /** When false, hides the user toolbar (avatar, Presenter, Follow me). @default true when showToolbars is true */
   showUserToolbar?: boolean;
@@ -88,6 +96,10 @@ export function MsqdxBoardCanvas({
   onConnectorDirectionChange,
   onConnectorDelete,
   onConnectorDrop,
+  marqueeSelectMode = false,
+  onMarqueeSelectModeChange,
+  onMarqueeSelect,
+  selectedPrismionIds,
   showToolbars = true,
   showUserToolbar = true,
   prismionResults,
@@ -96,6 +108,9 @@ export function MsqdxBoardCanvas({
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isPanning, setIsPanning] = React.useState(false);
   const [lastPanPoint, setLastPanPoint] = React.useState({ x: 0, y: 0 });
+  const [marqueeStart, setMarqueeStart] = useState<{ x: number; y: number } | null>(null);
+  const [marqueeEnd, setMarqueeEnd] = useState<{ x: number; y: number } | null>(null);
+  const marqueeEndRef = useRef<{ x: number; y: number } | null>(null);
   const [draggingPrismionId, setDraggingPrismionId] = useState<string | null>(null);
   const [dragStartPosition, setDragStartPosition] = useState<{ x: number; y: number } | null>(null);
   const [dragStartClient, setDragStartClient] = useState<{ x: number; y: number } | null>(null);
@@ -119,16 +134,48 @@ export function MsqdxBoardCanvas({
   const gridOffsetX = pan.x % gridSize;
   const gridOffsetY = pan.y % gridSize;
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button === 1 || e.button === 0) {
-      setIsPanning(true);
-      setLastPanPoint({ x: e.clientX, y: e.clientY });
-      e.preventDefault();
-    }
-  }, []);
+  const effectiveSelectedIds = selectedPrismionIds ?? (selectedPrismionId ? [selectedPrismionId] : []);
+
+  const clientToCanvas = useCallback(
+    (clientX: number, clientY: number) => {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect) return { x: 0, y: 0 };
+      return {
+        x: (clientX - rect.left - pan.x) / zoom,
+        y: (clientY - rect.top - pan.y) / zoom,
+      };
+    },
+    [pan, zoom]
+  );
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.button !== 0 && e.button !== 1) return;
+      const isOnCard = (e.target as HTMLElement).closest?.("[data-prismion-id]");
+      if (marqueeSelectMode && e.button === 0 && !isOnCard) {
+        const pt = clientToCanvas(e.clientX, e.clientY);
+        setMarqueeStart(pt);
+        setMarqueeEnd(pt);
+        e.preventDefault();
+        return;
+      }
+      if (e.button === 1 || e.button === 0) {
+        setIsPanning(true);
+        setLastPanPoint({ x: e.clientX, y: e.clientY });
+        e.preventDefault();
+      }
+    },
+    [marqueeSelectMode, clientToCanvas]
+  );
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
+      if (marqueeStart !== null) {
+        const pt = clientToCanvas(e.clientX, e.clientY);
+        marqueeEndRef.current = pt;
+        setMarqueeEnd(pt);
+        return;
+      }
       if (isPanning) {
         onPanChange({
           x: pan.x + (e.clientX - lastPanPoint.x),
@@ -137,10 +184,44 @@ export function MsqdxBoardCanvas({
         setLastPanPoint({ x: e.clientX, y: e.clientY });
       }
     },
-    [isPanning, lastPanPoint, pan, onPanChange]
+    [marqueeStart, isPanning, lastPanPoint, pan, onPanChange, clientToCanvas]
   );
 
-  const handleMouseUp = useCallback(() => setIsPanning(false), []);
+  const handleMouseUp = useCallback(() => {
+    const end = marqueeEndRef.current ?? marqueeEnd;
+    if (marqueeStart !== null && end !== null && onMarqueeSelect) {
+      const rx = Math.min(marqueeStart.x, end.x);
+      const ry = Math.min(marqueeStart.y, end.y);
+      const rw = Math.abs(end.x - marqueeStart.x);
+      const rh = Math.abs(end.y - marqueeStart.y);
+      const cardIds: string[] = [];
+      for (const p of prismions) {
+        const px = p.position.x;
+        const py = p.position.y;
+        const w = p.size?.w ?? 300;
+        const h = p.size?.h ?? 200;
+        const overlaps =
+          !(px + w < rx || px > rx + rw || py + h < ry || py > ry + rh);
+        if (overlaps) cardIds.push(p.id);
+      }
+      const cardSet = new Set(cardIds);
+      const connectionIds = connections
+        .filter(
+          (c) =>
+            c.fromPrismionId &&
+            c.toPrismionId &&
+            cardSet.has(c.fromPrismionId) &&
+            cardSet.has(c.toPrismionId)
+        )
+        .map((c) => c.id);
+      onMarqueeSelect(cardIds, connectionIds);
+      onMarqueeSelectModeChange?.(false);
+    }
+    marqueeEndRef.current = null;
+    setMarqueeStart(null);
+    setMarqueeEnd(null);
+    setIsPanning(false);
+  }, [marqueeStart, marqueeEnd, onMarqueeSelect, onMarqueeSelectModeChange, prismions, connections]);
 
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
@@ -298,7 +379,7 @@ export function MsqdxBoardCanvas({
         position: "relative",
         overflow: "hidden",
         backgroundColor: canvasSettings.backgroundColor,
-        cursor: isPanning ? "grabbing" : "grab",
+        cursor: marqueeStart !== null ? "crosshair" : isPanning ? "grabbing" : marqueeSelectMode ? "crosshair" : "grab",
         userSelect: "none",
       }}
     >
@@ -372,6 +453,28 @@ export function MsqdxBoardCanvas({
           transformOrigin: "0 0",
         }}
       >
+        {(marqueeStart !== null && marqueeEnd !== null) && (() => {
+          const rx = Math.min(marqueeStart.x, marqueeEnd.x);
+          const ry = Math.min(marqueeStart.y, marqueeEnd.y);
+          const rw = Math.max(Math.abs(marqueeEnd.x - marqueeStart.x), 2);
+          const rh = Math.max(Math.abs(marqueeEnd.y - marqueeStart.y), 2);
+          return (
+            <Box
+              sx={{
+                position: "absolute",
+                left: rx,
+                top: ry,
+                width: rw,
+                height: rh,
+                border: `2px dashed ${MSQDX_BRAND_COLOR_CSS}`,
+                borderRadius: 1,
+                backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 12%, transparent)",
+                pointerEvents: "none",
+                zIndex: 25,
+              }}
+            />
+          );
+        })()}
         {(connectors.length > 0 || (connectorDragFrom && connectorDragEnd)) && (
           <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 15 }}>
             {connectors.map((connector) => (
@@ -379,7 +482,7 @@ export function MsqdxBoardCanvas({
                 key={connector.id}
                 connector={connector}
                 prismions={prismionsMap}
-                selectedPrismionIds={selectedPrismionId ? [selectedPrismionId] : []}
+                selectedPrismionIds={effectiveSelectedIds}
                 onDirectionChange={onConnectorDirectionChange}
                 onDelete={onConnectorDelete}
               />
@@ -481,7 +584,7 @@ export function MsqdxBoardCanvas({
           >
             <MsqdxPrismionCard
               prismion={prismion}
-              selected={selectedPrismionId === prismion.id}
+              selected={effectiveSelectedIds.includes(prismion.id)}
               onSelect={() => onSelectPrismion?.(prismion.id)}
               onMove={(pos) => onPrismionMove?.(prismion.id, pos)}
               onResize={
@@ -563,6 +666,12 @@ export function MsqdxBoardCanvas({
               onZoomChange={onZoomChange}
               pan={pan}
               onPanChange={onPanChange}
+              marqueeSelectActive={marqueeSelectMode}
+              onMarqueeSelectClick={
+                onMarqueeSelect
+                  ? () => onMarqueeSelectModeChange?.(!marqueeSelectMode)
+                  : undefined
+              }
             />
           </Box>
           {showUserToolbar && (
