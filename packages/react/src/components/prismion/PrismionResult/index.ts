@@ -1,3 +1,4 @@
+export { MarkdownContent } from "./MarkdownContent";
 export {
   MsqdxPrismionResult,
   type MsqdxPrismionResultProps,

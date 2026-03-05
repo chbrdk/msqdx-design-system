@@ -3,6 +3,7 @@
 import React from "react";
 import { Box, styled } from "@mui/material";
 import { MsqdxTabs } from "../../molecules/Tabs/MsqdxTabs";
+import { MarkdownContent } from "./MarkdownContent";
 import { MSQDX_SPACING, MSQDX_TYPOGRAPHY, MSQDX_NEUTRAL, MSQDX_EFFECTS } from "@msqdx/tokens";
 
 export type PrismionResultItem =
@@ -32,14 +33,6 @@ function labelFor(item: PrismionResultItem, idx: number): string {
       return "Link";
   }
 }
-
-const ContentBox = styled(Box)(() => ({
-  fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
-  fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
-  color: MSQDX_NEUTRAL[800],
-  whiteSpace: "pre-wrap" as const,
-  maxWidth: "100%",
-}));
 
 const RichContentBox = styled(Box)(() => ({
   fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
@@ -71,7 +64,7 @@ export function MsqdxPrismionResult({ items, defaultTab, className }: MsqdxPrism
             sx={{ display: activeTab === t.value ? "block" : "none" }}
           >
             {t.item.type === "text" && (
-              <ContentBox>{t.item.content}</ContentBox>
+              <MarkdownContent content={t.item.content} />
             )}
             {t.item.type === "richtext" && (
               <RichContentBox dangerouslySetInnerHTML={{ __html: t.item.content }} />

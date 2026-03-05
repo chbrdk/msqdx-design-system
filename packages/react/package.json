@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "@msqdx/tokens": "^1.0.0",
-    "lucide-react": "^0.460.0"
+    "lucide-react": "^0.460.0",
+    "react-markdown": "^9.0.1"
   },
   "peerDependencies": {
     "@emotion/react": "^11.0.0",

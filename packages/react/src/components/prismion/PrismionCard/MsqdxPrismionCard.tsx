@@ -7,6 +7,7 @@ import type { Prismion, Position, Size, PortSide } from "../../../types/prismion
 import { MsqdxPrismionPorts } from "../PrismionPorts";
 import { MsqdxPrismionToolbar } from "../PrismionToolbar";
 import { MsqdxPrismionResult, type PrismionResultItem } from "../PrismionResult";
+import { MarkdownContent } from "../PrismionResult/MarkdownContent";
 import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import { MsqdxInput } from "../../atoms/Input/MsqdxInput";
 import { MsqdxCard } from "../../atoms/Card/MsqdxCard";
@@ -250,16 +251,7 @@ export function MsqdxPrismionCard({
             /* Result-only: only show the first result text, no title/prompt/tabs */
             <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }} onClick={(e) => e.stopPropagation()}>
               {hasResults && results![0].type === "text" ? (
-                <Box
-                  sx={{
-                    fontSize: MSQDX_TYPOGRAPHY.fontSize["2xs"],
-                    fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono,
-                    color: MSQDX_NEUTRAL[800],
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  {results![0].content}
-                </Box>
+                <MarkdownContent content={results![0].content} />
               ) : hasResults && results![0].type === "richtext" ? (
                 <Box
                   sx={{
