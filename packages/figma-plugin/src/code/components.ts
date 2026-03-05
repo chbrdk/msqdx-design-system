@@ -186,7 +186,7 @@ export const COMPONENT_DEFINITIONS: MsqdxComponent[] = [
                 layoutSizingVertical: 'HUG',
                 autoLayout: {
                     direction: 'HORIZONTAL',
-                    padding: { vertical: 12, horizontal: 16 },
+                    padding: { top: 12, right: 16, bottom: 12, left: 16 },
                     gap: 8,
                     alignItems: 'CENTER',
                     justifyContent: 'SPACE_BETWEEN'
@@ -316,7 +316,7 @@ export const COMPONENT_DEFINITIONS: MsqdxComponent[] = [
         ],
         autoLayout: {
             direction: 'HORIZONTAL',
-            padding: { vertical: 8, horizontal: 12 }, // sm md
+            padding: { top: 8, right: 12, bottom: 8, left: 12 }, // sm md
             gap: 0,
             alignItems: 'CENTER',
             justifyContent: 'CENTER'
