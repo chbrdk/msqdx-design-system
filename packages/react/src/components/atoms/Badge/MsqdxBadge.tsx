@@ -92,7 +92,7 @@ const BadgeContainer = styled(Box, {
     borderRight: `${sizeConfig.borderWidth}px solid ${baseColor}`,
     minWidth: `${sizeConfig.minWidth}px`,
   };
-});
+}) as React.ComponentType<{ color: string; size: BadgeSize; brandColor?: BrandColor; children?: React.ReactNode }>;
 
 const Label = styled('span')<{ size: BadgeSize }>(({ size }) => ({
   fontFamily: MSQDX_BADGE.fontFamily,
@@ -100,7 +100,7 @@ const Label = styled('span')<{ size: BadgeSize }>(({ size }) => ({
   fontWeight: MSQDX_BADGE.fontWeight.label,
   color: 'inherit',
   lineHeight: 1,
-}));
+})) as React.ComponentType<{ size: BadgeSize; children?: React.ReactNode }>;
 
 const Sublabel = styled('span')<{ size: BadgeSize }>(({ theme, size }) => ({
   fontFamily: MSQDX_BADGE.fontFamily,
@@ -111,7 +111,7 @@ const Sublabel = styled('span')<{ size: BadgeSize }>(({ theme, size }) => ({
   color: theme.palette.text.secondary,
   opacity: MSQDX_BADGE.opacity.sublabel,
   marginTop: `${MSQDX_BADGE.spacing.sublabelMarginTop}px`,
-}));
+})) as React.ComponentType<{ size: BadgeSize; children?: React.ReactNode }>;
 
 /**
  * MsqdxBadge
