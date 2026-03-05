@@ -54,7 +54,7 @@ const StyledFormControl = styled(FormControl)(() => ({
   flexDirection: "column",
   gap: MSQDX_INPUT.label.gap,
   width: "100%",
-}));
+})) as React.ComponentType<any>;
 
 const StyledCheckbox = styled(Checkbox)<{ disabled?: boolean }>(({ theme, disabled }) => ({
   padding: '8px',
@@ -79,7 +79,7 @@ const StyledCheckbox = styled(Checkbox)<{ disabled?: boolean }>(({ theme, disabl
       color: MSQDX_INPUT.border.disabled,
     },
   },
-}));
+})) as React.ComponentType<any>;
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   marginLeft: 0,
@@ -89,7 +89,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     fontFamily: MSQDX_INPUT.fontFamily,
     paddingLeft: theme.spacing(1),
   },
-}));
+})) as React.ComponentType<any>;
 
 /**
  * MsqdxCheckboxField

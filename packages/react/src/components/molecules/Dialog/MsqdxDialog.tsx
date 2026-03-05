@@ -60,7 +60,7 @@ const StyledDialog = styled(MuiDialog)({
     boxShadow: MSQDX_EFFECTS.shadows.xl,
     transition: `box-shadow ${MSQDX_EFFECTS.transitions.standard}, border-color ${MSQDX_EFFECTS.transitions.standard}`,
   },
-});
+}) as React.ComponentType<any>;
 
 const StyledDialogTitle = styled(DialogTitle)({
   fontFamily: MSQDX_TYPOGRAPHY.fontFamily.primary,
@@ -76,7 +76,7 @@ const StyledDialogTitle = styled(DialogTitle)({
   alignItems: "center",
   justifyContent: "space-between",
   gap: MSQDX_SPACING.scale.xs,
-});
+}) as React.ComponentType<any>;
 
 const StyledDialogContent = styled(DialogContent)({
   fontFamily: MSQDX_TYPOGRAPHY.fontFamily.primary,
@@ -84,14 +84,14 @@ const StyledDialogContent = styled(DialogContent)({
   lineHeight: MSQDX_TYPOGRAPHY.lineHeight.relaxed,
   padding: MSQDX_SPACING.scale.lg,
   color: "inherit",
-});
+}) as React.ComponentType<any>;
 
 const StyledDialogActions = styled(DialogActions)({
   padding: MSQDX_SPACING.scale.md,
   paddingTop: MSQDX_SPACING.scale.sm,
   borderTop: `1px solid ${MSQDX_NEUTRAL[200]}`,
   gap: MSQDX_SPACING.scale.xs,
-});
+}) as React.ComponentType<any>;
 
 export interface MsqdxDialogProps {
   /** Whether the dialog is open. */

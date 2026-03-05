@@ -78,7 +78,7 @@ const StyledTypography = styled(Typography, {
       marginBottom: MSQDX_SPACING.scale.xxs,
     }),
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxTypography

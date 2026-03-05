@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Box, Select, MenuItem, Typography, styled, alpha, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import type { SelectProps } from "@mui/material";
 import { MSQDX_COLORS, MSQDX_SPACING, MSQDX_TYPOGRAPHY, MSQDX_INPUT, MSQDX_EFFECTS, MSQDX_SCROLLBAR, getScrollbarColor } from "@msqdx/tokens";
@@ -27,7 +28,7 @@ export interface MsqdxSelectProps extends Omit<SelectProps, 'children' | 'size'>
 const StyledFormControl = styled(FormControl)(() => ({
   gap: MSQDX_INPUT.label.gap,
   minWidth: 120,
-}));
+})) as React.ComponentType<any>;
 
 const StyledSelect = styled(Select, {
   shouldForwardProp: (prop) => prop !== 'success' && prop !== 'borderColor' && prop !== 'selectSize',
@@ -111,7 +112,7 @@ const StyledSelect = styled(Select, {
       display: 'none',
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxSelect

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Button, CircularProgress, alpha, styled } from "@mui/material";
 import type { ButtonProps } from "@mui/material";
 import { 
@@ -230,7 +231,7 @@ const StyledButton = styled(Button, {
       },
     }),
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxButton

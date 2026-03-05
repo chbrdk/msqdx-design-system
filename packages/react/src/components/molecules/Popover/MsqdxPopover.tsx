@@ -35,7 +35,7 @@ const StyledPopover = styled(MuiPopover)({
     boxShadow: MSQDX_EFFECTS.shadows.lg,
     transition: `box-shadow ${MSQDX_EFFECTS.transitions.standard}, border-color ${MSQDX_EFFECTS.transitions.standard}`,
   },
-});
+}) as React.ComponentType<any>;
 
 export interface MsqdxPopoverProps {
   /** Whether the popover is open. */

@@ -35,7 +35,7 @@ function getBrandColor(color?: SnackbarBrandColor): string {
   return MSQDX_COLORS.brand[color];
 }
 
-const StyledSnackbar = styled(MuiSnackbar)({});
+const StyledSnackbar = styled(MuiSnackbar)({}) as React.ComponentType<any>;
 
 export interface MsqdxSnackbarProps {
   /** Whether the snackbar is visible. */

@@ -52,7 +52,7 @@ const StyledFormControl = styled(FormControl)(() => ({
   flexDirection: "column",
   gap: MSQDX_INPUT.label.gap,
   width: "100%",
-}));
+})) as React.ComponentType<any>;
 
 const StyledRadio = styled(Radio)<{ disabled?: boolean }>(({ theme, disabled }) => ({
   padding: '8px',
@@ -77,7 +77,7 @@ const StyledRadio = styled(Radio)<{ disabled?: boolean }>(({ theme, disabled }) 
       color: MSQDX_INPUT.border.disabled,
     },
   },
-}));
+})) as React.ComponentType<any>;
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   marginLeft: 0,
@@ -87,7 +87,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     fontFamily: MSQDX_INPUT.fontFamily,
     paddingLeft: theme.spacing(1),
   },
-}));
+})) as React.ComponentType<any>;
 
 /**
  * MsqdxRadioField

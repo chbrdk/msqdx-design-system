@@ -22,7 +22,7 @@ const StyledInputWrapper = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   gap: theme.spacing(1),
   width: "100%",
-}));
+})) as React.ComponentType<any>;
 
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'success' && prop !== 'borderColor',
@@ -93,7 +93,7 @@ const StyledTextField = styled(TextField, {
       },
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxFormField

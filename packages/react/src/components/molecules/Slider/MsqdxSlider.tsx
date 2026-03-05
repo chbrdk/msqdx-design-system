@@ -133,7 +133,7 @@ const StyledSlider = styled(MuiSlider, {
       },
     },
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxSlider

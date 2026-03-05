@@ -108,7 +108,7 @@ const ScrollbarContainer = styled(Box, {
     overflowX: horizontal ? overflowMode : "hidden",
     overflowY: vertical ? overflowMode : "hidden",
   };
-});
+}) as React.ComponentType<any>;
 
 /**
  * MsqdxScrollbar
