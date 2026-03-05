@@ -64,6 +64,7 @@ export const Default: Story = {
 };
 
 export const Sizes: Story = {
+  args: { name: 'Settings' },
   render: () => (
     <Stack spacing={3}>
       <Typography variant="subtitle2" color="text.secondary">
@@ -82,6 +83,7 @@ export const Sizes: Story = {
 };
 
 export const Weights: Story = {
+  args: { name: 'Add' },
   render: () => (
     <Stack spacing={3}>
       <Typography variant="subtitle2" color="text.secondary">
@@ -100,6 +102,7 @@ export const Weights: Story = {
 };
 
 export const TokenNames: Story = {
+  args: { name: 'Add' },
   render: () => (
     <Stack spacing={2}>
       <Typography variant="subtitle2" color="text.secondary">
