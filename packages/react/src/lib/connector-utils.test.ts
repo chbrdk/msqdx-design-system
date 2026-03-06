@@ -7,6 +7,7 @@ import {
   CONNECTOR_BOUNDS_PADDING,
   type Point,
 } from "./connector-utils";
+import type { Prismion } from "../types/prismion";
 
 describe("computeOrthogonalPath", () => {
   it("returns 4 points for right port: from, corner1, corner2, to", () => {
@@ -138,13 +139,13 @@ describe("calculatePortPosition", () => {
       tags: [],
       position: { x: 10, y: 20, zIndex: 0 },
       size: { w: 100, h: 50, minW: 200, minH: 120 },
-      ports: {} as never,
-      state: "active",
+      ports: {} as Prismion["ports"],
+      state: "active" as Prismion["state"],
       createdBy: "user",
       createdAt: "",
       updatedAt: "",
       revision: 0,
-    };
+    } as Prismion;
     expect(calculatePortPosition(prismion, "bottom")).toEqual({ x: 60, y: 70 });
     expect(calculatePortPosition(prismion, "right")).toEqual({ x: 110, y: 45 });
   });
