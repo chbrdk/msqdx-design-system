@@ -74,6 +74,8 @@ export function MsqdxPrismionCard({
   const resultOnly = resultOnlyProp || prismion.id.startsWith("result-");
   const isToolCard = prismion.kind === "tool";
   const rootRef = useRef<HTMLDivElement>(null);
+  const lastReportedSizeRef = useRef<{ w: number; h: number } | null>(null);
+  const rafIdRef = useRef<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -81,15 +83,25 @@ export function MsqdxPrismionCard({
     if (!el || !onResize) return;
     const minH = prismion.size.minH ?? 120;
     const ro = new ResizeObserver(() => {
-      const rect = el.getBoundingClientRect();
-      const w = Math.round(rect.width);
-      const h = Math.round(rect.height);
-      if (w < 20 || h < 20) return;
-      onResize({ w, h: Math.max(h, minH) });
+      if (rafIdRef.current != null) cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        const rect = el.getBoundingClientRect();
+        const w = Math.round(rect.width);
+        const h = Math.max(Math.round(rect.height), minH);
+        if (w < 20 || h < 20) return;
+        const last = lastReportedSizeRef.current;
+        if (last && last.w === w && last.h === h) return;
+        lastReportedSizeRef.current = { w, h };
+        onResize({ w, h });
+      });
     });
     ro.observe(el);
-    return () => ro.disconnect();
-  }, [onResize, prismion.size.minW, prismion.size.minH]);
+    return () => {
+      if (rafIdRef.current != null) cancelAnimationFrame(rafIdRef.current);
+      ro.disconnect();
+    };
+  }, [onResize, prismion.size.minH]);
   const [editTitle, setEditTitle] = useState(prismion.title);
   const [promptInput, setPromptInput] = useState("");
 

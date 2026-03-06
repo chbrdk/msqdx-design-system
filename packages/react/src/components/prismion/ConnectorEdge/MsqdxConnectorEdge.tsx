@@ -111,7 +111,6 @@ export function MsqdxConnectorEdge({
   onWaypointsChange,
   clientToBoard,
 }: MsqdxConnectorEdgeProps) {
-  const [, setForceUpdate] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [isOverlayHovered, setIsOverlayHovered] = useState(false);
@@ -265,24 +264,6 @@ export function MsqdxConnectorEdge({
 
   const shouldShowOverlay = isHovered || showOverlay || isOverlayHovered;
   const pathData = buildRoundedPathData(path, bounds, 12);
-
-  useEffect(() => {
-    setForceUpdate((n) => n + 1);
-  }, [
-    connector.from.prismionId,
-    connector.from.port,
-    connector.to.prismionId,
-    connector.to.port,
-    connector.waypoints,
-    prismions[connector.from.prismionId]?.position.x,
-    prismions[connector.from.prismionId]?.position.y,
-    prismions[connector.from.prismionId]?.size?.w,
-    prismions[connector.from.prismionId]?.size?.h,
-    prismions[connector.to.prismionId]?.position.x,
-    prismions[connector.to.prismionId]?.position.y,
-    prismions[connector.to.prismionId]?.size?.w,
-    prismions[connector.to.prismionId]?.size?.h,
-  ]);
 
   useEffect(() => {
     if (draggingWaypointIndex === null || !clientToBoard || !onWaypointsChange) return;
