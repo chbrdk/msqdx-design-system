@@ -170,6 +170,7 @@ export function MsqdxBoardCanvas({
       const el = document.querySelector(`[data-prismion-id="${prismionId}"]`) as HTMLElement | null;
       if (!el) return null;
       const rect = el.getBoundingClientRect();
+      if (rect.width < 1 || rect.height < 1) return null;
       let cx: number;
       let cy: number;
       switch (port) {
@@ -523,24 +524,6 @@ export function MsqdxBoardCanvas({
             />
           );
         })()}
-        {connectors.length > 0 && (
-          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
-            {connectors.map((connector) => (
-              <MsqdxConnectorEdge
-                key={connector.id}
-                connector={connector}
-                prismions={prismionsMap}
-                selectedPrismionIds={effectiveSelectedIds}
-                onDirectionChange={onConnectorDirectionChange}
-                onDelete={onConnectorDelete}
-                onWaypointsChange={onConnectorWaypointsChange}
-                clientToBoard={clientToCanvas}
-                getPortPositionFromDOM={getPortPositionFromDOM}
-              />
-            ))}
-          </Box>
-        )}
-
         {connectorDragFrom && connectorDragEnd && prismionsMap[connectorDragFrom.fromId] && (() => {
           const start =
             getPortPositionFromDOM(connectorDragFrom.fromId, connectorDragFrom.fromPort) ??
@@ -669,6 +652,24 @@ export function MsqdxBoardCanvas({
             />
           </Box>
         ))}
+
+        {connectors.length > 0 && (
+          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
+            {connectors.map((connector) => (
+              <MsqdxConnectorEdge
+                key={connector.id}
+                connector={connector}
+                prismions={prismionsMap}
+                selectedPrismionIds={effectiveSelectedIds}
+                onDirectionChange={onConnectorDirectionChange}
+                onDelete={onConnectorDelete}
+                onWaypointsChange={onConnectorWaypointsChange}
+                clientToBoard={clientToCanvas}
+                getPortPositionFromDOM={getPortPositionFromDOM}
+              />
+            ))}
+          </Box>
+        )}
 
         {participants.filter((p) => p.isActive && p.cursorX != null && p.cursorY != null).length > 0 && (
           <>
