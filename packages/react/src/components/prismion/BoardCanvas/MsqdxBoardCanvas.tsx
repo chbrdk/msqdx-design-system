@@ -25,6 +25,7 @@ function connectionToConnector(c: Connection): Connector & { direction?: "forwar
       prismionId: c.toPrismionId,
       port: (c.toPort as "top" | "right" | "bottom" | "left") || "left",
     },
+    waypoints: c.waypoints ?? undefined,
     createdBy: "user",
     createdAt: c.createdAt ?? new Date().toISOString(),
     direction: c.direction,
@@ -59,6 +60,8 @@ export interface MsqdxBoardCanvasProps {
   onConnectorDelete?: (connectorId: string) => void;
   /** Called when user drags from a port and drops on another card's port. Creates a new connection. */
   onConnectorDrop?: (fromPrismionId: string, fromPort: "top" | "right" | "bottom" | "left", toPrismionId: string, toPort: "top" | "right" | "bottom" | "left") => void;
+  /** Called when user drags a connector waypoint handle. Waypoints are in board coordinates (excluding start/end). */
+  onConnectorWaypointsChange?: (connectorId: string, waypoints: { x: number; y: number }[]) => void;
   /** When true, drag on empty canvas draws a selection rectangle; on release, cards and connections in the rect are reported. */
   marqueeSelectMode?: boolean;
   /** Called when marquee mode should be turned off (e.g. after a marquee selection is done). */
@@ -104,6 +107,7 @@ export function MsqdxBoardCanvas({
   onConnectorDirectionChange,
   onConnectorDelete,
   onConnectorDrop,
+  onConnectorWaypointsChange,
   marqueeSelectMode = false,
   onMarqueeSelectModeChange,
   onMarqueeSelect,
@@ -497,6 +501,8 @@ export function MsqdxBoardCanvas({
                 selectedPrismionIds={effectiveSelectedIds}
                 onDirectionChange={onConnectorDirectionChange}
                 onDelete={onConnectorDelete}
+                onWaypointsChange={onConnectorWaypointsChange}
+                clientToBoard={clientToCanvas}
               />
             ))}
           </Box>

@@ -120,34 +120,89 @@ export interface Obstacle {
   id: string;
 }
 
+/** Minimum distance from port before first bend (orthogonal path). */
+const MIN_SEGMENT = 12;
+
+/**
+ * Computes an orthogonal path (only horizontal/vertical segments) between two port positions.
+ * Returns [fromPos, corner1, corner2?, toPos] with 2–4 points. Used when no waypoints are stored.
+ */
+export function computeOrthogonalPath(
+  fromPos: Point,
+  toPos: Point,
+  fromPort: 'top' | 'right' | 'bottom' | 'left',
+  _toPort: 'top' | 'right' | 'bottom' | 'left'
+): Point[] {
+  const dx = toPos.x - fromPos.x;
+  const dy = toPos.y - fromPos.y;
+  const c1: Point = { x: fromPos.x, y: fromPos.y };
+  const c2: Point = { x: toPos.x, y: toPos.y };
+
+  switch (fromPort) {
+    case 'right':
+      c1.x = fromPos.x + Math.max(MIN_SEGMENT, Math.abs(dx) / 2);
+      c1.y = fromPos.y;
+      c2.x = c1.x;
+      c2.y = toPos.y;
+      break;
+    case 'left':
+      c1.x = fromPos.x - Math.max(MIN_SEGMENT, Math.abs(dx) / 2);
+      c1.y = fromPos.y;
+      c2.x = c1.x;
+      c2.y = toPos.y;
+      break;
+    case 'top':
+      c1.x = fromPos.x;
+      c1.y = fromPos.y - Math.max(MIN_SEGMENT, Math.abs(dy) / 2);
+      c2.x = toPos.x;
+      c2.y = c1.y;
+      break;
+    case 'bottom':
+      c1.x = fromPos.x;
+      c1.y = fromPos.y + Math.max(MIN_SEGMENT, Math.abs(dy) / 2);
+      c2.x = toPos.x;
+      c2.y = c1.y;
+      break;
+  }
+
+  return [fromPos, c1, c2, toPos];
+}
+
 export function findPathAvoidingObstacles(
   from: Point,
   to: Point,
   _obstacles: Obstacle[],
   _excludeIds: string[],
-  _fromPort: 'top' | 'right' | 'bottom' | 'left',
-  _toPort: 'top' | 'right' | 'bottom' | 'left'
+  fromPort: 'top' | 'right' | 'bottom' | 'left',
+  toPort: 'top' | 'right' | 'bottom' | 'left'
 ): Point[] {
-  return [from, to];
+  return computeOrthogonalPath(from, to, fromPort, toPort);
 }
 
 /** Padding around path for SVG bounds so path and markers are fully visible. */
-const CONNECTOR_BOUNDS_PADDING = 16;
+export const CONNECTOR_BOUNDS_PADDING = 16;
 
 export function getConnectorBounds(
-  from: Point,
-  to: Point,
-  _path?: Point[]
+  path: Point[],
+  padding: number = CONNECTOR_BOUNDS_PADDING
 ): { x: number; y: number; width: number; height: number } {
-  const p = CONNECTOR_BOUNDS_PADDING;
-  const minX = Math.min(from.x, to.x) - p;
-  const minY = Math.min(from.y, to.y) - p;
-  const maxX = Math.max(from.x, to.x) + p;
-  const maxY = Math.max(from.y, to.y) + p;
+  if (path.length === 0) {
+    return { x: 0, y: 0, width: padding * 2, height: padding * 2 };
+  }
+  let minX = path[0].x;
+  let maxX = path[0].x;
+  let minY = path[0].y;
+  let maxY = path[0].y;
+  for (let i = 1; i < path.length; i++) {
+    minX = Math.min(minX, path[i].x);
+    maxX = Math.max(maxX, path[i].x);
+    minY = Math.min(minY, path[i].y);
+    maxY = Math.max(maxY, path[i].y);
+  }
   return {
-    x: minX,
-    y: minY,
-    width: maxX - minX,
-    height: maxY - minY,
+    x: minX - padding,
+    y: minY - padding,
+    width: maxX - minX + padding * 2,
+    height: maxY - minY + padding * 2,
   };
 }

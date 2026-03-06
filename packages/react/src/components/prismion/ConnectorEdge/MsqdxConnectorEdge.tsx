@@ -8,10 +8,10 @@ import { MsqdxSwitchField } from "../../molecules/Switch/MsqdxSwitchField";
 import {
   calculatePortPosition,
   getConnectorBounds,
-  findPathAvoidingObstacles,
+  computeOrthogonalPath,
   findOptimalPorts,
+  CONNECTOR_BOUNDS_PADDING,
   type Point,
-  type Obstacle,
 } from "../../../lib/connector-utils";
 import { MSQDX_BRAND_COLOR_CSS, MSQDX_NEUTRAL, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY, MSQDX_STATUS } from "@msqdx/tokens";
 
@@ -26,6 +26,10 @@ export interface MsqdxConnectorEdgeProps {
     toConnectorId: string,
     optimalPort?: "top" | "right" | "bottom" | "left"
   ) => void;
+  /** Called when user drags a waypoint handle. Waypoints are in board coordinates (excluding start/end port positions). */
+  onWaypointsChange?: (connectorId: string, waypoints: { x: number; y: number }[]) => void;
+  /** Convert client coordinates to board coordinates (for waypoint drag). */
+  clientToBoard?: (clientX: number, clientY: number) => { x: number; y: number };
 }
 
 function buildRoundedPathData(
@@ -83,6 +87,20 @@ function buildRoundedPathData(
   return d;
 }
 
+/** Constrain a point so that segments (prev, p) and (p, next) stay horizontal/vertical. */
+function constrainWaypoint(
+  boardPos: Point,
+  prev: Point,
+  _curr: Point,
+  next: Point
+): Point {
+  const opt1: Point = { x: boardPos.x, y: prev.y };
+  const opt2: Point = { x: next.x, y: boardPos.y };
+  const d1 = Math.hypot(boardPos.x - opt1.x, boardPos.y - opt1.y);
+  const d2 = Math.hypot(boardPos.x - opt2.x, boardPos.y - opt2.y);
+  return d1 <= d2 ? opt1 : opt2;
+}
+
 export function MsqdxConnectorEdge({
   connector,
   prismions,
@@ -90,6 +108,8 @@ export function MsqdxConnectorEdge({
   onDirectionChange,
   onDelete,
   onNewConnection,
+  onWaypointsChange,
+  clientToBoard,
 }: MsqdxConnectorEdgeProps) {
   const [, setForceUpdate] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -98,7 +118,10 @@ export function MsqdxConnectorEdge({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartPos, setDragStartPos] = useState<{ x: number; y: number } | null>(null);
   const [dragCurrentPos, setDragCurrentPos] = useState<{ x: number; y: number } | null>(null);
+  const [draggingWaypointIndex, setDraggingWaypointIndex] = useState<number | null>(null);
+  const [dragWaypointPosition, setDragWaypointPosition] = useState<Point | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const waypointDragRef = useRef<{ path: Point[]; index: number; position: Point } | null>(null);
 
   const fromPrismion = prismions[connector.from.prismionId];
   const toPrismion = prismions[connector.to.prismionId];
@@ -175,24 +198,22 @@ export function MsqdxConnectorEdge({
   const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
   const fromPos = calculatePortPosition(fromPrismion, effectiveFromPort);
   const toPos = calculatePortPosition(toPrismion, effectiveToPort);
-  const obstacles: Obstacle[] = Object.values(prismions)
-    .filter((p) => p.id !== fromPrismion.id && p.id !== toPrismion.id)
-    .map((p) => ({
-      x: p.position.x,
-      y: p.position.y,
-      width: p.size.w,
-      height: p.size.h,
-      id: p.id,
-    }));
-  const path = findPathAvoidingObstacles(
-    fromPos,
-    toPos,
-    obstacles,
-    [fromPrismion.id, toPrismion.id],
-    effectiveFromPort,
-    effectiveToPort
-  );
-  const bounds = getConnectorBounds(fromPos, toPos, path);
+  let path: Point[] =
+    connector.waypoints && connector.waypoints.length > 0
+      ? [fromPos, ...connector.waypoints, toPos]
+      : computeOrthogonalPath(fromPos, toPos, effectiveFromPort, effectiveToPort);
+  if (draggingWaypointIndex !== null && dragWaypointPosition !== null && path.length > draggingWaypointIndex) {
+    path = path.slice();
+    path[draggingWaypointIndex] = dragWaypointPosition;
+  }
+  const bounds = getConnectorBounds(path, CONNECTOR_BOUNDS_PADDING);
+  const isSelected =
+    selectedPrismionIds.includes(connector.from.prismionId) ||
+    selectedPrismionIds.includes(connector.to.prismionId);
+  const shouldShowHandles =
+    isSelected &&
+    path.length > 2 &&
+    Boolean(onWaypointsChange && clientToBoard);
 
   const getMidpoint = (): Point => {
     if (path.length === 2)
@@ -241,6 +262,7 @@ export function MsqdxConnectorEdge({
     connector.from.port,
     connector.to.prismionId,
     connector.to.port,
+    connector.waypoints,
     prismions[connector.from.prismionId]?.position.x,
     prismions[connector.from.prismionId]?.position.y,
     prismions[connector.from.prismionId]?.size?.w,
@@ -250,6 +272,43 @@ export function MsqdxConnectorEdge({
     prismions[connector.to.prismionId]?.size?.w,
     prismions[connector.to.prismionId]?.size?.h,
   ]);
+
+  useEffect(() => {
+    if (draggingWaypointIndex === null || !clientToBoard || !onWaypointsChange) return;
+    const onMove = (e: PointerEvent) => {
+      const ref = waypointDragRef.current;
+      if (!ref) return;
+      const boardPos = clientToBoard(e.clientX, e.clientY);
+      const prev = ref.path[ref.index - 1];
+      const curr = ref.path[ref.index];
+      const next = ref.path[ref.index + 1];
+      if (prev && next) {
+        const constrained = constrainWaypoint(boardPos, prev, curr, next);
+        ref.position = constrained;
+        setDragWaypointPosition(constrained);
+      }
+    };
+    const onUp = () => {
+      const ref = waypointDragRef.current;
+      if (ref) {
+        const nextPath = ref.path.slice();
+        nextPath[ref.index] = ref.position;
+        const waypoints = nextPath.slice(1, -1);
+        onWaypointsChange(connector.id, waypoints);
+      }
+      waypointDragRef.current = null;
+      setDraggingWaypointIndex(null);
+      setDragWaypointPosition(null);
+    };
+    window.addEventListener("pointermove", onMove, { capture: true });
+    window.addEventListener("pointerup", onUp, { capture: true });
+    window.addEventListener("pointercancel", onUp, { capture: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove, { capture: true });
+      window.removeEventListener("pointerup", onUp, { capture: true });
+      window.removeEventListener("pointercancel", onUp, { capture: true });
+    };
+  }, [draggingWaypointIndex, clientToBoard, onWaypointsChange, connector.id]);
 
   return (
     <>
@@ -328,6 +387,42 @@ export function MsqdxConnectorEdge({
           />
         )}
       </svg>
+
+      {shouldShowHandles &&
+        path.slice(1, -1).map((p, idx) => {
+          const waypointIndex = idx + 1;
+          return (
+            <Box
+              key={waypointIndex}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                try {
+                  (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                } catch {}
+                const pos = { ...path[waypointIndex] };
+                waypointDragRef.current = { path: path.slice(), index: waypointIndex, position: pos };
+                setDraggingWaypointIndex(waypointIndex);
+                setDragWaypointPosition(pos);
+              }}
+              sx={{
+                position: "absolute",
+                left: p.x - 6,
+                top: p.y - 6,
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                backgroundColor: "white",
+                border: `2px solid ${MSQDX_BRAND_COLOR_CSS}`,
+                cursor: "grab",
+                pointerEvents: "all",
+                zIndex: 10,
+                "&:active": { cursor: "grabbing" },
+              }}
+              title="Wegpunkt verschieben"
+            />
+          );
+        })}
 
       {shouldShowOverlay && (
         <Box

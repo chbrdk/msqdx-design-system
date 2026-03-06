@@ -103,6 +103,8 @@ export interface Connector {
   from: { prismionId: PrismionID; port: 'top' | 'right' | 'bottom' | 'left' };
   to: { prismionId: PrismionID; port: 'top' | 'right' | 'bottom' | 'left' };
   label?: string;
+  /** Optional waypoints in board coordinates. Path = fromPort → waypoints → toPort; segments horizontal/vertical only. */
+  waypoints?: { x: number; y: number }[];
   createdBy: UserID;
   createdAt: string;
 }
@@ -119,6 +121,8 @@ export interface Connection {
   label?: string;
   color?: string;
   strokeWidth: number;
+  /** Optional waypoints in board coordinates. Path = fromPort → waypoints → toPort; segments horizontal/vertical only. If absent, path is computed orthogonally. */
+  waypoints?: { x: number; y: number }[];
   pathData?: unknown;
   createdAt: string;
   updatedAt: string;

@@ -34,7 +34,9 @@
   "scripts": {
     "storybook": "storybook dev -p 6006 --host 0.0.0.0",
     "build-storybook": "storybook build",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.0",
