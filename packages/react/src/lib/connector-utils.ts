@@ -35,13 +35,13 @@ export function findOptimalPorts(
 }
 
 /**
- * Match PrismionPorts: PORT_SIZE=32, port positioned with bottom/top/left/right: -14.
- * Port center from card edge: 14 - 16 = 2 (2px inside card edge).
+ * Must match PrismionPorts: PORT_SIZE=32, port positioned with top/right/bottom/left: -14.
+ * Port center from card edge = 14 - PORT_SIZE/2 = 14 - 16 = -2 (2px inside card).
+ * We use these so connector lines meet the visible port circle center.
  */
-const PORT_INSET_TOP = 2;
-const PORT_INSET_RIGHT = 2;
-const PORT_INSET_BOTTOM = 2;
-const PORT_INSET_LEFT = 2;
+const PORT_SIZE = 32;
+const PORT_OFFSET_FROM_EDGE = 14; // PrismionPorts use right: -14 etc.
+const PORT_CENTER_INSET = PORT_OFFSET_FROM_EDGE - PORT_SIZE / 2; // 2px inside
 
 export function calculatePortPosition(
   prismion: Prismion,
@@ -49,16 +49,27 @@ export function calculatePortPosition(
 ): { x: number; y: number } {
   const { x, y } = prismion.position;
   const { w, h } = prismion.size;
+  let px: number;
+  let py: number;
   switch (port) {
     case 'top':
-      return { x: x + w / 2, y: y + PORT_INSET_TOP };
+      px = x + w / 2;
+      py = y + PORT_CENTER_INSET;
+      break;
     case 'right':
-      return { x: x + w - PORT_INSET_RIGHT, y: y + h / 2 };
+      px = x + w - PORT_CENTER_INSET;
+      py = y + h / 2;
+      break;
     case 'bottom':
-      return { x: x + w / 2, y: y + h - PORT_INSET_BOTTOM };
+      px = x + w / 2;
+      py = y + h - PORT_CENTER_INSET;
+      break;
     case 'left':
-      return { x: x + PORT_INSET_LEFT, y: y + h / 2 };
+      px = x + PORT_CENTER_INSET;
+      py = y + h / 2;
+      break;
   }
+  return { x: Math.round(px), y: Math.round(py) };
 }
 
 export function generateConnectionPath(
