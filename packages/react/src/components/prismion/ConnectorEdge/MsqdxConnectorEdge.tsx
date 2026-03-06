@@ -207,9 +207,6 @@ export function MsqdxConnectorEdge({
     path[draggingWaypointIndex] = dragWaypointPosition;
   }
   const bounds = getConnectorBounds(path, CONNECTOR_BOUNDS_PADDING);
-  const isSelected =
-    selectedPrismionIds.includes(connector.from.prismionId) ||
-    selectedPrismionIds.includes(connector.to.prismionId);
   const shouldShowHandles =
     isSelected &&
     path.length > 2 &&
