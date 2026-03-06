@@ -30,6 +30,11 @@ export interface MsqdxConnectorEdgeProps {
   onWaypointsChange?: (connectorId: string, waypoints: { x: number; y: number }[]) => void;
   /** Convert client coordinates to board coordinates (for waypoint drag). */
   clientToBoard?: (clientX: number, clientY: number) => { x: number; y: number };
+  /** Optional: get port center from card DOM (rect center per side). When provided, used for connector endpoints so the line aligns with the visible card. */
+  getPortPositionFromDOM?: (
+    prismionId: string,
+    port: "top" | "right" | "bottom" | "left"
+  ) => { x: number; y: number } | null;
 }
 
 function buildRoundedPathData(
@@ -110,6 +115,7 @@ export function MsqdxConnectorEdge({
   onNewConnection,
   onWaypointsChange,
   clientToBoard,
+  getPortPositionFromDOM,
 }: MsqdxConnectorEdgeProps) {
   const [, setForceUpdate] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -196,8 +202,12 @@ export function MsqdxConnectorEdge({
   const optimalPorts = findOptimalPorts(fromPrismion, toPrismion);
   const effectiveFromPort = connector.from.port ?? optimalPorts.fromPort;
   const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
-  const fromPos = calculatePortPosition(fromPrismion, effectiveFromPort);
-  const toPos = calculatePortPosition(toPrismion, effectiveToPort);
+  const fromPos =
+    getPortPositionFromDOM?.(connector.from.prismionId, effectiveFromPort) ??
+    calculatePortPosition(fromPrismion, effectiveFromPort);
+  const toPos =
+    getPortPositionFromDOM?.(connector.to.prismionId, effectiveToPort) ??
+    calculatePortPosition(toPrismion, effectiveToPort);
   let path: Point[] =
     connector.waypoints && connector.waypoints.length > 0
       ? [fromPos, ...connector.waypoints, toPos]

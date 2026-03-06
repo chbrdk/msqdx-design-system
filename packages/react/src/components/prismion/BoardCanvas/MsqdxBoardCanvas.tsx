@@ -164,6 +164,38 @@ export function MsqdxBoardCanvas({
     [pan, zoom]
   );
 
+  /** Port center from card DOM rect: top = (w/2, 0), right = (w, h/2), bottom = (w/2, h), left = (0, h/2). */
+  const getPortPositionFromDOM = useCallback(
+    (prismionId: string, port: "top" | "right" | "bottom" | "left"): { x: number; y: number } | null => {
+      const el = document.querySelector(`[data-prismion-id="${prismionId}"]`) as HTMLElement | null;
+      if (!el) return null;
+      const rect = el.getBoundingClientRect();
+      let cx: number;
+      let cy: number;
+      switch (port) {
+        case "top":
+          cx = rect.left + rect.width / 2;
+          cy = rect.top;
+          break;
+        case "right":
+          cx = rect.left + rect.width;
+          cy = rect.top + rect.height / 2;
+          break;
+        case "bottom":
+          cx = rect.left + rect.width / 2;
+          cy = rect.top + rect.height;
+          break;
+        case "left":
+          cx = rect.left;
+          cy = rect.top + rect.height / 2;
+          break;
+      }
+      const board = clientToCanvas(cx, cy);
+      return { x: Math.round(board.x), y: Math.round(board.y) };
+    },
+    [clientToCanvas]
+  );
+
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0 && e.button !== 1) return;
@@ -503,13 +535,16 @@ export function MsqdxBoardCanvas({
                 onDelete={onConnectorDelete}
                 onWaypointsChange={onConnectorWaypointsChange}
                 clientToBoard={clientToCanvas}
+                getPortPositionFromDOM={getPortPositionFromDOM}
               />
             ))}
           </Box>
         )}
 
         {connectorDragFrom && connectorDragEnd && prismionsMap[connectorDragFrom.fromId] && (() => {
-          const start = calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
+          const start =
+            getPortPositionFromDOM(connectorDragFrom.fromId, connectorDragFrom.fromPort) ??
+            calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
           const end = connectorDragEnd;
           const minX = Math.min(start.x, end.x) - 4;
           const minY = Math.min(start.y, end.y) - 4;
