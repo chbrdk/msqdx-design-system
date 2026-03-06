@@ -122,6 +122,7 @@ export function MsqdxConnectorEdge({
   const [dragWaypointPosition, setDragWaypointPosition] = useState<Point | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const waypointDragRef = useRef<{ path: Point[]; index: number; position: Point } | null>(null);
+  const debugLogRef = useRef<string | null>(null);
 
   const fromPrismion = prismions[connector.from.prismionId];
   const toPrismion = prismions[connector.to.prismionId];
@@ -202,10 +203,14 @@ export function MsqdxConnectorEdge({
     typeof window !== "undefined" &&
     (window as unknown as { __CONNECTOR_DEBUG__?: boolean }).__CONNECTOR_DEBUG__
   ) {
-    console.log("[Connector]", connector.id, {
-      from: { id: fromPrismion.id, position: fromPrismion.position, size: fromPrismion.size, port: effectiveFromPort, fromPos },
-      to: { id: toPrismion.id, position: toPrismion.position, size: toPrismion.size, port: effectiveToPort, toPos },
-    });
+    const key = `${connector.id}|${fromPos.x},${fromPos.y}|${toPos.x},${toPos.y}|${fromPrismion.position.x},${fromPrismion.position.y},${fromPrismion.size.w},${fromPrismion.size.h}|${toPrismion.position.x},${toPrismion.position.y},${toPrismion.size.w},${toPrismion.size.h}`;
+    if (debugLogRef.current !== key) {
+      debugLogRef.current = key;
+      console.log("[Connector]", connector.id, {
+        from: { id: fromPrismion.id, position: fromPrismion.position, size: fromPrismion.size, port: effectiveFromPort, fromPos },
+        to: { id: toPrismion.id, position: toPrismion.position, size: toPrismion.size, port: effectiveToPort, toPos },
+      });
+    }
   }
   let path: Point[] =
     connector.waypoints && connector.waypoints.length > 0

@@ -240,7 +240,7 @@ export function MsqdxBoardCanvas({
   }, [marqueeStart, marqueeEnd, onMarqueeSelect, onMarqueeSelectModeChange, prismions, connections]);
 
   const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
+    (e: WheelEvent) => {
       e.preventDefault();
       const rect = canvasRef.current?.getBoundingClientRect();
       if (!rect) return;
@@ -259,6 +259,13 @@ export function MsqdxBoardCanvas({
     },
     [zoom, pan, onZoomChange, onPanChange]
   );
+
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
 
   const handleDoubleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -387,7 +394,6 @@ export function MsqdxBoardCanvas({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      onWheel={handleWheel}
       onDoubleClick={handleDoubleClick}
       sx={{
         width: "100%",

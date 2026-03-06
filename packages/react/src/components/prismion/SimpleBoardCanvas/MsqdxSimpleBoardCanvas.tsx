@@ -96,11 +96,18 @@ export function MsqdxSimpleBoardCanvas({
     setIsPanning(false);
   }, []);
 
-  const handleWheel = useCallback((e: React.WheelEvent) => {
+  const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     setZoom((prev) => Math.max(CANVAS_ZOOM.min, Math.min(CANVAS_ZOOM.max, prev * delta)));
   }, []);
+
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
 
   const handleCardMouseDown = useCallback(
     (e: React.MouseEvent, prismion: Prismion) => {
@@ -225,7 +232,6 @@ export function MsqdxSimpleBoardCanvas({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        onWheel={handleWheel}
         onDoubleClick={handleDoubleClick}
         sx={{
           position: "absolute",
