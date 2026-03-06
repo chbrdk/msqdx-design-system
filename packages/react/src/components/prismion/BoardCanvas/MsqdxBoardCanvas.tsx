@@ -467,12 +467,13 @@ export function MsqdxBoardCanvas({
         </Box>
       )}
 
+      {/* Use CSS zoom so cards and connectors scale together without separate coordinate math; avoids connector drift when zooming. */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
-          transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-          transformOrigin: "0 0",
+          transform: `translate(${pan.x}px, ${pan.y}px)`,
+          zoom,
         }}
       >
         {(marqueeStart !== null && marqueeEnd !== null) && (() => {

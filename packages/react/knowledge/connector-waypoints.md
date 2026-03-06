@@ -35,7 +35,8 @@ Die Connector-Endpunkte werden nach dem **draw.io/mxGraph**-Vorbild berechnet: P
 
 ## Zoom / Darstellung
 
-- **SVG:** Connector-SVG hat `preserveAspectRatio="none"`, damit die ViewBox exakt auf das Element abgebildet wird (kein „meet“-Zentrieren). Bei Zoom gerundete Viewport-Größen können sonst zu sichtbarer Verschiebung der Linie führen (Pfeil „fehlplatziert“).
+- **Board-Zoom:** Der Board-Inhalt (Karten + Connectors) nutzt **CSS `zoom`** statt `transform: scale()`, damit alles gemeinsam skaliert wird und Connector-Endpunkte beim Zoomen nicht mehr relativ zu den Karten driften.
+- **SVG:** Connector-SVG hat `preserveAspectRatio="none"`, damit die ViewBox exakt auf das Element abgebildet wird (kein „meet“-Zentrieren).
 - **Strichstärke:** `vectorEffect="non-scaling-stroke"` an allen Connector-Pfaden, damit die Linienstärke beim Zoomen konstant bleibt.
 
 ## Relevante Dateien
