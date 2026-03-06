@@ -25,7 +25,7 @@ Connector-Linien zwischen Prismion-Cards nutzen **orthogonale Pfade** (nur horiz
 
 Damit die Connector-Linie exakt am sichtbaren Card-Rand anliegt (kein Verschieben bei Zoom/Resize), werden die Port-Endpunkte optional aus dem **DOM** ermittelt:
 
-- **BoardCanvas** implementiert `getPortPositionFromDOM(prismionId, port)`: sucht das Element mit `[data-prismion-id="…"]`, liest `getBoundingClientRect()`, berechnet die Port-Mitte je nach Seite (oben = `x: width/2, y: 0`; rechts = `x: width, y: height/2`; unten = `x: width/2, y: height`; links = `x: 0, y: height/2`), rechnet mit `clientToCanvas` in Board-Koordinaten um und rundet.
+- **BoardCanvas** implementiert `getPortPositionFromDOM(prismionId, port)`: sucht das Element mit `[data-prismion-id="…"]`, liest `getBoundingClientRect()`, berechnet die **Kantenmitte** je nach Seite (wie oben), rechnet mit `clientToCanvas` in Board-Koordinaten um und wendet **PORT_CENTER_INSET** (2px in Board-Einheiten) an, damit der Punkt der sichtbaren Port-Kreismitte entspricht (oben: y+2; rechts: x−2; unten: y−2; links: x+2).
 - **MsqdxConnectorEdge** erhält optional `getPortPositionFromDOM`. Wenn gesetzt, werden `fromPos` und `toPos` zuerst aus dem DOM geholt; falls `null` (Element nicht gefunden), Fallback auf `calculatePortPosition(prismion, port)` (State-basiert).
 - Die temporäre Drag-Linie (neue Connection vom Port) nutzt ebenfalls `getPortPositionFromDOM` für den Startpunkt, damit sie am Port ausgerichtet bleibt.
 

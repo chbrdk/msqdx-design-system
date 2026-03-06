@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import { Sparkles } from "lucide-react";
 import type { Board, Prismion, Connection, BoardParticipant, Connector } from "../../../types/prismion";
 import { getCanvasSettings, CANVAS_ZOOM, wouldOverlap } from "../../../lib/board-utils";
-import { calculatePortPosition } from "../../../lib/connector-utils";
+import { calculatePortPosition, PORT_CENTER_INSET } from "../../../lib/connector-utils";
 import { MsqdxPrismionCard } from "../PrismionCard";
 import type { PrismionResultItem } from "../PrismionResult";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
@@ -164,7 +164,7 @@ export function MsqdxBoardCanvas({
     [pan, zoom]
   );
 
-  /** Port center from card DOM rect: top = (w/2, 0), right = (w, h/2), bottom = (w/2, h), left = (0, h/2). */
+  /** Port center from card DOM rect; applies PORT_CENTER_INSET so the line meets the visible port circle (2px inside edge). */
   const getPortPositionFromDOM = useCallback(
     (prismionId: string, port: "top" | "right" | "bottom" | "left"): { x: number; y: number } | null => {
       const el = document.querySelector(`[data-prismion-id="${prismionId}"]`) as HTMLElement | null;
@@ -192,7 +192,16 @@ export function MsqdxBoardCanvas({
           break;
       }
       const board = clientToCanvas(cx, cy);
-      return { x: Math.round(board.x), y: Math.round(board.y) };
+      switch (port) {
+        case "top":
+          return { x: Math.round(board.x), y: Math.round(board.y + PORT_CENTER_INSET) };
+        case "right":
+          return { x: Math.round(board.x - PORT_CENTER_INSET), y: Math.round(board.y) };
+        case "bottom":
+          return { x: Math.round(board.x), y: Math.round(board.y - PORT_CENTER_INSET) };
+        case "left":
+          return { x: Math.round(board.x + PORT_CENTER_INSET), y: Math.round(board.y) };
+      }
     },
     [clientToCanvas]
   );
