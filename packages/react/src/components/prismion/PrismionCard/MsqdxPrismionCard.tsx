@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Box, IconButton } from "@mui/material";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Plug } from "lucide-react";
 import type { Prismion, Position, Size, PortSide } from "../../../types/prismion";
 import { MsqdxPrismionPorts } from "../PrismionPorts";
 import { MsqdxPrismionToolbar } from "../PrismionToolbar";
@@ -72,6 +72,7 @@ export function MsqdxPrismionCard({
   onCheckionMcpToggle,
 }: MsqdxPrismionCardProps) {
   const resultOnly = resultOnlyProp || prismion.id.startsWith("result-");
+  const isToolCard = prismion.kind === "tool";
   const rootRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -160,7 +161,8 @@ export function MsqdxPrismionCard({
         left: 0,
         top: 0,
         width: prismion.size.w,
-        minHeight: collapsed ? 60 : 120,
+        height: isToolCard ? prismion.size.h : undefined,
+        minHeight: isToolCard ? undefined : (collapsed ? 60 : 120),
         zIndex: Math.max(prismion.position.zIndex ?? 1, 1),
         display: "inline-block",
         "& .ports-wrapper": {
@@ -185,7 +187,7 @@ export function MsqdxPrismionCard({
         onSelect?.(e.shiftKey);
       }}
     >
-      {onResize && (
+      {onResize && !isToolCard && (
         <Box
           className="resize-handle"
           onMouseDown={handleResizeStart}
@@ -215,10 +217,10 @@ export function MsqdxPrismionCard({
         variant="flat"
         sx={{
           height: "100%",
-          minHeight: collapsed ? 60 : 120,
+          minHeight: isToolCard ? undefined : (collapsed ? 60 : 120),
           display: "flex",
           flexDirection: "column",
-          borderRadius: "32px",
+          borderRadius: isToolCard ? "50%" : "32px",
           backgroundColor: "#fff",
           boxShadow: MSQDX_EFFECTS.shadows.lg,
           border: selected ? `2px solid ${MSQDX_BRAND_COLOR_CSS}` : `1px solid ${MSQDX_NEUTRAL[200]}`,
@@ -240,6 +242,11 @@ export function MsqdxPrismionCard({
           />
         </Box>
 
+        {isToolCard ? (
+          <Box sx={{ position: "relative", flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: 0 }} onClick={(e) => e.stopPropagation()}>
+            <Plug size={28} color={MSQDX_BRAND_COLOR_CSS} strokeWidth={2} style={{ flexShrink: 0 }} />
+          </Box>
+        ) : (
         <Box sx={{ position: "relative", height: "100%", padding: "12px", display: "flex", flexDirection: "column" }}>
           <Box
             sx={{
@@ -354,6 +361,7 @@ export function MsqdxPrismionCard({
             </>
           )}
         </Box>
+        )}
       </MsqdxCard>
     </Box>
   );

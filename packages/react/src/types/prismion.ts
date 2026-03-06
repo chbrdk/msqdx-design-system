@@ -302,6 +302,7 @@ export interface MergeResult {
 
 export type PrismionKind =
   | 'prompt'
+  | 'tool'
   | 'result.text'
   | 'result.richtext'
   | 'result.image'
