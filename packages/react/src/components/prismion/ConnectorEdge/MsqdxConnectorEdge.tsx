@@ -170,10 +170,9 @@ export function MsqdxConnectorEdge({
     strokeDasharray: isSelected ? "none" : "5,5",
   };
 
-  const { fromPort: effectiveFromPort, toPort: effectiveToPort } = findOptimalPorts(
-    fromPrismion,
-    toPrismion
-  );
+  const optimalPorts = findOptimalPorts(fromPrismion, toPrismion);
+  const effectiveFromPort = connector.from.port ?? optimalPorts.fromPort;
+  const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
   const fromPos = calculatePortPosition(fromPrismion, effectiveFromPort);
   const toPos = calculatePortPosition(toPrismion, effectiveToPort);
   const obstacles: Obstacle[] = Object.values(prismions)
@@ -239,7 +238,9 @@ export function MsqdxConnectorEdge({
     setForceUpdate((n) => n + 1);
   }, [
     connector.from.prismionId,
+    connector.from.port,
     connector.to.prismionId,
+    connector.to.port,
     prismions[connector.from.prismionId]?.position.x,
     prismions[connector.from.prismionId]?.position.y,
     prismions[connector.from.prismionId]?.size?.w,
