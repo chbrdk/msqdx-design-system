@@ -589,8 +589,7 @@ export function MsqdxBoardCanvas({
               left: prismion.position.x,
               top: prismion.position.y,
               width: prismion.size.w,
-              height: prismion.size.h,
-              overflow: "hidden",
+              minHeight: prismion.size.h,
               zIndex: draggingPrismionId === prismion.id ? 20 : (prismion.position.zIndex ?? 10),
               cursor: draggingPrismionId === prismion.id ? "grabbing" : "grab",
             }}
@@ -605,13 +604,15 @@ export function MsqdxBoardCanvas({
                   ? (size) => {
                       const minW = prismion.size.minW ?? 200;
                       const minH = prismion.size.minH ?? 120;
+                      const MIN_ZOOM_FOR_RESIZE = 0.15;
+                      if (zoom < MIN_ZOOM_FOR_RESIZE) return;
+                      const MAX_BOARD_SIZE = 4000;
                       const logicalW = Math.round(size.w / zoom);
                       const logicalH = Math.round(size.h / zoom);
                       if (logicalW < 10 || logicalH < 10) return;
-                      onPrismionResize(prismion.id, {
-                        w: Math.max(minW, logicalW),
-                        h: Math.max(minH, logicalH),
-                      });
+                      const clampedW = Math.min(MAX_BOARD_SIZE, Math.max(minW, logicalW));
+                      const clampedH = Math.min(MAX_BOARD_SIZE, Math.max(minH, logicalH));
+                      onPrismionResize(prismion.id, { w: clampedW, h: clampedH });
                     }
                   : undefined
               }

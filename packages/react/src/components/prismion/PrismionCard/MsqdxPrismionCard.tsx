@@ -90,6 +90,8 @@ export function MsqdxPrismionCard({
         const w = Math.round(rect.width);
         const h = Math.max(Math.round(rect.height), minH);
         if (w < 20 || h < 20) return;
+        const MAX_REPORT_PX = 8000;
+        if (w > MAX_REPORT_PX || h > MAX_REPORT_PX) return;
         const last = lastReportedSizeRef.current;
         if (last && last.w === w && last.h === h) return;
         lastReportedSizeRef.current = { w, h };
