@@ -21,6 +21,11 @@ Connector-Linien zwischen Prismion-Cards nutzen **orthogonale Pfade** (nur horiz
 - **Handles:** Kleine Kreise an jedem inneren Pfadpunkt (path[1] … path[path.length-2]); Position in Board-Koordinaten.
 - **Drag:** Beim Ziehen eines Handles bleibt der Pfad orthogonal (constrainWaypoint: Punkt wird auf die nächstliegende gültige Linie gesnappt). Beim Pointer-Up wird `onWaypointsChange(connectorId, waypoints)` mit den neuen Wegpunkten (ohne Start/Ende) aufgerufen.
 
+## Zoom / Darstellung
+
+- **SVG:** Connector-SVG hat `preserveAspectRatio="none"`, damit die ViewBox exakt auf das Element abgebildet wird (kein „meet“-Zentrieren). Bei Zoom gerundete Viewport-Größen können sonst zu sichtbarer Verschiebung der Linie führen (Pfeil „fehlplatziert“).
+- **Strichstärke:** `vectorEffect="non-scaling-stroke"` an allen Connector-Pfaden, damit die Linienstärke beim Zoomen konstant bleibt.
+
 ## Relevante Dateien
 
 - `lib/connector-utils.ts`: `computeOrthogonalPath`, `getConnectorBounds`, `CONNECTOR_BOUNDS_PADDING`

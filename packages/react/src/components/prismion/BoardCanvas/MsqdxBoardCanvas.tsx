@@ -533,6 +533,7 @@ export function MsqdxBoardCanvas({
                   stroke={MSQDX_BRAND_COLOR_CSS}
                   strokeWidth={2}
                   strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
                 />
               </Box>
             </Box>

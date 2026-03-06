@@ -322,6 +322,7 @@ export function MsqdxConnectorEdge({
           zIndex: 1,
         }}
         viewBox={`0 0 ${bounds.width} ${bounds.height}`}
+        preserveAspectRatio="none"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
           setIsHovered(false);
@@ -360,6 +361,7 @@ export function MsqdxConnectorEdge({
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={lineStyle.strokeDasharray}
+          vectorEffect="non-scaling-stroke"
           markerEnd={currentDirection === "forward" ? `url(#arrowhead-f-${connector.id})` : undefined}
           markerStart={currentDirection === "backward" ? `url(#arrowhead-b-${connector.id})` : undefined}
           style={{
@@ -380,6 +382,7 @@ export function MsqdxConnectorEdge({
             strokeWidth={2}
             strokeDasharray="5,5"
             fill="none"
+            vectorEffect="non-scaling-stroke"
             style={{ pointerEvents: "none" }}
           />
         )}
