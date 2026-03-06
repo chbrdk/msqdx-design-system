@@ -10,6 +10,7 @@ import {
   Image,
   Video,
   Link as LinkIcon,
+  Plug,
 } from "lucide-react";
 import {
   MSQDX_EFFECTS,
@@ -30,6 +31,12 @@ export interface MsqdxPrismionPortsProps {
     port: PortSide,
     type: "file" | "image" | "video" | "link"
   ) => void;
+  /** When true, show a CHECKION MCP option in the port menu (toggle tools for this board). */
+  showCheckionMcpOption?: boolean;
+  /** Whether CHECKION MCP is currently enabled (used to style the option). */
+  checkionMcpEnabled?: boolean;
+  /** Called when the user clicks the CHECKION option in the port menu. */
+  onCheckionMcpToggle?: () => void;
 }
 
 const PORT_SIZE = 32;
@@ -82,6 +89,7 @@ const iconColorMap: Record<string, string> = {
   image: "#16a34a",
   video: MSQDX_BRAND_PRIMARY.purple,
   link: MSQDX_BRAND_PRIMARY.orange,
+  checkion: MSQDX_BRAND_COLOR_CSS,
 };
 
 export function MsqdxPrismionPorts({
@@ -90,6 +98,9 @@ export function MsqdxPrismionPorts({
   onConnectorDrag,
   onCreatePrismion,
   onAttachToExisting,
+  showCheckionMcpOption = false,
+  checkionMcpEnabled = false,
+  onCheckionMcpToggle,
 }: MsqdxPrismionPortsProps) {
   const [activePort, setActivePort] = useState<PortSide | null>(null);
   const [entered, setEntered] = useState(false);
@@ -155,6 +166,9 @@ export function MsqdxPrismionPorts({
     { key: "image", label: "Bild", Icon: Image, colorKey: "image", kind: "image" as const },
     { key: "video", label: "Video", Icon: Video, colorKey: "video", kind: "video" as const },
     { key: "link", label: "Link", Icon: LinkIcon, colorKey: "link", kind: "link" as const },
+    ...(showCheckionMcpOption
+      ? [{ key: "checkion", label: "CHECKION", Icon: Plug, colorKey: "checkion", kind: "checkion" as const }]
+      : []),
   ];
 
   const renderPort = (side: PortSide, style: React.CSSProperties) => {
@@ -207,14 +221,16 @@ export function MsqdxPrismionPorts({
                   key={action.key}
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
-                    if (action.kind === "link") {
+                    if (action.kind === "checkion") {
+                      onCheckionMcpToggle?.();
+                    } else if (action.kind === "link") {
                       onAttachToExisting?.(side, "link");
                     } else {
                       onCreatePrismion?.(side, action.kind);
                     }
                     setActivePort(null);
                   }}
-                  title={action.label}
+                  title={action.kind === "checkion" ? (checkionMcpEnabled ? "CHECKION MCP an" : "CHECKION MCP aus") : action.label}
                   role="button"
                   tabIndex={0}
                   sx={{
@@ -224,6 +240,10 @@ export function MsqdxPrismionPorts({
                     transitionProperty: "transform, opacity",
                     transitionDelay: delay,
                     color,
+                    ...(action.kind === "checkion" && checkionMcpEnabled && {
+                      backgroundColor: "color-mix(in srgb, var(--color-theme-accent, #00ca55) 18%, transparent)",
+                      borderColor: "var(--color-theme-accent, #00ca55)",
+                    }),
                     "&:hover": {
                       transform: `translate(${tx}px, ${ty}px) scale(1.05)`,
                       boxShadow: MSQDX_EFFECTS.shadows.xl,

@@ -74,6 +74,12 @@ export interface MsqdxBoardCanvasProps {
   prismionResults?: Record<string, PrismionResultItem[]>;
   /** Optional extra content in the board toolbar (e.g. CHECKION MCP toggle). */
   boardToolbarExtra?: React.ReactNode;
+  /** When true, show CHECKION MCP option in each card's port menu. */
+  showCheckionMcpOption?: boolean;
+  /** Whether CHECKION MCP is enabled (for port menu). */
+  checkionMcpEnabled?: boolean;
+  /** Called when user toggles CHECKION MCP from a card's port menu. */
+  onCheckionMcpToggle?: () => void;
   className?: string;
 }
 
@@ -106,6 +112,9 @@ export function MsqdxBoardCanvas({
   showUserToolbar = true,
   prismionResults,
   boardToolbarExtra,
+  showCheckionMcpOption = false,
+  checkionMcpEnabled = false,
+  onCheckionMcpToggle,
   className,
 }: MsqdxBoardCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -611,6 +620,9 @@ export function MsqdxBoardCanvas({
               onLockToggle={() => onPrismionLockToggle?.(prismion.id)}
               onDelete={() => onPrismionDelete?.(prismion.id)}
               results={prismionResults?.[prismion.id]}
+              showCheckionMcpOption={showCheckionMcpOption}
+              checkionMcpEnabled={checkionMcpEnabled}
+              onCheckionMcpToggle={onCheckionMcpToggle}
             />
           </Box>
         ))}

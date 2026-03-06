@@ -42,6 +42,12 @@ export interface MsqdxPrismionCardProps {
   mediaSize?: "sm" | "md" | "lg";
   /** When true, only the first result text is shown (no prompt, no tabs, minimal layout). Also enabled when prismion.id starts with "result-". */
   resultOnly?: boolean;
+  /** When true, show CHECKION MCP option in the port menu. */
+  showCheckionMcpOption?: boolean;
+  /** Whether CHECKION MCP is enabled (for port menu option). */
+  checkionMcpEnabled?: boolean;
+  /** Called when user toggles CHECKION MCP in the port menu. */
+  onCheckionMcpToggle?: () => void;
 }
 
 export function MsqdxPrismionCard({
@@ -61,6 +67,9 @@ export function MsqdxPrismionCard({
   onToggleCollapse,
   className,
   resultOnly: resultOnlyProp = false,
+  showCheckionMcpOption = false,
+  checkionMcpEnabled = false,
+  onCheckionMcpToggle,
 }: MsqdxPrismionCardProps) {
   const resultOnly = resultOnlyProp || prismion.id.startsWith("result-");
   const rootRef = useRef<HTMLDivElement>(null);
@@ -225,6 +234,9 @@ export function MsqdxPrismionCard({
             onConnectorDrag={onConnectorDrag}
             onCreatePrismion={(port, type) => onConnectorCreatePrismion?.(port, type)}
             onAttachToExisting={() => {}}
+            showCheckionMcpOption={showCheckionMcpOption}
+            checkionMcpEnabled={checkionMcpEnabled}
+            onCheckionMcpToggle={onCheckionMcpToggle}
           />
         </Box>
 
