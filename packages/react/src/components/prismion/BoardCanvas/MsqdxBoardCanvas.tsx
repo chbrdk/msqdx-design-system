@@ -487,8 +487,8 @@ export function MsqdxBoardCanvas({
             />
           );
         })()}
-        {(connectors.length > 0 || (connectorDragFrom && connectorDragEnd)) && (
-          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 15 }}>
+        {connectors.length > 0 && (
+          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
             {connectors.map((connector) => (
               <MsqdxConnectorEdge
                 key={connector.id}
@@ -499,38 +499,39 @@ export function MsqdxBoardCanvas({
                 onDelete={onConnectorDelete}
               />
             ))}
-            {connectorDragFrom && connectorDragEnd && prismionsMap[connectorDragFrom.fromId] && (() => {
-              const start = calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
-              const end = connectorDragEnd;
-              const minX = Math.min(start.x, end.x) - 4;
-              const minY = Math.min(start.y, end.y) - 4;
-              const w = Math.max(Math.abs(end.x - start.x) + 8, 2);
-              const h = Math.max(Math.abs(end.y - start.y) + 8, 2);
-              return (
-                <Box sx={{ position: "absolute", left: minX, top: minY, width: w, height: h, zIndex: 16 }}>
-                  <Box
-                    component="svg"
-                    width="100%"
-                    height="100%"
-                    viewBox={`0 0 ${w} ${h}`}
-                    preserveAspectRatio="none"
-                    sx={{ overflow: "visible" }}
-                  >
-                    <line
-                      x1={start.x - minX}
-                      y1={start.y - minY}
-                      x2={end.x - minX}
-                      y2={end.y - minY}
-                      stroke={MSQDX_BRAND_COLOR_CSS}
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                    />
-                  </Box>
-                </Box>
-              );
-            })()}
           </Box>
         )}
+
+        {connectorDragFrom && connectorDragEnd && prismionsMap[connectorDragFrom.fromId] && (() => {
+          const start = calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
+          const end = connectorDragEnd;
+          const minX = Math.min(start.x, end.x) - 4;
+          const minY = Math.min(start.y, end.y) - 4;
+          const w = Math.max(Math.abs(end.x - start.x) + 8, 2);
+          const h = Math.max(Math.abs(end.y - start.y) + 8, 2);
+          return (
+            <Box sx={{ position: "absolute", left: minX, top: minY, width: w, height: h, pointerEvents: "none", zIndex: 25 }}>
+              <Box
+                component="svg"
+                width="100%"
+                height="100%"
+                viewBox={`0 0 ${w} ${h}`}
+                preserveAspectRatio="none"
+                sx={{ overflow: "visible" }}
+              >
+                <line
+                  x1={start.x - minX}
+                  y1={start.y - minY}
+                  x2={end.x - minX}
+                  y2={end.y - minY}
+                  stroke={MSQDX_BRAND_COLOR_CSS}
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                />
+              </Box>
+            </Box>
+          );
+        })()}
 
         {prismions.length === 0 && (
           <Box

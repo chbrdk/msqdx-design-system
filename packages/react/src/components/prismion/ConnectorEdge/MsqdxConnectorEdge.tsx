@@ -263,7 +263,7 @@ export function MsqdxConnectorEdge({
           width: bounds.width,
           height: bounds.height,
           pointerEvents: "auto",
-          zIndex: 0,
+          zIndex: 1,
         }}
         viewBox={`0 0 ${bounds.width} ${bounds.height}`}
         onMouseEnter={() => setIsHovered(true)}
