@@ -72,6 +72,8 @@ export interface MsqdxBoardCanvasProps {
   showUserToolbar?: boolean;
   /** Optional results per prismion id (e.g. AI response items for result cards). */
   prismionResults?: Record<string, PrismionResultItem[]>;
+  /** Optional extra content in the board toolbar (e.g. CHECKION MCP toggle). */
+  boardToolbarExtra?: React.ReactNode;
   className?: string;
 }
 
@@ -103,6 +105,7 @@ export function MsqdxBoardCanvas({
   showToolbars = true,
   showUserToolbar = true,
   prismionResults,
+  boardToolbarExtra,
   className,
 }: MsqdxBoardCanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -672,6 +675,7 @@ export function MsqdxBoardCanvas({
                   ? () => onMarqueeSelectModeChange?.(!marqueeSelectMode)
                   : undefined
               }
+              extra={boardToolbarExtra}
             />
           </Box>
           {showUserToolbar && (

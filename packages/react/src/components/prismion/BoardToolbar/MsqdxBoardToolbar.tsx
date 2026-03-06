@@ -35,6 +35,8 @@ export interface MsqdxBoardToolbarProps {
   marqueeSelectActive?: boolean;
   /** Call when user clicks the "Select area" tool to toggle marquee mode. */
   onMarqueeSelectClick?: () => void;
+  /** Optional extra content rendered after the built-in toolbar actions (e.g. CHECKION MCP toggle). */
+  extra?: React.ReactNode;
 }
 
 export function MsqdxBoardToolbar({
@@ -48,6 +50,7 @@ export function MsqdxBoardToolbar({
   onFollowingPresenterChange,
   marqueeSelectActive = false,
   onMarqueeSelectClick,
+  extra,
 }: MsqdxBoardToolbarProps) {
   return (
     <Box
@@ -135,6 +138,7 @@ export function MsqdxBoardToolbar({
           {followingPresenter ? "Unfollow" : "Follow"}
         </MsqdxButton>
       )}
+      {extra}
       <Box component="span" sx={{ marginLeft: 0.5, fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, color: MSQDX_BRAND_COLOR_CSS, userSelect: "none" }}>
         {Math.round(zoom * 100)}%
       </Box>
