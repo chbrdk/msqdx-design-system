@@ -588,7 +588,8 @@ export function MsqdxBoardCanvas({
               left: prismion.position.x,
               top: prismion.position.y,
               width: prismion.size.w,
-              minHeight: prismion.size.h,
+              height: prismion.size.h,
+              overflow: "hidden",
               zIndex: draggingPrismionId === prismion.id ? 20 : (prismion.position.zIndex ?? 10),
               cursor: draggingPrismionId === prismion.id ? "grabbing" : "grab",
             }}

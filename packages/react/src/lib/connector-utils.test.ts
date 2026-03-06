@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   computeOrthogonalPath,
   getConnectorBounds,
+  getConnectionPoint,
+  calculatePortPosition,
   CONNECTOR_BOUNDS_PADDING,
   type Point,
 } from "./connector-utils";
@@ -96,5 +98,54 @@ describe("getConnectorBounds", () => {
     expect(b.y).toBe(0);
     expect(b.width).toBe(32);
     expect(b.height).toBe(32);
+  });
+});
+
+describe("getConnectionPoint", () => {
+  const bounds = { x: 0, y: 0, w: 100, h: 50 };
+
+  it("returns center of top edge for top port", () => {
+    expect(getConnectionPoint(bounds, "top")).toEqual({ x: 50, y: 0 });
+  });
+
+  it("returns center of right edge for right port", () => {
+    expect(getConnectionPoint(bounds, "right")).toEqual({ x: 100, y: 25 });
+  });
+
+  it("returns center of bottom edge for bottom port", () => {
+    expect(getConnectionPoint(bounds, "bottom")).toEqual({ x: 50, y: 50 });
+  });
+
+  it("returns center of left edge for left port", () => {
+    expect(getConnectionPoint(bounds, "left")).toEqual({ x: 0, y: 25 });
+  });
+
+  it("rounds correctly for fractional bounds", () => {
+    const b = { x: 10, y: 20, w: 33, h: 33 };
+    expect(getConnectionPoint(b, "top")).toEqual({ x: 27, y: 20 });
+    expect(getConnectionPoint(b, "bottom")).toEqual({ x: 27, y: 53 });
+  });
+});
+
+describe("calculatePortPosition", () => {
+  it("delegates to getConnectionPoint from prismion bounds", () => {
+    const prismion = {
+      id: "p1",
+      boardId: "b1",
+      title: "",
+      prompt: "",
+      colorToken: "",
+      tags: [],
+      position: { x: 10, y: 20, zIndex: 0 },
+      size: { w: 100, h: 50, minW: 200, minH: 120 },
+      ports: {} as never,
+      state: "active",
+      createdBy: "user",
+      createdAt: "",
+      updatedAt: "",
+      revision: 0,
+    };
+    expect(calculatePortPosition(prismion, "bottom")).toEqual({ x: 60, y: 70 });
+    expect(calculatePortPosition(prismion, "right")).toEqual({ x: 110, y: 45 });
   });
 });

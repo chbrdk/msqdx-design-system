@@ -21,9 +21,15 @@ Connector-Linien zwischen Prismion-Cards nutzen **orthogonale Pfade** (nur horiz
 - **Handles:** Kleine Kreise an jedem inneren Pfadpunkt (path[1] … path[path.length-2]); Position in Board-Koordinaten.
 - **Drag:** Beim Ziehen eines Handles bleibt der Pfad orthogonal (constrainWaypoint: Punkt wird auf die nächstliegende gültige Linie gesnappt). Beim Pointer-Up wird `onWaypointsChange(connectorId, waypoints)` mit den neuen Wegpunkten (ohne Start/Ende) aufgerufen.
 
-## Port-Position
+## Port-Position (draw.io / mxGraph)
 
-Die Connector-Endpunkte werden ausschließlich **state-basiert** mit `calculatePortPosition(prismion, port)` aus `lib/connector-utils.ts` berechnet (aus `prismion.position` und `prismion.size`). Keine DOM-Abfrage; dadurch bleibt die Berechnung stabil und konsistent mit dem gerenderten Layout, solange ResizeObserver und Move die State-Größe/-Position aktuell halten.
+Die Connector-Endpunkte werden nach dem **draw.io/mxGraph**-Vorbild berechnet: Port-Positionen sind **relative Koordinaten** (0–1) auf den Card-Bounds, die absolute Position ist `bounds.x + bounds.width * relX`, `bounds.y + bounds.height * relY`. Keine Pixel-Offsets, keine DOM-Abfrage; Bounds aus dem State sind die einzige Quelle (wie bei mxGeometry + mxConnectionConstraint).
+
+- **`getConnectionPoint(bounds, port)`** in `lib/connector-utils.ts`: Liefert den absoluten Punkt für einen Port aus Bounds; Port-Mapping: top=(0.5,0), right=(1,0.5), bottom=(0.5,1), left=(0,0.5).
+- **`calculatePortPosition(prismion, port)`**: Ruft `getConnectionPoint` mit `{ x, y, w, h }` aus `prismion.position` und `prismion.size` auf.
+- Referenzen: [mxConnectionConstraint](https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxConnectionConstraint-js.html), [mxGraphView.getFixedTerminalPoint](https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraphView-js.html).
+
+**Bounds = einzige Quelle:** Die Card-Wrapper-Box im BoardCanvas hat feste `width` und `height` aus `prismion.size`, damit die gerenderte Box exakt den Modell-Bounds entspricht.
 
 **Debug:** In der Browser-Konsole `window.__CONNECTOR_DEBUG__ = true` setzen – dann loggt jede Connector-Edge nur bei **Änderung** von Position/Size/Port/fromPos/toPos (kein Log bei jedem Re-Render). Re-Renders alle paar Sekunden ohne Nutzeraktion kommen ggf. von der Parent-App (z. B. Session-/Heartbeat-Polling).
 
@@ -34,7 +40,7 @@ Die Connector-Endpunkte werden ausschließlich **state-basiert** mit `calculateP
 
 ## Relevante Dateien
 
-- `lib/connector-utils.ts`: `computeOrthogonalPath`, `getConnectorBounds`, `CONNECTOR_BOUNDS_PADDING`
+- `lib/connector-utils.ts`: `getConnectionPoint`, `calculatePortPosition`, `computeOrthogonalPath`, `getConnectorBounds`, `CONNECTOR_BOUNDS_PADDING`
 - `components/prismion/ConnectorEdge/MsqdxConnectorEdge.tsx`: Pfad aus waypoints oder compute; Handles + Drag; `onWaypointsChange`, `clientToBoard`
 - `components/prismion/BoardCanvas/MsqdxBoardCanvas.tsx`: `connectionToConnector` mit waypoints; `onConnectorWaypointsChange`, `clientToCanvas` an Edge
 

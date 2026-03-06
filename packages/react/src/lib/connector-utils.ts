@@ -35,42 +35,48 @@ export function findOptimalPorts(
 }
 
 /**
- * Must match PrismionPorts: PORT_SIZE=32, port positioned with top/right/bottom/left: -14.
- * Port center from card edge = 14 - PORT_SIZE/2 = 14 - 16 = -2 (2px inside card).
- * We use these so connector lines meet the visible port circle center.
+ * Relative connection points (draw.io / mxConnectionConstraint style).
+ * Port position = bounds.x + bounds.w * relX, bounds.y + bounds.h * relY.
+ * No pixel offsets; single source of truth from model bounds.
+ * @see https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxConnectionConstraint-js.html
  */
-const PORT_SIZE = 32;
-const PORT_OFFSET_FROM_EDGE = 14; // PrismionPorts use right: -14 etc.
-/** Port circle center offset from card edge (2px inside). */
-export const PORT_CENTER_INSET = PORT_OFFSET_FROM_EDGE - PORT_SIZE / 2;
+const PORT_RELATIVE: Record<'top' | 'right' | 'bottom' | 'left', { x: number; y: number }> = {
+  top: { x: 0.5, y: 0 },
+  right: { x: 1, y: 0.5 },
+  bottom: { x: 0.5, y: 1 },
+  left: { x: 0, y: 0.5 },
+};
+
+/** Port circle center offset from card edge (2px inside). Kept for PrismionPorts/legacy; connector uses relative ports only. */
+export const PORT_CENTER_INSET = 2;
+
+/**
+ * Returns the absolute connection point for a port from bounds (draw.io-style relative coordinates).
+ */
+export function getConnectionPoint(
+  bounds: { x: number; y: number; w: number; h: number },
+  port: 'top' | 'right' | 'bottom' | 'left'
+): { x: number; y: number } {
+  const rel = PORT_RELATIVE[port];
+  return {
+    x: Math.round(bounds.x + bounds.w * rel.x),
+    y: Math.round(bounds.y + bounds.h * rel.y),
+  };
+}
 
 export function calculatePortPosition(
   prismion: Prismion,
   port: 'top' | 'right' | 'bottom' | 'left'
 ): { x: number; y: number } {
-  const { x, y } = prismion.position;
-  const { w, h } = prismion.size;
-  let px: number;
-  let py: number;
-  switch (port) {
-    case 'top':
-      px = x + w / 2;
-      py = y + PORT_CENTER_INSET;
-      break;
-    case 'right':
-      px = x + w - PORT_CENTER_INSET;
-      py = y + h / 2;
-      break;
-    case 'bottom':
-      px = x + w / 2;
-      py = y + h - PORT_CENTER_INSET;
-      break;
-    case 'left':
-      px = x + PORT_CENTER_INSET;
-      py = y + h / 2;
-      break;
-  }
-  return { x: Math.round(px), y: Math.round(py) };
+  return getConnectionPoint(
+    {
+      x: prismion.position.x,
+      y: prismion.position.y,
+      w: prismion.size.w,
+      h: prismion.size.h,
+    },
+    port
+  );
 }
 
 export function generateConnectionPath(
