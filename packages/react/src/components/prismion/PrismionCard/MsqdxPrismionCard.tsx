@@ -108,22 +108,25 @@ export function MsqdxPrismionCard({
     }
   };
 
-  const resizeStartRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
+  const resizeStartRef = useRef<{ x: number; y: number; rectW: number; rectH: number } | null>(null);
   const [isResizing, setIsResizing] = useState(false);
   const handleResizeStart = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0 || !onResize) return;
       e.preventDefault();
       e.stopPropagation();
+      const el = rootRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
       setIsResizing(true);
       resizeStartRef.current = {
         x: e.clientX,
         y: e.clientY,
-        w: prismion.size.w,
-        h: prismion.size.h,
+        rectW: rect.width,
+        rectH: rect.height,
       };
     },
-    [onResize, prismion.size.w, prismion.size.h]
+    [onResize]
   );
 
   useEffect(() => {
@@ -133,8 +136,8 @@ export function MsqdxPrismionCard({
     const onMove = (e: MouseEvent) => {
       const s = resizeStartRef.current;
       if (!s) return;
-      const newW = Math.max(minW, Math.round(s.w + (e.clientX - s.x)));
-      const newH = Math.max(minH, Math.round(s.h + (e.clientY - s.y)));
+      const newW = Math.max(minW, Math.round(s.rectW + (e.clientX - s.x)));
+      const newH = Math.max(minH, Math.round(s.rectH + (e.clientY - s.y)));
       onResize({ w: newW, h: newH });
     };
     const onUp = () => {

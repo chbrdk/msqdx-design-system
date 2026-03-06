@@ -25,6 +25,8 @@ Connector-Linien zwischen Prismion-Cards nutzen **orthogonale Pfade** (nur horiz
 
 Die Connector-Endpunkte werden ausschließlich **state-basiert** mit `calculatePortPosition(prismion, port)` aus `lib/connector-utils.ts` berechnet (aus `prismion.position` und `prismion.size`). Keine DOM-Abfrage; dadurch bleibt die Berechnung stabil und konsistent mit dem gerenderten Layout, solange ResizeObserver und Move die State-Größe/-Position aktuell halten.
 
+**Debug:** In der Browser-Konsole `window.__CONNECTOR_DEBUG__ = true` setzen – dann loggt jede Connector-Edge pro Render `from`/`to` inkl. `position`, `size`, `port` und berechneter `fromPos`/`toPos`, um Abweichungen zu prüfen.
+
 ## Zoom / Darstellung
 
 - **SVG:** Connector-SVG hat `preserveAspectRatio="none"`, damit die ViewBox exakt auf das Element abgebildet wird (kein „meet“-Zentrieren). Bei Zoom gerundete Viewport-Größen können sonst zu sichtbarer Verschiebung der Linie führen (Pfeil „fehlplatziert“).

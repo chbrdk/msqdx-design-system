@@ -198,6 +198,15 @@ export function MsqdxConnectorEdge({
   const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
   const fromPos = calculatePortPosition(fromPrismion, effectiveFromPort);
   const toPos = calculatePortPosition(toPrismion, effectiveToPort);
+  if (
+    typeof window !== "undefined" &&
+    (window as unknown as { __CONNECTOR_DEBUG__?: boolean }).__CONNECTOR_DEBUG__
+  ) {
+    console.log("[Connector]", connector.id, {
+      from: { id: fromPrismion.id, position: fromPrismion.position, size: fromPrismion.size, port: effectiveFromPort, fromPos },
+      to: { id: toPrismion.id, position: toPrismion.position, size: toPrismion.size, port: effectiveToPort, toPos },
+    });
+  }
   let path: Point[] =
     connector.waypoints && connector.waypoints.length > 0
       ? [fromPos, ...connector.waypoints, toPos]
