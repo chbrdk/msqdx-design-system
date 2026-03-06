@@ -21,13 +21,9 @@ Connector-Linien zwischen Prismion-Cards nutzen **orthogonale Pfade** (nur horiz
 - **Handles:** Kleine Kreise an jedem inneren Pfadpunkt (path[1] … path[path.length-2]); Position in Board-Koordinaten.
 - **Drag:** Beim Ziehen eines Handles bleibt der Pfad orthogonal (constrainWaypoint: Punkt wird auf die nächstliegende gültige Linie gesnappt). Beim Pointer-Up wird `onWaypointsChange(connectorId, waypoints)` mit den neuen Wegpunkten (ohne Start/Ende) aufgerufen.
 
-## Port-Position aus DOM
+## Port-Position
 
-Damit die Connector-Linie exakt am sichtbaren Card-Rand anliegt (kein Verschieben bei Zoom/Resize), werden die Port-Endpunkte optional aus dem **DOM** ermittelt:
-
-- **BoardCanvas** implementiert `getPortPositionFromDOM(prismionId, port)`: sucht das Element mit `[data-prismion-id="…"]`, liest `getBoundingClientRect()`, berechnet die **Kantenmitte** je nach Seite (wie oben), rechnet mit `clientToCanvas` in Board-Koordinaten um und wendet **PORT_CENTER_INSET** (2px in Board-Einheiten) an, damit der Punkt der sichtbaren Port-Kreismitte entspricht (oben: y+2; rechts: x−2; unten: y−2; links: x+2).
-- **MsqdxConnectorEdge** erhält optional `getPortPositionFromDOM`. Wenn gesetzt, werden `fromPos` und `toPos` zuerst aus dem DOM geholt; falls `null` (Element nicht gefunden), Fallback auf `calculatePortPosition(prismion, port)` (State-basiert).
-- Die temporäre Drag-Linie (neue Connection vom Port) nutzt ebenfalls `getPortPositionFromDOM` für den Startpunkt, damit sie am Port ausgerichtet bleibt.
+Die Connector-Endpunkte werden ausschließlich **state-basiert** mit `calculatePortPosition(prismion, port)` aus `lib/connector-utils.ts` berechnet (aus `prismion.position` und `prismion.size`). Keine DOM-Abfrage; dadurch bleibt die Berechnung stabil und konsistent mit dem gerenderten Layout, solange ResizeObserver und Move die State-Größe/-Position aktuell halten.
 
 ## Zoom / Darstellung
 
@@ -38,7 +34,7 @@ Damit die Connector-Linie exakt am sichtbaren Card-Rand anliegt (kein Verschiebe
 
 - `lib/connector-utils.ts`: `computeOrthogonalPath`, `getConnectorBounds`, `CONNECTOR_BOUNDS_PADDING`
 - `components/prismion/ConnectorEdge/MsqdxConnectorEdge.tsx`: Pfad aus waypoints oder compute; Handles + Drag; `onWaypointsChange`, `clientToBoard`
-- `components/prismion/BoardCanvas/MsqdxBoardCanvas.tsx`: `connectionToConnector` mit waypoints; `getPortPositionFromDOM`, `onConnectorWaypointsChange`, `clientToCanvas` an Edge
+- `components/prismion/BoardCanvas/MsqdxBoardCanvas.tsx`: `connectionToConnector` mit waypoints; `onConnectorWaypointsChange`, `clientToCanvas` an Edge
 
 ## Persistenz (z. B. PLEXON)
 

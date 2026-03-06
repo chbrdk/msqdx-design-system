@@ -41,7 +41,7 @@ export function findOptimalPorts(
  */
 const PORT_SIZE = 32;
 const PORT_OFFSET_FROM_EDGE = 14; // PrismionPorts use right: -14 etc.
-/** Port circle center offset from card edge (2px inside). Exported for DOM-based port position. */
+/** Port circle center offset from card edge (2px inside). */
 export const PORT_CENTER_INSET = PORT_OFFSET_FROM_EDGE - PORT_SIZE / 2;
 
 export function calculatePortPosition(

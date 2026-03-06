@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import { Sparkles } from "lucide-react";
 import type { Board, Prismion, Connection, BoardParticipant, Connector } from "../../../types/prismion";
 import { getCanvasSettings, CANVAS_ZOOM, wouldOverlap } from "../../../lib/board-utils";
-import { calculatePortPosition, PORT_CENTER_INSET } from "../../../lib/connector-utils";
+import { calculatePortPosition } from "../../../lib/connector-utils";
 import { MsqdxPrismionCard } from "../PrismionCard";
 import type { PrismionResultItem } from "../PrismionResult";
 import { MsqdxConnectorEdge } from "../ConnectorEdge";
@@ -162,48 +162,6 @@ export function MsqdxBoardCanvas({
       };
     },
     [pan, zoom]
-  );
-
-  /** Port center from card DOM rect; applies PORT_CENTER_INSET so the line meets the visible port circle (2px inside edge). */
-  const getPortPositionFromDOM = useCallback(
-    (prismionId: string, port: "top" | "right" | "bottom" | "left"): { x: number; y: number } | null => {
-      const el = document.querySelector(`[data-prismion-id="${prismionId}"]`) as HTMLElement | null;
-      if (!el) return null;
-      const rect = el.getBoundingClientRect();
-      if (rect.width < 1 || rect.height < 1) return null;
-      let cx: number;
-      let cy: number;
-      switch (port) {
-        case "top":
-          cx = rect.left + rect.width / 2;
-          cy = rect.top;
-          break;
-        case "right":
-          cx = rect.left + rect.width;
-          cy = rect.top + rect.height / 2;
-          break;
-        case "bottom":
-          cx = rect.left + rect.width / 2;
-          cy = rect.top + rect.height;
-          break;
-        case "left":
-          cx = rect.left;
-          cy = rect.top + rect.height / 2;
-          break;
-      }
-      const board = clientToCanvas(cx, cy);
-      switch (port) {
-        case "top":
-          return { x: Math.round(board.x), y: Math.round(board.y + PORT_CENTER_INSET) };
-        case "right":
-          return { x: Math.round(board.x - PORT_CENTER_INSET), y: Math.round(board.y) };
-        case "bottom":
-          return { x: Math.round(board.x), y: Math.round(board.y - PORT_CENTER_INSET) };
-        case "left":
-          return { x: Math.round(board.x + PORT_CENTER_INSET), y: Math.round(board.y) };
-      }
-    },
-    [clientToCanvas]
   );
 
   const handleMouseDown = useCallback(
@@ -534,9 +492,7 @@ export function MsqdxBoardCanvas({
           );
         })()}
         {connectorDragFrom && connectorDragEnd && prismionsMap[connectorDragFrom.fromId] && (() => {
-          const start =
-            getPortPositionFromDOM(connectorDragFrom.fromId, connectorDragFrom.fromPort) ??
-            calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
+          const start = calculatePortPosition(prismionsMap[connectorDragFrom.fromId], connectorDragFrom.fromPort);
           const end = connectorDragEnd;
           const minX = Math.min(start.x, end.x) - 4;
           const minY = Math.min(start.y, end.y) - 4;
@@ -674,7 +630,6 @@ export function MsqdxBoardCanvas({
                 onDelete={onConnectorDelete}
                 onWaypointsChange={onConnectorWaypointsChange}
                 clientToBoard={clientToCanvas}
-                getPortPositionFromDOM={getPortPositionFromDOM}
               />
             ))}
           </Box>
