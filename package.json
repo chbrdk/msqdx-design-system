@@ -2,9 +2,9 @@
   "name": "msqdx-design-system",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["packages/tokens", "packages/react"],
+  "workspaces": ["packages/tokens", "packages/react", "packages/graph"],
   "scripts": {
-    "build": "npm run build -w @msqdx/tokens && npm run build -w @msqdx/react",
+    "build": "npm run build -w @msqdx/tokens && npm run build -w @msqdx/graph && npm run build -w @msqdx/react",
     "build:tokens": "npm run build -w @msqdx/tokens",
     "storybook": "npm run storybook -w @msqdx/react",
     "storybook:pm2": "pm2 start ecosystem.config.cjs",

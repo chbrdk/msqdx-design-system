@@ -1,0 +1,142 @@
+'use client';
+
+import React, { useRef, useEffect, useCallback } from 'react';
+import { Graph, InternalEvent } from '@maxgraph/core';
+import '@maxgraph/core/css/common.css';
+import { syncPrismionsAndConnectionsToGraph } from './syncToGraph';
+import type { PrismionShape, ConnectionShape } from './types';
+
+export type PortSide = 'top' | 'right' | 'bottom' | 'left';
+
+export interface MaxGraphBoardProps {
+  prismions: PrismionShape[];
+  connections: ConnectionShape[];
+  selectedPrismionIds?: string[];
+  onSelectPrismion?: (id: string | null) => void;
+  onPrismionMove?: (id: string, position: { x: number; y: number }) => void;
+  onPrismionResize?: (id: string, size: { w: number; h: number }) => void;
+  onPrismionDelete?: (id: string) => void;
+  onConnectorDelete?: (connectorId: string) => void;
+  onDoubleClickCell?: (id: string) => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export function MaxGraphBoard({
+  prismions,
+  connections,
+  selectedPrismionIds = [],
+  onSelectPrismion,
+  onPrismionMove,
+  onPrismionResize,
+  onPrismionDelete,
+  onConnectorDelete,
+  onDoubleClickCell,
+  className,
+  style = { width: '100%', height: '100%' },
+}: MaxGraphBoardProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const graphRef = useRef<Graph | null>(null);
+
+  const syncToGraph = useCallback(() => {
+    const graph = graphRef.current;
+    if (!graph) return;
+    syncPrismionsAndConnectionsToGraph(graph, prismions, connections);
+  }, [prismions, connections]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    InternalEvent.disableContextMenu(container);
+    const graph = new Graph(container);
+    graphRef.current = graph;
+
+    graph.setPanning(true);
+
+    graph.addListener(InternalEvent.CELLS_MOVED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
+      const cells = evt.getProperty('cells') as Array<{ getId: () => string; getGeometry: () => { x: number; y: number; width: number; height: number } | null; isEdge: () => boolean }>;
+      if (!cells || !onPrismionMove) return;
+      for (const cell of cells) {
+        if (cell.isEdge?.()) continue;
+        const geo = cell.getGeometry?.();
+        if (geo) {
+          const id = cell.getId?.();
+          if (id) onPrismionMove(id, { x: geo.x, y: geo.y });
+        }
+      }
+    });
+
+    graph.addListener(InternalEvent.CELLS_RESIZED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
+      const cells = evt.getProperty('cells') as Array<{ getId: () => string; getGeometry: () => { width: number; height: number } | null; isEdge: () => boolean }>;
+      if (!cells || !onPrismionResize) return;
+      for (const cell of cells) {
+        if (cell.isEdge?.()) continue;
+        const geo = cell.getGeometry?.();
+        if (geo && geo.width != null && geo.height != null) {
+          const id = cell.getId?.();
+          if (id) onPrismionResize(id, { w: geo.width, h: geo.height });
+        }
+      }
+    });
+
+    graph.addListener(InternalEvent.CELLS_REMOVED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
+      const cells = evt.getProperty('cells') as Array<{ getId: () => string; isEdge: () => boolean }>;
+      if (!cells) return;
+      for (const cell of cells) {
+        const id = cell.getId?.();
+        if (!id) continue;
+        if (cell.isEdge?.()) {
+          onConnectorDelete?.(id);
+        } else {
+          onPrismionDelete?.(id);
+        }
+      }
+    });
+
+    graph.addListener(InternalEvent.CLICK, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
+      const cell = evt.getProperty('cell') as { getId: () => string } | null;
+      if (onSelectPrismion) {
+        onSelectPrismion(cell ? cell.getId?.() ?? null : null);
+      }
+    });
+
+    graph.addListener(InternalEvent.DOUBLE_CLICK, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
+      const cell = evt.getProperty('cell') as { getId: () => string } | null;
+      if (cell && onDoubleClickCell) {
+        const id = cell.getId?.();
+        if (id) onDoubleClickCell(id);
+      }
+    });
+
+    syncPrismionsAndConnectionsToGraph(graph, prismions, connections);
+
+    return () => {
+      graph.destroy();
+      graphRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    syncToGraph();
+  }, [syncToGraph]);
+
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph) return;
+    if (selectedPrismionIds.length === 0) {
+      graph.clearSelection();
+      return;
+    }
+    const model = graph.getDataModel();
+    const parent = graph.getDefaultParent();
+    const toSelect: import('@maxgraph/core').Cell[] = [];
+    for (const id of selectedPrismionIds) {
+      const cell = model.getCell(id);
+      if (cell && cell.getParent?.() === parent) toSelect.push(cell);
+    }
+    graph.setSelectionCells(toSelect);
+  }, [selectedPrismionIds]);
+
+  return <div ref={containerRef} className={className} style={style} />;
+}

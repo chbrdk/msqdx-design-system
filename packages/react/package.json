@@ -20,6 +20,7 @@
     "directory": "packages/react"
   },
   "dependencies": {
+    "@msqdx/graph": "^1.0.0",
     "@msqdx/tokens": "^1.0.0",
     "lucide-react": "^0.460.0",
     "react-markdown": "^9.0.1"
