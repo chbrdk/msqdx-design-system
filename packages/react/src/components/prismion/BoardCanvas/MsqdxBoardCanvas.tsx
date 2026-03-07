@@ -164,6 +164,39 @@ export function MsqdxBoardCanvas({
     [pan, zoom]
   );
 
+  const getPortPositionFromDOM = useCallback(
+    (prismionId: string, port: "top" | "right" | "bottom" | "left") => {
+      const wrapper = canvasRef.current?.querySelector(
+        `[data-prismion-id="${prismionId}"]`
+      ) as HTMLElement | null;
+      if (!wrapper) return null;
+      const rect = wrapper.getBoundingClientRect();
+      if (rect.width < 1 || rect.height < 1) return null;
+      let clientX: number;
+      let clientY: number;
+      switch (port) {
+        case "top":
+          clientX = rect.left + rect.width / 2;
+          clientY = rect.top;
+          break;
+        case "bottom":
+          clientX = rect.left + rect.width / 2;
+          clientY = rect.top + rect.height;
+          break;
+        case "left":
+          clientX = rect.left;
+          clientY = rect.top + rect.height / 2;
+          break;
+        case "right":
+          clientX = rect.left + rect.width;
+          clientY = rect.top + rect.height / 2;
+          break;
+      }
+      return clientToCanvas(clientX, clientY);
+    },
+    [clientToCanvas]
+  );
+
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0 && e.button !== 1) return;
@@ -641,6 +674,7 @@ export function MsqdxBoardCanvas({
                 onDelete={onConnectorDelete}
                 onWaypointsChange={onConnectorWaypointsChange}
                 clientToBoard={clientToCanvas}
+                getPortPositionFromDOM={getPortPositionFromDOM}
               />
             ))}
           </Box>

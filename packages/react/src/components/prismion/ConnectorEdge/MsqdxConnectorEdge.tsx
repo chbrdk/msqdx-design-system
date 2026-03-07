@@ -30,6 +30,8 @@ export interface MsqdxConnectorEdgeProps {
   onWaypointsChange?: (connectorId: string, waypoints: { x: number; y: number }[]) => void;
   /** Convert client coordinates to board coordinates (for waypoint drag). */
   clientToBoard?: (clientX: number, clientY: number) => { x: number; y: number };
+  /** Optional: get port position from rendered card wrapper (fixes offset when wrapper height differs from state). */
+  getPortPositionFromDOM?: (prismionId: string, port: "top" | "right" | "bottom" | "left") => { x: number; y: number } | null;
 }
 
 function buildRoundedPathData(
@@ -110,6 +112,7 @@ export function MsqdxConnectorEdge({
   onNewConnection,
   onWaypointsChange,
   clientToBoard,
+  getPortPositionFromDOM,
 }: MsqdxConnectorEdgeProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -196,8 +199,12 @@ export function MsqdxConnectorEdge({
   const optimalPorts = findOptimalPorts(fromPrismion, toPrismion);
   const effectiveFromPort = connector.from.port ?? optimalPorts.fromPort;
   const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
-  const fromPos = calculatePortPosition(fromPrismion, effectiveFromPort);
-  const toPos = calculatePortPosition(toPrismion, effectiveToPort);
+  const fromPos =
+    getPortPositionFromDOM?.(fromPrismion.id, effectiveFromPort) ??
+    calculatePortPosition(fromPrismion, effectiveFromPort);
+  const toPos =
+    getPortPositionFromDOM?.(toPrismion.id, effectiveToPort) ??
+    calculatePortPosition(toPrismion, effectiveToPort);
   if (
     typeof window !== "undefined" &&
     (window as unknown as { __CONNECTOR_DEBUG__?: boolean }).__CONNECTOR_DEBUG__
