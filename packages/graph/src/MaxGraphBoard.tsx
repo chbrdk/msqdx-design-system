@@ -37,11 +37,22 @@ export function MaxGraphBoard({
 }: MaxGraphBoardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
+  const initialFitDoneRef = useRef(false);
 
   const syncToGraph = useCallback(() => {
     const graph = graphRef.current;
     if (!graph) return;
     syncPrismionsAndConnectionsToGraph(graph, prismions, connections);
+    // Fit and center once after first sync so all cells are visible
+    if (!initialFitDoneRef.current) {
+      initialFitDoneRef.current = true;
+      const fitPlugin = (graph as { getPlugin?(id: string): { fitCenter?(opts?: unknown): number } | undefined }).getPlugin?.('fit');
+      if (fitPlugin?.fitCenter) {
+        requestAnimationFrame(() => {
+          fitPlugin.fitCenter?.({ minScale: 0.1, maxScale: 2 });
+        });
+      }
+    }
   }, [prismions, connections]);
 
   useEffect(() => {
@@ -53,6 +64,10 @@ export function MaxGraphBoard({
     graphRef.current = graph;
 
     graph.setPanning(true);
+    graph.setCellsMovable(true);
+    graph.setCellsResizable(true);
+    graph.setCellsSelectable(true);
+    graph.setCellsDeletable(true);
 
     graph.addListener(InternalEvent.CELLS_MOVED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
       const cells = evt.getProperty('cells') as Array<{ getId: () => string; getGeometry: () => { x: number; y: number; width: number; height: number } | null; isEdge: () => boolean }>;
@@ -138,5 +153,15 @@ export function MaxGraphBoard({
     graph.setSelectionCells(toSelect);
   }, [selectedPrismionIds]);
 
-  return <div ref={containerRef} className={className} style={style} />;
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{
+        minHeight: 300,
+        position: 'relative',
+        ...style,
+      }}
+    />
+  );
 }
