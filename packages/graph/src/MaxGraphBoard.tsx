@@ -6,6 +6,17 @@ import '@maxgraph/core/css/common.css';
 import { syncPrismionsAndConnectionsToGraph } from './syncToGraph';
 import type { PrismionShape, ConnectionShape } from './types';
 
+/** Serialize graph-relevant data so we only sync when something actually changed (avoids re-sync on every parent re-render). */
+function getGraphDataSig(prismions: PrismionShape[], connections: ConnectionShape[]): string {
+  const p = prismions
+    .map((r) => `${r.id},${r.position.x},${r.position.y},${r.size.w},${r.size.h}`)
+    .join('|');
+  const c = connections
+    .map((e) => `${e.id},${e.fromPrismionId},${e.toPrismionId}`)
+    .join('|');
+  return `${p}::${c}`;
+}
+
 export type PortSide = 'top' | 'right' | 'bottom' | 'left';
 
 export interface MaxGraphBoardProps {
@@ -38,10 +49,14 @@ export function MaxGraphBoard({
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
   const initialFitDoneRef = useRef(false);
+  const lastSyncSigRef = useRef<string>('');
 
   const syncToGraph = useCallback(() => {
     const graph = graphRef.current;
     if (!graph) return;
+    const sig = getGraphDataSig(prismions, connections);
+    if (lastSyncSigRef.current === sig) return;
+    lastSyncSigRef.current = sig;
     syncPrismionsAndConnectionsToGraph(graph, prismions, connections);
     // Fit and center once after first sync so all cells are visible
     if (!initialFitDoneRef.current) {
