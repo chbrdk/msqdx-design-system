@@ -50,11 +50,18 @@ export function MaxGraphBoard({
   const graphRef = useRef<Graph | null>(null);
   const initialFitDoneRef = useRef(false);
   const lastSyncSigRef = useRef<string>('');
+  /** Skip the next sync when we just pushed a move/resize from the graph – the graph already has the right state, and React state may not have committed yet. */
+  const skipNextSyncRef = useRef(false);
 
   const syncToGraph = useCallback(() => {
     const graph = graphRef.current;
     if (!graph) return;
     const sig = getGraphDataSig(prismions, connections);
+    if (skipNextSyncRef.current) {
+      skipNextSyncRef.current = false;
+      lastSyncSigRef.current = sig;
+      return;
+    }
     if (lastSyncSigRef.current === sig) return;
     lastSyncSigRef.current = sig;
     syncPrismionsAndConnectionsToGraph(graph, prismions, connections);
@@ -87,6 +94,7 @@ export function MaxGraphBoard({
     graph.addListener(InternalEvent.CELLS_MOVED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
       const cells = evt.getProperty('cells') as Array<{ getId: () => string; getGeometry: () => { x: number; y: number; width: number; height: number } | null; isEdge: () => boolean }>;
       if (!cells || !onPrismionMove) return;
+      skipNextSyncRef.current = true;
       for (const cell of cells) {
         if (cell.isEdge?.()) continue;
         const geo = cell.getGeometry?.();
@@ -100,6 +108,7 @@ export function MaxGraphBoard({
     graph.addListener(InternalEvent.CELLS_RESIZED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
       const cells = evt.getProperty('cells') as Array<{ getId: () => string; getGeometry: () => { width: number; height: number } | null; isEdge: () => boolean }>;
       if (!cells || !onPrismionResize) return;
+      skipNextSyncRef.current = true;
       for (const cell of cells) {
         if (cell.isEdge?.()) continue;
         const geo = cell.getGeometry?.();
