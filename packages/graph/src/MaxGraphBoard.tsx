@@ -29,6 +29,10 @@ export interface MaxGraphBoardProps {
   onPrismionDelete?: (id: string) => void;
   onConnectorDelete?: (connectorId: string) => void;
   onDoubleClickCell?: (id: string) => void;
+  /** Called when user double-clicks on empty canvas (no cell). graphX/graphY are in graph coordinates. */
+  onDoubleClickCanvas?: (graphX: number, graphY: number) => void;
+  /** Called when user creates a new edge by dragging from one vertex to another. */
+  onConnectionCreate?: (fromId: string, toId: string) => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -43,6 +47,8 @@ export function MaxGraphBoard({
   onPrismionDelete,
   onConnectorDelete,
   onDoubleClickCell,
+  onDoubleClickCanvas,
+  onConnectionCreate,
   className,
   style = { width: '100%', height: '100%' },
 }: MaxGraphBoardProps) {
@@ -90,6 +96,7 @@ export function MaxGraphBoard({
     graph.setCellsResizable(true);
     graph.setCellsSelectable(true);
     graph.setCellsDeletable(true);
+    graph.setConnectable(true);
 
     graph.addListener(InternalEvent.CELLS_MOVED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
       const cells = evt.getProperty('cells') as Array<{ getId: () => string; getGeometry: () => { x: number; y: number; width: number; height: number } | null; isEdge: () => boolean }>;
@@ -142,9 +149,34 @@ export function MaxGraphBoard({
 
     graph.addListener(InternalEvent.DOUBLE_CLICK, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
       const cell = evt.getProperty('cell') as { getId: () => string } | null;
-      if (cell && onDoubleClickCell) {
-        const id = cell.getId?.();
-        if (id) onDoubleClickCell(id);
+      if (cell) {
+        if (onDoubleClickCell) {
+          const id = cell.getId?.();
+          if (id) onDoubleClickCell(id);
+        }
+      } else if (onDoubleClickCanvas) {
+        const mouseEvt = evt.getProperty('event') as MouseEvent | undefined;
+        if (mouseEvt && typeof (graph as { getPointForEvent?(e: MouseEvent): { x: number; y: number } }).getPointForEvent === 'function') {
+          const pt = (graph as { getPointForEvent(e: MouseEvent): { x: number; y: number } }).getPointForEvent(mouseEvt);
+          onDoubleClickCanvas(pt.x, pt.y);
+        }
+      }
+    });
+
+    graph.addListener(InternalEvent.CELL_CONNECTED, (_sender: unknown, evt: { getProperty: (k: string) => unknown }) => {
+      if (!onConnectionCreate) return;
+      const edge = evt.getProperty('edge') as { getId: () => string } | null;
+      if (!edge) return;
+      const model = graph.getDataModel() as { getTerminal?(e: unknown, source: boolean): { getId: () => string } | null };
+      const source = model.getTerminal?.(edge, true);
+      const target = model.getTerminal?.(edge, false);
+      if (source && target) {
+        const fromId = source.getId?.();
+        const toId = target.getId?.();
+        if (fromId && toId) {
+          onConnectionCreate(fromId, toId);
+          // Sync will replace all cells and draw our connection; no need to remove the edge here
+        }
       }
     });
 
