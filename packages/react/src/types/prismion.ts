@@ -95,6 +95,8 @@ export interface Prismion {
   mergeMeta?: MergeMeta;
   kind?: PrismionKind;
   content?: PrismionContent;
+  /** Optional card background color (hex or CSS color). Used by board UI for custom card color. */
+  backgroundColor?: string;
 }
 
 export interface Connector {

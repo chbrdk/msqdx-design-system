@@ -39,10 +39,6 @@ const RadialButton = styled(Box)(() => ({
   justifyContent: "center",
   cursor: "pointer",
   pointerEvents: "auto",
-  transition: "all 220ms ease-out",
-  "&:hover": {
-    transform: "scale(1.05)",
-  },
 })) as React.ComponentType<any>;
 
 export function MsqdxPrismionToolbar({
@@ -61,7 +57,6 @@ export function MsqdxPrismionToolbar({
     e.stopPropagation();
     e.preventDefault();
   }, []);
-  const [entered, setEntered] = useState(false);
 
   const toggle = useCallback(() => setOpen((v) => !v), []);
 
@@ -78,15 +73,6 @@ export function MsqdxPrismionToolbar({
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("mousedown", onDown, true);
     };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) {
-      setEntered(false);
-      return;
-    }
-    const id = requestAnimationFrame(() => setEntered(true));
-    return () => cancelAnimationFrame(id);
   }, [open]);
 
   const actions = [
@@ -189,7 +175,6 @@ export function MsqdxPrismionToolbar({
               const radius = 64;
               const tx = Math.cos(angleRad) * radius;
               const ty = Math.sin(angleRad) * radius;
-              const delay = `${idx * 0.06}s`;
               return (
                 <RadialButton
                   key={a.key}
@@ -200,11 +185,7 @@ export function MsqdxPrismionToolbar({
                   onMouseDown={blockMouseDown}
                   title={a.label}
                   sx={{
-                    transform: `translate(${tx}px, ${ty}px) scale(${entered ? 1 : 0.85})`,
-                    opacity: entered ? 1 : 0,
-                    transitionDuration: "220ms",
-                    transitionProperty: "transform, opacity",
-                    transitionDelay: delay,
+                    transform: `translate(${tx}px, ${ty}px)`,
                     color: a.isDanger ? MSQDX_STATUS.error.base : undefined,
                   }}
                 >
