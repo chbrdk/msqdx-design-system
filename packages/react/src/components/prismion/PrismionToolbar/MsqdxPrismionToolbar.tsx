@@ -13,6 +13,16 @@ import {
   MSQDX_STATUS,
 } from "@msqdx/tokens";
 
+/** Toolbar trigger styled like board ports: round, brand background, light border */
+const TOOLBAR_TRIGGER_STYLE = {
+  overflow: "visible" as const,
+  backgroundColor: MSQDX_BRAND_COLOR_CSS,
+  color: "#fff",
+  border: `2px solid ${MSQDX_NEUTRAL[100]}`,
+  boxShadow: MSQDX_EFFECTS.shadows.sm,
+  borderRadius: "50%",
+};
+
 export interface MsqdxPrismionToolbarProps {
   className?: string;
   onBranch?: () => void;
@@ -95,7 +105,7 @@ export function MsqdxPrismionToolbar({
   ];
 
   return (
-    <Box className={className} sx={{ position: "relative", userSelect: "none" }}>
+    <Box className={className} sx={{ position: "relative", userSelect: "none", overflow: "visible" }}>
       <Box
         ref={wrapperRef}
         sx={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center", overflow: "visible" }}
@@ -108,8 +118,11 @@ export function MsqdxPrismionToolbar({
           title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
           aria-label={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
           sx={{
-            color: MSQDX_BRAND_COLOR_CSS,
-            overflow: 'visible',
+            ...TOOLBAR_TRIGGER_STYLE,
+            "&:hover": {
+              backgroundColor: MSQDX_BRAND_COLOR_CSS,
+              color: "#fff",
+            },
             ...(open ? { boxShadow: `0 0 0 2px ${MSQDX_BRAND_COLOR_CSS}` } : {}),
           }}
         >
