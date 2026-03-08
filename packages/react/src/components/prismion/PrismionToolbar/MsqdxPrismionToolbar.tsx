@@ -36,9 +36,6 @@ export interface MsqdxPrismionToolbarProps {
   variant?: "bar" | "radial";
 }
 
-/** Radial menu items use MsqdxIconButton size="xs" (20×20). Offset to center at (tx, ty). */
-const RADIAL_ICON_SIZE = 20;
-
 export function MsqdxPrismionToolbar({
   className,
   onBranch,
@@ -198,8 +195,7 @@ export function MsqdxPrismionToolbar({
                     position: "absolute",
                     left: tx,
                     top: ty,
-                    marginLeft: -RADIAL_ICON_SIZE / 2,
-                    marginTop: -RADIAL_ICON_SIZE / 2,
+                    transform: "translate(-50%, -50%)",
                     color: a.isDanger ? MSQDX_STATUS.error.base : undefined,
                   }}
                 >
