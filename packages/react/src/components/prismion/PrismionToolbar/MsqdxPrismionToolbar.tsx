@@ -196,7 +196,13 @@ export function MsqdxPrismionToolbar({
                     left: tx,
                     top: ty,
                     transform: "translate(-50%, -50%)",
-                    color: a.isDanger ? MSQDX_STATUS.error.base : undefined,
+                    backgroundColor: a.isDanger ? MSQDX_STATUS.error.base : MSQDX_BRAND_COLOR_CSS,
+                    color: "#fff",
+                    borderColor: MSQDX_NEUTRAL[100],
+                    "&:hover": {
+                      backgroundColor: a.isDanger ? MSQDX_STATUS.error.base : MSQDX_BRAND_COLOR_CSS,
+                      color: "#fff",
+                    },
                   }}
                 >
                   <a.Icon size={12} />
