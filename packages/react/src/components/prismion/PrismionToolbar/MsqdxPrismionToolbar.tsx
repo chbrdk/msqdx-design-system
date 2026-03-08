@@ -4,7 +4,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Box, styled } from "@mui/material";
 import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import { MsqdxIconButton } from "../../atoms/Button/MsqdxIconButton";
-import { GitBranch, ArrowRight, Lock, Unlock, Archive, Trash2, MoreHorizontal, X } from "lucide-react";
+import { GitBranch, ArrowRight, Lock, Unlock, Archive, Trash2, MoreHorizontal, X, Palette } from "lucide-react";
 import {
   MSQDX_SPACING,
   MSQDX_EFFECTS,
@@ -20,6 +20,8 @@ export interface MsqdxPrismionToolbarProps {
   onLockToggle?: () => void;
   onArchive?: () => void;
   onDelete?: () => void;
+  /** When set, adds a "Farbe" (color) action that calls this on click (e.g. to open a color picker). */
+  onColorClick?: () => void;
   locked?: boolean;
   variant?: "bar" | "radial";
 }
@@ -48,6 +50,7 @@ export function MsqdxPrismionToolbar({
   onLockToggle,
   onArchive,
   onDelete,
+  onColorClick,
   locked = false,
   variant = "radial",
 }: MsqdxPrismionToolbarProps) {
@@ -85,6 +88,7 @@ export function MsqdxPrismionToolbar({
       onClick: onLockToggle,
     },
     { key: "archive", label: "Archive", Icon: Archive, onClick: onArchive },
+    ...(onColorClick ? [{ key: "color" as const, label: "Farbe", Icon: Palette, onClick: onColorClick }] : []),
     { key: "delete", label: "Delete", Icon: Trash2, onClick: onDelete, isDanger: true },
   ];
 
