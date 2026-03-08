@@ -33,6 +33,7 @@ const RadialButton = styled(Box)(() => ({
   marginLeft: -18,
   marginTop: -18,
   borderRadius: "50%",
+  overflow: "hidden", /* clip content to circle */
   backgroundColor: "rgba(255,255,255,0.95)",
   border: `1px solid ${MSQDX_NEUTRAL[200]}`,
   boxShadow: MSQDX_EFFECTS.shadows.md,
@@ -41,6 +42,7 @@ const RadialButton = styled(Box)(() => ({
   justifyContent: "center",
   cursor: "pointer",
   pointerEvents: "auto",
+  flexShrink: 0,
 })) as React.ComponentType<any>;
 
 export function MsqdxPrismionToolbar({
@@ -105,7 +107,11 @@ export function MsqdxPrismionToolbar({
           onMouseDown={blockMouseDown}
           title={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
           aria-label={open ? "Toolbar ausblenden" : "Toolbar anzeigen"}
-          sx={open ? { boxShadow: `0 0 0 2px ${MSQDX_BRAND_COLOR_CSS}` } : undefined}
+          sx={{
+            color: MSQDX_BRAND_COLOR_CSS,
+            overflow: 'visible',
+            ...(open ? { boxShadow: `0 0 0 2px ${MSQDX_BRAND_COLOR_CSS}` } : {}),
+          }}
         >
           {open ? <X size={14} /> : <MoreHorizontal size={14} />}
         </MsqdxIconButton>
@@ -167,6 +173,7 @@ export function MsqdxPrismionToolbar({
               transform: "translate(-50%, -50%)",
               zIndex: 9999,
               pointerEvents: "auto",
+              overflow: "visible",
             }}
           >
             {actions.map((a, idx) => {
@@ -182,6 +189,7 @@ export function MsqdxPrismionToolbar({
               return (
                 <RadialButton
                   key={a.key}
+                  data-prismion-radial-button
                   onClick={(e: React.MouseEvent<HTMLElement>) => {
                     e.stopPropagation();
                     a.onClick?.();
@@ -190,6 +198,7 @@ export function MsqdxPrismionToolbar({
                   title={a.label}
                   sx={{
                     transform: `translate(${tx}px, ${ty}px)`,
+                    borderRadius: "50%",
                     color: a.isDanger ? MSQDX_STATUS.error.base : undefined,
                   }}
                 >
