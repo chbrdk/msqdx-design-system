@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Box, styled } from "@mui/material";
+import { Box } from "@mui/material";
 import { MsqdxButton } from "../../atoms/Button/MsqdxButton";
 import { MsqdxIconButton } from "../../atoms/Button/MsqdxIconButton";
 import { GitBranch, ArrowRight, Lock, Unlock, Archive, Trash2, MoreHorizontal, X, Palette } from "lucide-react";
@@ -36,24 +36,8 @@ export interface MsqdxPrismionToolbarProps {
   variant?: "bar" | "radial";
 }
 
-const RadialButton = styled(Box)(() => ({
-  position: "absolute",
-  width: 36,
-  height: 36,
-  marginLeft: -18,
-  marginTop: -18,
-  borderRadius: "50%",
-  overflow: "hidden", /* clip content to circle */
-  backgroundColor: "rgba(255,255,255,0.95)",
-  border: `1px solid ${MSQDX_NEUTRAL[200]}`,
-  boxShadow: MSQDX_EFFECTS.shadows.md,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  cursor: "pointer",
-  pointerEvents: "auto",
-  flexShrink: 0,
-})) as React.ComponentType<any>;
+/** Radial menu items use MsqdxIconButton size="xs" (20×20). Offset to center at (tx, ty). */
+const RADIAL_ICON_SIZE = 20;
 
 export function MsqdxPrismionToolbar({
   className,
@@ -200,23 +184,27 @@ export function MsqdxPrismionToolbar({
               const tx = Math.cos(angleRad) * radius;
               const ty = Math.sin(angleRad) * radius;
               return (
-                <RadialButton
+                <MsqdxIconButton
                   key={a.key}
+                  size="xs"
                   data-prismion-radial-button
-                  onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     a.onClick?.();
                   }}
                   onMouseDown={blockMouseDown}
                   title={a.label}
                   sx={{
-                    transform: `translate(${tx}px, ${ty}px)`,
-                    borderRadius: "50%",
+                    position: "absolute",
+                    left: tx,
+                    top: ty,
+                    marginLeft: -RADIAL_ICON_SIZE / 2,
+                    marginTop: -RADIAL_ICON_SIZE / 2,
                     color: a.isDanger ? MSQDX_STATUS.error.base : undefined,
                   }}
                 >
-                  <a.Icon size={18} />
-                </RadialButton>
+                  <a.Icon size={12} />
+                </MsqdxIconButton>
               );
             })}
           </Box>
