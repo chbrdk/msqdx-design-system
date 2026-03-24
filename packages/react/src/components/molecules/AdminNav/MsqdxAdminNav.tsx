@@ -230,14 +230,45 @@ export const MsqdxAdminNav = ({
         {items.map((item) => {
           const active = item.path ? isActive(item.path, item.exact) : false;
           if (!isExpanded) {
-            return (
-              <IconButton
+            return item.path ? (
+              <LinkComponent
                 key={item.path}
-                size="medium"
-                component={LinkComponent}
                 href={item.path}
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noreferrer" : undefined}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    handleItemClick();
+                  }
+                }}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <IconButton
+                  size="medium"
+                  sx={{
+                    color: active ? textColor : textMuted,
+                    width: ITEM_HEIGHT,
+                    height: ITEM_HEIGHT,
+                    minWidth: ITEM_HEIGHT,
+                    minHeight: ITEM_HEIGHT,
+                    padding: 0,
+                    "&:hover": {
+                      backgroundColor: active ? activeBgHover : hoverBg,
+                      color: textColor,
+                    },
+                  }}
+                  title={item.label}
+                  aria-label={item.label}
+                >
+                  <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                </IconButton>
+              </LinkComponent>
+            ) : (
+              <IconButton
+                key={item.label} // Use label as key if path is undefined
+                size="medium"
                 onClick={() => {
                   if (item.onClick) {
                     item.onClick();
@@ -264,20 +295,8 @@ export const MsqdxAdminNav = ({
               </IconButton>
             );
           }
-          return (
+          const content = (
             <Box
-              key={item.label + (item.path ?? "")}
-              component={item.onClick ? "button" : LinkComponent}
-              href={item.path}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
-              onClick={() => {
-                if (item.onClick) {
-                  item.onClick();
-                } else {
-                  handleItemClick();
-                }
-              }}
               sx={{
                 flexShrink: 0,
                 height: ITEM_HEIGHT,
@@ -292,8 +311,8 @@ export const MsqdxAdminNav = ({
                 color: active ? textColor : textMuted,
                 textDecoration: "none",
                 cursor: "pointer",
-                border: "none", // For button component
-                fontFamily: "inherit", // For button component
+                border: "none",
+                fontFamily: "inherit",
                 "&:hover": {
                   backgroundColor: active ? activeBgHover : hoverBg,
                   color: textColor,
@@ -317,6 +336,45 @@ export const MsqdxAdminNav = ({
               >
                 {item.label}
               </MsqdxTypography>
+            </Box>
+          );
+
+          if (item.path) {
+            return (
+              <LinkComponent
+                key={item.label + item.path}
+                href={item.path}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    handleItemClick();
+                  }
+                }}
+                style={{ textDecoration: "none", color: "inherit", width: "100%" }}
+              >
+                {content}
+              </LinkComponent>
+            );
+          }
+
+          return (
+            <Box
+              key={item.label}
+              component="button"
+              type="button"
+              onClick={() => {
+                if (item.onClick) {
+                  item.onClick();
+                } else {
+                  handleItemClick();
+                }
+              }}
+              sx={{ p: 0, m: 0, border: "none", background: "none", width: "100%", textAlign: "left" }}
+            >
+              {content}
             </Box>
           );
         })}
@@ -344,50 +402,69 @@ export const MsqdxAdminNav = ({
             }}
           />
         )}
-        {externalItems.map((item) =>
-          !isExpanded ? (
-            <IconButton
-              key={item.path}
-              size="medium"
-              component={LinkComponent}
-              href={item.path}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
-              onClick={() => {
-                if (item.onClick) {
-                  item.onClick();
-                } else {
-                  handleItemClick();
-                }
-              }}
-              sx={{
-                color: textMuted,
-                width: ITEM_HEIGHT,
-                height: ITEM_HEIGHT,
-                minWidth: ITEM_HEIGHT,
-                minHeight: ITEM_HEIGHT,
-                padding: 0,
-                "&:hover": { backgroundColor: hoverBg, color: textColor },
-              }}
-              title={item.label}
-              aria-label={item.label}
-            >
-              <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
-            </IconButton>
-          ) : (
+        {externalItems.map((item) => {
+          if (!isExpanded) {
+            return item.path ? (
+              <LinkComponent
+                key={item.path}
+                href={item.path}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    handleItemClick();
+                  }
+                }}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <IconButton
+                  size="medium"
+                  sx={{
+                    color: textMuted,
+                    width: ITEM_HEIGHT,
+                    height: ITEM_HEIGHT,
+                    minWidth: ITEM_HEIGHT,
+                    minHeight: ITEM_HEIGHT,
+                    padding: 0,
+                    "&:hover": { backgroundColor: hoverBg, color: textColor },
+                  }}
+                  title={item.label}
+                  aria-label={item.label}
+                >
+                  <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                </IconButton>
+              </LinkComponent>
+            ) : (
+              <IconButton
+                key={item.label}
+                size="medium"
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    handleItemClick();
+                  }
+                }}
+                sx={{
+                  color: textMuted,
+                  width: ITEM_HEIGHT,
+                  height: ITEM_HEIGHT,
+                  minWidth: ITEM_HEIGHT,
+                  minHeight: ITEM_HEIGHT,
+                  padding: 0,
+                  "&:hover": { backgroundColor: hoverBg, color: textColor },
+                }}
+                title={item.label}
+                aria-label={item.label}
+              >
+                <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+              </IconButton>
+            );
+          }
+          const content = (
             <Box
-              key={item.label + (item.path ?? "")}
-              component={item.onClick ? "button" : LinkComponent}
-              href={item.path}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
-              onClick={() => {
-                if (item.onClick) {
-                  item.onClick();
-                } else {
-                  handleItemClick();
-                }
-              }}
               sx={{
                 flexShrink: 0,
                 height: ITEM_HEIGHT,
@@ -401,8 +478,8 @@ export const MsqdxAdminNav = ({
                 color: textMuted,
                 textDecoration: "none",
                 cursor: "pointer",
-                border: "none", // For button component
-                fontFamily: "inherit", // For button component
+                border: "none",
+                fontFamily: "inherit",
                 "&:hover": { backgroundColor: hoverBg, color: textColor },
                 transition: "all 0.2s ease",
               }}
@@ -423,8 +500,47 @@ export const MsqdxAdminNav = ({
                 {item.label}
               </MsqdxTypography>
             </Box>
-          )
-        )}
+          );
+
+          if (item.path) {
+            return (
+              <LinkComponent
+                key={item.label + item.path}
+                href={item.path}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    handleItemClick();
+                  }
+                }}
+                style={{ textDecoration: "none", color: "inherit", width: "100%" }}
+              >
+                {content}
+              </LinkComponent>
+            );
+          }
+
+          return (
+            <Box
+              key={item.label}
+              component="button"
+              type="button"
+              onClick={() => {
+                if (item.onClick) {
+                  item.onClick();
+                } else {
+                  handleItemClick();
+                }
+              }}
+              sx={{ p: 0, m: 0, border: "none", background: "none", width: "100%", textAlign: "left" }}
+            >
+              {content}
+            </Box>
+          );
+        })}
         {onToggleTheme && (
           <Box
             sx={{
