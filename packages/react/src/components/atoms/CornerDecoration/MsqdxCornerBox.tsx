@@ -89,6 +89,10 @@ export interface MsqdxCornerBoxProps
    * Ausrichtung Header-Zeile (Logo/App-Name): align-items. Token aus MSQDX_LAYOUT.alignment.align.
    */
   headerAlign?: AlignValue;
+  /**
+   * Optionaler Inhalt am rechten Ende der Header-Zeile (z. B. Projekt-Subnav, Aktionen).
+   */
+  headerEnd?: ReactNode;
   children?: ReactNode;
 }
 
@@ -194,6 +198,7 @@ export const MsqdxCornerBox = ({
   alignItems,
   headerJustify,
   headerAlign,
+  headerEnd,
   sx,
   children,
   ...props
@@ -254,44 +259,49 @@ export const MsqdxCornerBox = ({
           sx={{
             display: "flex",
             alignItems: headerAlign != null ? MSQDX_LAYOUT.alignment.align[headerAlign] : "center",
-            justifyContent: headerJustify != null ? MSQDX_LAYOUT.alignment.justify[headerJustify] : undefined,
+            justifyContent: headerJustify != null ? MSQDX_LAYOUT.alignment.justify[headerJustify] : (headerEnd != null ? "space-between" : undefined),
             alignSelf: "stretch",
             minHeight: 28,
-            gap: 0,
+            gap: 1,
             marginBottom: children != null ? 1 : 0,
           }}
         >
-          {showLogo && (
-            <Box sx={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
-              <Box sx={{ display: { xs: "block", md: "none" } }}>
-                <MsqdxLogoMark width={32} height={32} color={logoProps.color ?? "black"} />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0, flexShrink: 0 }}>
+            {showLogo && (
+              <Box sx={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+                <Box sx={{ display: { xs: "block", md: "none" } }}>
+                  <MsqdxLogoMark width={32} height={32} color={logoProps.color ?? "black"} />
+                </Box>
+                <Box sx={{ display: { xs: "none", md: "block" }, marginTop: "6px" }}>
+                  <MsqdxLogo size="small" {...logoProps} />
+                </Box>
               </Box>
-              <Box sx={{ display: { xs: "none", md: "block" }, marginTop: "6px" }}>
-                <MsqdxLogo size="small" {...logoProps} />
-              </Box>
+            )}
+            <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 0 }}>
+              {showLogo && appName != null && (
+                <MsqdxDivider orientation="vertical" spacing="sm" />
+              )}
+              {appName != null && (
+                <Box
+                  component="span"
+                  sx={{
+                    flexShrink: 0,
+                    width: "fit-content",
+                    fontFamily: MSQDX_TYPOGRAPHY.fontFamily.primary,
+                    fontSize: "1.3rem",
+                    fontWeight: 200,
+                    textTransform: "uppercase",
+                    ...(headerTextColor && { color: headerTextColor }),
+                  }}
+                >
+                  {appName}
+                </Box>
+              )}
             </Box>
-          )}
-          <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 0 }}>
-            {showLogo && appName != null && (
-              <MsqdxDivider orientation="vertical" spacing="sm" />
-            )}
-            {appName != null && (
-              <Box
-                component="span"
-                sx={{
-                  flexShrink: 0,
-                  width: "fit-content",
-                  fontFamily: MSQDX_TYPOGRAPHY.fontFamily.primary,
-                  fontSize: "1.3rem",
-                  fontWeight: 200,
-                  textTransform: "uppercase",
-                  ...(headerTextColor && { color: headerTextColor }),
-                }}
-              >
-                {appName}
-              </Box>
-            )}
           </Box>
+          {headerEnd != null && (
+            <Box sx={{ marginLeft: "auto", flexShrink: 0 }}>{headerEnd}</Box>
+          )}
         </Box>
       )}
       {children}

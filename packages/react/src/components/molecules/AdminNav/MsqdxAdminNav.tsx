@@ -15,11 +15,13 @@ import { MsqdxTypography } from "../../atoms/Typography/MsqdxTypography";
 
 export type AdminNavItem = {
   label: string;
-  path: string;
+  path?: string;
   icon: string;
   external?: boolean;
   /** When true, active only when currentPath === path (exact match). Use for root/dashboard links. */
   exact?: boolean;
+  /** Optional click handler for actions (e.g. opening modals) instead of navigation. */
+  onClick?: () => void;
 };
 
 export type MsqdxAdminNavProps = {
@@ -226,7 +228,7 @@ export const MsqdxAdminNav = ({
         ))}
 
         {items.map((item) => {
-          const active = isActive(item.path, item.exact);
+          const active = item.path ? isActive(item.path, item.exact) : false;
           if (!isExpanded) {
             return (
               <IconButton
@@ -236,7 +238,13 @@ export const MsqdxAdminNav = ({
                 href={item.path}
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noreferrer" : undefined}
-                onClick={handleItemClick}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    handleItemClick();
+                  }
+                }}
                 sx={{
                   color: active ? textColor : textMuted,
                   width: ITEM_HEIGHT,
@@ -258,12 +266,18 @@ export const MsqdxAdminNav = ({
           }
           return (
             <Box
-              key={item.path}
-              component={LinkComponent}
+              key={item.label + (item.path ?? "")}
+              component={item.onClick ? "button" : LinkComponent}
               href={item.path}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noreferrer" : undefined}
-              onClick={handleItemClick}
+              onClick={() => {
+                if (item.onClick) {
+                  item.onClick();
+                } else {
+                  handleItemClick();
+                }
+              }}
               sx={{
                 flexShrink: 0,
                 height: ITEM_HEIGHT,
@@ -278,6 +292,8 @@ export const MsqdxAdminNav = ({
                 color: active ? textColor : textMuted,
                 textDecoration: "none",
                 cursor: "pointer",
+                border: "none", // For button component
+                fontFamily: "inherit", // For button component
                 "&:hover": {
                   backgroundColor: active ? activeBgHover : hoverBg,
                   color: textColor,
@@ -337,7 +353,13 @@ export const MsqdxAdminNav = ({
               href={item.path}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noreferrer" : undefined}
-              onClick={handleItemClick}
+              onClick={() => {
+                if (item.onClick) {
+                  item.onClick();
+                } else {
+                  handleItemClick();
+                }
+              }}
               sx={{
                 color: textMuted,
                 width: ITEM_HEIGHT,
@@ -354,12 +376,18 @@ export const MsqdxAdminNav = ({
             </IconButton>
           ) : (
             <Box
-              key={item.path}
-              component={LinkComponent}
+              key={item.label + (item.path ?? "")}
+              component={item.onClick ? "button" : LinkComponent}
               href={item.path}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noreferrer" : undefined}
-              onClick={handleItemClick}
+              onClick={() => {
+                if (item.onClick) {
+                  item.onClick();
+                } else {
+                  handleItemClick();
+                }
+              }}
               sx={{
                 flexShrink: 0,
                 height: ITEM_HEIGHT,
@@ -373,6 +401,8 @@ export const MsqdxAdminNav = ({
                 color: textMuted,
                 textDecoration: "none",
                 cursor: "pointer",
+                border: "none", // For button component
+                fontFamily: "inherit", // For button component
                 "&:hover": { backgroundColor: hoverBg, color: textColor },
                 transition: "all 0.2s ease",
               }}

@@ -134,6 +134,10 @@ export interface MsqdxAppLayoutProps extends Omit<BoxProps, "children"> {
    * Optional: CSS-Farbe oder var() für äußeren Brand-Hintergrund. Überschreibt brandColor wenn gesetzt (z. B. für User-Preferences).
    */
   brandBackgroundColor?: string;
+  /**
+   * Optionaler Inhalt am rechten Ende der Header-Zeile (Logo/App-Name), z. B. Projekt-Subnav.
+   */
+  headerEnd?: ReactNode;
 }
 
 /**
@@ -156,6 +160,7 @@ export const MsqdxAppLayout = ({
   appName,
   sidebar,
   brandBackgroundColor,
+  headerEnd,
   sx,
   ...props
 }: MsqdxAppLayoutProps) => {
@@ -256,6 +261,7 @@ export const MsqdxAppLayout = ({
                 logo={logo}
                 appName={appName}
                 headerColor={brandColor === "black" ? "white" : undefined}
+                headerEnd={headerEnd}
                 padding="md"
                 borderRadius={LAYOUT_RADIUS_BUTTON_PX}
                 topLeft="square"
