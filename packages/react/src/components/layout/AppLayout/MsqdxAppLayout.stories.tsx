@@ -45,7 +45,7 @@ Vollflächiger App-Container:
 - **brandColor**: purple, yellow, pink, orange, green, black
 - **borderRadius**: Token-Key (z. B. md, lg, 2xl)
 - **borderWidth**: none, thin, medium, thick, heavy
-- **innerBackground**: default, offwhite, white, checker (Karo), grid (Linienraster wie Audion)
+- **innerBackground**: default, offwhite, white; `checker` / `grid` sind Aliase für offwhite (ohne Muster)
 - **innerBackgroundColor**: optional, eigene Farbe
         `,
       },
@@ -168,30 +168,9 @@ export const Offwhite: Story = {
     children: (
       <Box sx={{ p: 3 }}>
         <Typography variant="h6">Hintergrund: Offwhite (Token neutral)</Typography>
-      </Box>
-    ),
-  },
-};
-
-export const Checker: Story = {
-  args: {
-    brandColor: "green",
-    innerBackground: "checker",
-    children: (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h6">Hintergrund: Karo-Muster</Typography>
-      </Box>
-    ),
-  },
-};
-
-export const Grid: Story = {
-  args: {
-    brandColor: "green",
-    innerBackground: "grid",
-    children: (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h6">Hintergrund: Linienraster (wie Audion Admin)</Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Standard-App-Hintergrund ohne Karo- oder Gittermuster.
+        </Typography>
       </Box>
     ),
   },

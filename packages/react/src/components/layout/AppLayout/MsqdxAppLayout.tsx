@@ -1,7 +1,7 @@
 "use client";
 
 import React, { type ReactNode } from "react";
-import { Box, alpha } from "@mui/material";
+import { Box } from "@mui/material";
 import type { BoxProps } from "@mui/material";
 import {
   MSQDX_COLORS,
@@ -58,36 +58,21 @@ const APP_LAYOUT_BORDER_WIDTH: Record<
   heavy: 16,
 };
 
-/** Optionen für den Hintergrund des inneren Containers (Token-basiert + Muster). */
+/** Optionen für den Hintergrund des inneren Containers (Token-basiert, ohne Muster). */
 export type AppLayoutInnerBackground =
-  | "default"   // NEUTRAL[50]
-  | "offwhite"  // NEUTRAL.neutral (#f8f6f0)
-  | "white"     // #ffffff
-  | "checker"   // Karo-Muster (NEUTRAL[50] / NEUTRAL[200])
-  | "grid";     // Dezentes Linienraster wie Audion Admin (20px, 1px Linien)
+  | "default" // NEUTRAL[50]
+  | "offwhite" // NEUTRAL.neutral (#f8f6f0)
+  | "white" // #ffffff
+  /** @deprecated Alias für offwhite (früher Karo-Muster). */
+  | "checker"
+  /** @deprecated Alias für offwhite (früher Linienraster). */
+  | "grid";
 
 const INNER_BG = {
   default: MSQDX_NEUTRAL[50],
   offwhite: MSQDX_NEUTRAL.neutral,
   white: "#ffffff",
 } as const;
-
-/** CSS für Karo-Muster (zwei Token-Farben). */
-const CHECKER_BACKGROUND = {
-  backgroundColor: MSQDX_NEUTRAL[50],
-  backgroundImage: `linear-gradient(45deg, ${MSQDX_NEUTRAL[200]} 25%, transparent 25%), linear-gradient(-45deg, ${MSQDX_NEUTRAL[200]} 25%, transparent 25%), linear-gradient(45deg, transparent 75%, ${MSQDX_NEUTRAL[200]} 75%), linear-gradient(-45deg, transparent 75%, ${MSQDX_NEUTRAL[200]} 75%)`,
-  backgroundSize: "16px 16px",
-  backgroundPosition: "0 0, 0 8px, 8px -8px, -8px 0px",
-};
-
-/** Dezentes Linienraster wie Audion Admin (1px Linien, 20px Raster, fixed). */
-const GRID_LINE = alpha(MSQDX_NEUTRAL[900], 0.03);
-const GRID_BACKGROUND = {
-  backgroundColor: MSQDX_NEUTRAL.neutral,
-  backgroundImage: `linear-gradient(${GRID_LINE} 1px, transparent 1px), linear-gradient(90deg, ${GRID_LINE} 1px, transparent 1px)`,
-  backgroundSize: "20px 20px",
-  backgroundAttachment: "fixed" as const,
-};
 
 export interface MsqdxAppLayoutProps extends Omit<BoxProps, "children"> {
   /**
@@ -110,12 +95,13 @@ export interface MsqdxAppLayoutProps extends Omit<BoxProps, "children"> {
    */
   borderWidth?: keyof typeof MSQDX_EFFECTS.borderWidth;
   /**
-   * Hintergrund des inneren Containers: default, offwhite, white, checker (Karo), grid (Linienraster wie Audion).
+   * Hintergrund des inneren Containers: default, offwhite, white.
+   * `checker` / `grid` sind Aliase für offwhite (Rückwärtskompatibilität, kein Muster mehr).
    * @default 'default'
    */
   innerBackground?: AppLayoutInnerBackground;
   /**
-   * Eigene Hintergrundfarbe (überschreibt innerBackground bei default/offwhite/white).
+   * Eigene Hintergrundfarbe (überschreibt die Farbe aus innerBackground).
    */
   innerBackgroundColor?: string;
   /**
@@ -167,17 +153,13 @@ export const MsqdxAppLayout = ({
   const color = brandBackgroundColor ?? getBrandColor(brandColor);
   const widthPx = APP_LAYOUT_BORDER_WIDTH[borderWidth];
 
-  const isChecker = innerBackground === "checker";
-  const isGrid = innerBackground === "grid";
-  const innerSx =
-    isChecker
-      ? CHECKER_BACKGROUND
-      : isGrid
-        ? GRID_BACKGROUND
-        : {
-            backgroundColor:
-              innerBackgroundColor ?? INNER_BG[innerBackground],
-          };
+  const resolvedBgKey =
+    innerBackground === "checker" || innerBackground === "grid"
+      ? "offwhite"
+      : innerBackground;
+  const innerSx = {
+    backgroundColor: innerBackgroundColor ?? INNER_BG[resolvedBgKey],
+  };
 
   const hasCornerBox = logo != null || appName != null;
   const hasSidebar = sidebar != null;
