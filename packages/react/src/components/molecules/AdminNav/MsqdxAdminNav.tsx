@@ -12,6 +12,7 @@ import {
 import type { ReactNode, ElementType } from "react";
 import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
 import { MsqdxTypography } from "../../atoms/Typography/MsqdxTypography";
+import { ADMIN_NAV_ROOT_Z_INDEX } from "./admin-nav-layout";
 
 export type AdminNavItem = {
   label: string;
@@ -132,7 +133,7 @@ export const MsqdxAdminNav = ({
           md: "translateX(0)",
         },
         transition: "width 0.3s ease, transform 0.3s ease",
-        zIndex: { xs: 1200, md: "auto" },
+        zIndex: ADMIN_NAV_ROOT_Z_INDEX,
         overflowY: "auto",
         overflowX: "hidden",
         display: "flex",
