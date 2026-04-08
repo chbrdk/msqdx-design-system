@@ -52,11 +52,18 @@ export type MsqdxAdminNavProps = {
 
 const SIDEBAR_WIDTH_EXPANDED = 240;
 const SIDEBAR_WIDTH_COLLAPSED = 64;
-const ITEM_HEIGHT = 32; // Kompakt zwischen small (29) und medium (36)
-const ICON_SIZE = MSQDX_ICONS.sizes.lg; // 24px
-const ITEM_PADDING_Y = 4;
+/** Desktop / docked sidebar: compact row height. */
+const ITEM_HEIGHT_COMPACT = 32;
+/** Mobile & tablet drawer: ≥44px touch target baseline. */
+const ITEM_HEIGHT_TOUCH = 48;
+const ICON_SIZE_COMPACT = MSQDX_ICONS.sizes.lg; // 24px
+const ICON_SIZE_TOUCH = 28;
+const ITEM_PADDING_Y_COMPACT = 4;
+const ITEM_PADDING_Y_TOUCH = 10;
 const ITEM_PADDING_X = MSQDX_SPACING.scale.xxs;
-const ITEM_GAP = 2;
+/** MUI spacing units (theme spacing multiplier). */
+const ITEM_GAP_COMPACT = 2;
+const ITEM_GAP_TOUCH = 2;
 const ITEM_BORDER_RADIUS = MSQDX_SPACING.borderRadius.sm;
 
 export const MsqdxAdminNav = ({
@@ -73,7 +80,8 @@ export const MsqdxAdminNav = ({
   brandColor,
 }: MsqdxAdminNavProps) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
+  /** Overlay drawer for phone & tablet; docked rail from `lg` up. */
+  const isDrawerMode = useMediaQuery(theme.breakpoints.down("lg"), { noSsr: true });
   const [expanded, setExpanded] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -81,21 +89,34 @@ export const MsqdxAdminNav = ({
     setMounted(true);
   }, []);
 
+  const useCompactChrome = mounted && !isDrawerMode;
+  const itemHeight = useCompactChrome ? ITEM_HEIGHT_COMPACT : ITEM_HEIGHT_TOUCH;
+  const iconSize = useCompactChrome ? ICON_SIZE_COMPACT : ICON_SIZE_TOUCH;
+  const itemPaddingY = useCompactChrome ? ITEM_PADDING_Y_COMPACT : ITEM_PADDING_Y_TOUCH;
+  const itemGap = useCompactChrome ? ITEM_GAP_COMPACT : ITEM_GAP_TOUCH;
+  const labelFontSize = useCompactChrome
+    ? MSQDX_TYPOGRAPHY.fontSize.sm
+    : MSQDX_TYPOGRAPHY.fontSize.md;
+
   const isActive = (path: string, exact?: boolean) => {
     if (exact || path === "/" || path === "") return currentPath === path;
     return currentPath === path || (currentPath?.startsWith(path) ?? false);
   };
 
   const handleItemClick = () => {
-    if (mounted && isMobile) onClose();
+    if (mounted && isDrawerMode) onClose();
   };
 
   const handleToggleExpand = () => setExpanded((prev) => !prev);
 
-  const isExpanded = mounted && isMobile ? open : (mounted ? expanded : false);
-  const sidebarWidth = isExpanded
-    ? { xs: "95%", md: `${SIDEBAR_WIDTH_EXPANDED}px` }
-    : { xs: "95%", md: `${SIDEBAR_WIDTH_COLLAPSED}px` };
+  const isExpanded = mounted && isDrawerMode ? open : (mounted ? expanded : false);
+  const dockedWidthPx = isExpanded ? SIDEBAR_WIDTH_EXPANDED : SIDEBAR_WIDTH_COLLAPSED;
+  const drawerWidth = {
+    xs: "min(420px, calc(100vw - 16px))",
+    sm: "min(440px, calc(100vw - 24px))",
+    md: "min(420px, calc(100vw - 32px))",
+  };
+  const sidebarWidth = isDrawerMode ? drawerWidth : `${dockedWidthPx}px`;
 
   const brandBg =
     brandColor === "black"
@@ -113,47 +134,56 @@ export const MsqdxAdminNav = ({
   const activeBgHover = isLightNav ? alpha("#000", 0.18) : alpha("#fff", 0.2);
   const dividerColor = isLightNav ? alpha("#000", 0.2) : alpha("#fff", 0.2);
 
-  const paddingBlock = MSQDX_SPACING.padding.xxs;
-  const paddingInline = isExpanded ? MSQDX_SPACING.padding.xxs : 0;
+  const paddingBlock = isDrawerMode ? 12 : MSQDX_SPACING.padding.xxs;
+  const paddingInline = isDrawerMode
+    ? isExpanded
+      ? 12
+      : 8
+    : isExpanded
+      ? MSQDX_SPACING.padding.xxs
+      : 0;
 
   return (
     <Box
       component="nav"
       className={className ?? "msqdx-admin-nav"}
       sx={{
-        position: { xs: "fixed", md: "relative" },
+        position: isDrawerMode ? "fixed" : "relative",
         top: 0,
         left: 0,
-        height: "100vh",
+        height: isDrawerMode ? "100dvh" : "100vh",
+        maxHeight: isDrawerMode ? "100dvh" : undefined,
         width: sidebarWidth,
         borderRight: `1px solid ${borderColor}`,
         backgroundColor: navBg,
-        transform: {
-          xs: open ? "translateX(0)" : "translateX(-100%)",
-          md: "translateX(0)",
-        },
+        transform: isDrawerMode
+          ? open
+            ? "translateX(0)"
+            : "translateX(-100%)"
+          : "translateX(0)",
         transition: "width 0.3s ease, transform 0.3s ease",
-        zIndex: ADMIN_NAV_ROOT_Z_INDEX,
+        zIndex: isDrawerMode ? ADMIN_NAV_ROOT_Z_INDEX.xs : ADMIN_NAV_ROOT_Z_INDEX.md,
         overflowY: "auto",
         overflowX: "hidden",
         display: "flex",
         flexDirection: "column",
         alignItems: isExpanded ? "stretch" : "center",
         justifyContent: "flex-start",
-        padding: isExpanded ? `${paddingBlock}px ${paddingInline}px` : `${paddingBlock}px 0`,
+        padding: isExpanded ? `${paddingBlock}px ${paddingInline}px` : `${paddingBlock}px ${isDrawerMode ? `${paddingInline}px` : "0"}`,
+        paddingBottom: isDrawerMode ? "max(12px, env(safe-area-inset-bottom, 0px))" : undefined,
         ...sx,
       }}
     >
-      {/* Close button (mobile only) */}
-      {mounted && isMobile && (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", padding: ITEM_GAP }}>
+      {/* Close button (drawer: mobile & tablet) */}
+      {mounted && isDrawerMode && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", p: itemGap }}>
           <IconButton
-            size="medium"
+            size="large"
             onClick={onClose}
             sx={{ color: textColor, "&:hover": { backgroundColor: hoverBg } }}
             aria-label="Close navigation"
           >
-            <MsqdxIcon name="close" customSize={ICON_SIZE} />
+            <MsqdxIcon name="close" customSize={iconSize} />
           </IconButton>
         </Box>
       )}
@@ -167,19 +197,19 @@ export const MsqdxAdminNav = ({
           flexDirection: "column",
           alignItems: isExpanded ? "stretch" : "center",
           justifyContent: "center",
-          gap: ITEM_GAP,
+          gap: itemGap,
         }}
       >
-        {/* Menü ausklappen – Teil der normalen Nav, nur Desktop; Mobile später separat */}
-        {mounted && !isMobile && (isExpanded ? (
+        {/* Menü ausklappen – nur im docked Layout (lg+) */}
+        {mounted && !isDrawerMode && (isExpanded ? (
           <Box
             component="button"
             type="button"
             onClick={handleToggleExpand}
             sx={{
               flexShrink: 0,
-              height: ITEM_HEIGHT,
-              padding: `${ITEM_PADDING_Y}px ${ITEM_PADDING_X}px`,
+              height: itemHeight,
+              padding: `${itemPaddingY}px ${ITEM_PADDING_X}px`,
               margin: 0,
               borderRadius: ITEM_BORDER_RADIUS,
               width: "calc(100% - 8px)",
@@ -196,12 +226,12 @@ export const MsqdxAdminNav = ({
             aria-label={isExpanded ? "Navigation einklappen" : "Navigation ausklappen"}
           >
             <Box sx={{ marginRight: MSQDX_SPACING.scale.sm, display: "flex", alignItems: "center" }}>
-              <MsqdxIcon name="menu_open" customSize={ICON_SIZE} />
+              <MsqdxIcon name="menu_open" customSize={iconSize} />
             </Box>
             <MsqdxTypography
               variant="body2"
               sx={{
-                fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                fontSize: labelFontSize,
                 color: "inherit",
                 whiteSpace: "nowrap",
               }}
@@ -215,16 +245,16 @@ export const MsqdxAdminNav = ({
             onClick={handleToggleExpand}
             sx={{
               color: textColor,
-              width: ITEM_HEIGHT,
-              height: ITEM_HEIGHT,
-              minWidth: ITEM_HEIGHT,
-              minHeight: ITEM_HEIGHT,
+              width: itemHeight,
+              height: itemHeight,
+              minWidth: itemHeight,
+              minHeight: itemHeight,
               padding: 0,
               "&:hover": { backgroundColor: hoverBg },
             }}
             aria-label="Navigation ausklappen"
           >
-            <MsqdxIcon name="menu" customSize={ICON_SIZE} />
+            <MsqdxIcon name="menu" customSize={iconSize} />
           </IconButton>
         ))}
 
@@ -250,10 +280,10 @@ export const MsqdxAdminNav = ({
                   size="medium"
                   sx={{
                     color: active ? textColor : textMuted,
-                    width: ITEM_HEIGHT,
-                    height: ITEM_HEIGHT,
-                    minWidth: ITEM_HEIGHT,
-                    minHeight: ITEM_HEIGHT,
+                    width: itemHeight,
+                    height: itemHeight,
+                    minWidth: itemHeight,
+                    minHeight: itemHeight,
                     padding: 0,
                     "&:hover": {
                       backgroundColor: active ? activeBgHover : hoverBg,
@@ -263,7 +293,7 @@ export const MsqdxAdminNav = ({
                   title={item.label}
                   aria-label={item.label}
                 >
-                  <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                  <MsqdxIcon name={item.icon} customSize={iconSize} />
                 </IconButton>
               </LinkComponent>
             ) : (
@@ -279,10 +309,10 @@ export const MsqdxAdminNav = ({
                 }}
                 sx={{
                   color: active ? textColor : textMuted,
-                  width: ITEM_HEIGHT,
-                  height: ITEM_HEIGHT,
-                  minWidth: ITEM_HEIGHT,
-                  minHeight: ITEM_HEIGHT,
+                  width: itemHeight,
+                  height: itemHeight,
+                  minWidth: itemHeight,
+                  minHeight: itemHeight,
                   padding: 0,
                   "&:hover": {
                     backgroundColor: active ? activeBgHover : hoverBg,
@@ -292,7 +322,7 @@ export const MsqdxAdminNav = ({
                 title={item.label}
                 aria-label={item.label}
               >
-                <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                <MsqdxIcon name={item.icon} customSize={iconSize} />
               </IconButton>
             );
           }
@@ -300,8 +330,8 @@ export const MsqdxAdminNav = ({
             <Box
               sx={{
                 flexShrink: 0,
-                height: ITEM_HEIGHT,
-                padding: `${ITEM_PADDING_Y}px ${ITEM_PADDING_X}px`,
+                height: itemHeight,
+                padding: `${itemPaddingY}px ${ITEM_PADDING_X}px`,
                 margin: 0,
                 borderRadius: ITEM_BORDER_RADIUS,
                 width: "calc(100% - 8px)",
@@ -322,13 +352,13 @@ export const MsqdxAdminNav = ({
               }}
             >
               <Box sx={{ marginRight: MSQDX_SPACING.scale.sm, display: "flex", alignItems: "center" }}>
-                <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                <MsqdxIcon name={item.icon} customSize={iconSize} />
               </Box>
               <MsqdxTypography
                 variant="body2"
                 sx={{
                   fontWeight: active ? 600 : 400,
-                  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                  fontSize: labelFontSize,
                   color: "inherit",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -385,18 +415,18 @@ export const MsqdxAdminNav = ({
       <Box
         sx={{
           marginTop: "auto",
-          paddingTop: ITEM_GAP,
+          paddingTop: itemGap,
           width: "100%",
           display: "flex",
           flexDirection: "column",
           alignItems: isExpanded ? "stretch" : "center",
-          gap: ITEM_GAP,
+          gap: itemGap,
         }}
       >
         {(externalItems.length > 0 || onToggleTheme) && (
           <Divider
             sx={{
-              marginBottom: ITEM_GAP,
+              marginBottom: itemGap,
               width: isExpanded ? "calc(100% - 16px)" : "80%",
               alignSelf: "center",
               borderColor: dividerColor,
@@ -424,17 +454,17 @@ export const MsqdxAdminNav = ({
                   size="medium"
                   sx={{
                     color: textMuted,
-                    width: ITEM_HEIGHT,
-                    height: ITEM_HEIGHT,
-                    minWidth: ITEM_HEIGHT,
-                    minHeight: ITEM_HEIGHT,
+                    width: itemHeight,
+                    height: itemHeight,
+                    minWidth: itemHeight,
+                    minHeight: itemHeight,
                     padding: 0,
                     "&:hover": { backgroundColor: hoverBg, color: textColor },
                   }}
                   title={item.label}
                   aria-label={item.label}
                 >
-                  <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                  <MsqdxIcon name={item.icon} customSize={iconSize} />
                 </IconButton>
               </LinkComponent>
             ) : (
@@ -450,17 +480,17 @@ export const MsqdxAdminNav = ({
                 }}
                 sx={{
                   color: textMuted,
-                  width: ITEM_HEIGHT,
-                  height: ITEM_HEIGHT,
-                  minWidth: ITEM_HEIGHT,
-                  minHeight: ITEM_HEIGHT,
+                  width: itemHeight,
+                  height: itemHeight,
+                  minWidth: itemHeight,
+                  minHeight: itemHeight,
                   padding: 0,
                   "&:hover": { backgroundColor: hoverBg, color: textColor },
                 }}
                 title={item.label}
                 aria-label={item.label}
               >
-                <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                <MsqdxIcon name={item.icon} customSize={iconSize} />
               </IconButton>
             );
           }
@@ -468,8 +498,8 @@ export const MsqdxAdminNav = ({
             <Box
               sx={{
                 flexShrink: 0,
-                height: ITEM_HEIGHT,
-                padding: `${ITEM_PADDING_Y}px ${ITEM_PADDING_X}px`,
+                height: itemHeight,
+                padding: `${itemPaddingY}px ${ITEM_PADDING_X}px`,
                 margin: 0,
                 borderRadius: ITEM_BORDER_RADIUS,
                 width: "calc(100% - 8px)",
@@ -486,12 +516,12 @@ export const MsqdxAdminNav = ({
               }}
             >
               <Box sx={{ marginRight: MSQDX_SPACING.scale.sm, display: "flex", alignItems: "center" }}>
-                <MsqdxIcon name={item.icon} customSize={ICON_SIZE} />
+                <MsqdxIcon name={item.icon} customSize={iconSize} />
               </Box>
               <MsqdxTypography
                 variant="body2"
                 sx={{
-                  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                  fontSize: labelFontSize,
                   color: "inherit",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -548,7 +578,7 @@ export const MsqdxAdminNav = ({
               display: "flex",
               alignItems: "center",
               justifyContent: isExpanded ? "flex-start" : "center",
-              paddingBottom: ITEM_GAP,
+              paddingBottom: itemGap,
               gap: MSQDX_SPACING.scale.xs,
             }}
           >
@@ -557,10 +587,10 @@ export const MsqdxAdminNav = ({
               onClick={onToggleTheme}
               sx={{
                 color: textColor,
-                width: ITEM_HEIGHT,
-                height: ITEM_HEIGHT,
-                minWidth: ITEM_HEIGHT,
-                minHeight: ITEM_HEIGHT,
+                width: itemHeight,
+                height: itemHeight,
+                minWidth: itemHeight,
+                minHeight: itemHeight,
                 padding: 0,
                 "&:hover": { backgroundColor: hoverBg },
               }}
@@ -568,14 +598,14 @@ export const MsqdxAdminNav = ({
             >
               <MsqdxIcon
                 name={themeMode === "dark" ? "light_mode" : "dark_mode"}
-                customSize={ICON_SIZE}
+                customSize={iconSize}
               />
             </IconButton>
             {isExpanded && (
               <MsqdxTypography
                 variant="body2"
                 sx={{
-                  fontSize: MSQDX_TYPOGRAPHY.fontSize.sm,
+                  fontSize: labelFontSize,
                   color: textColor,
                   whiteSpace: "nowrap",
                 }}
