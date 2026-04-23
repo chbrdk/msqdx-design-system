@@ -122,6 +122,17 @@ export const MSQDX_TINTS = {
 } as const;
 
 /**
+ * Opaque purple surfaces for workflow “Human-in-the-loop” (HITL) nodes and similar UI.
+ * Pairs with `MSQDX_BRAND_PRIMARY.purple`; `MSQDX_TINTS.purple` remains rgba for glass overlays.
+ */
+export const MSQDX_WORKFLOW_HITL = {
+  headerBg: "#faf7ff",
+  notePaper: "#ede4f7",
+  noteBorder: "#7c3aed",
+  noteBand: "#ddd0f5",
+} as const;
+
+/**
  * CSS variable for the user-configured brand/theme accent color.
  * Same variable as PLEXON Sidebar (lib/theme-accent: --color-theme-accent). Host app sets
  * e.g. :root { --color-theme-accent: #00ca55; } so Sidebar and all MSQDX components use it.

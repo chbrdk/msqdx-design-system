@@ -300,7 +300,7 @@ export const MsqdxCornerBox = ({
             </Box>
           </Box>
           {headerEnd != null && (
-            <Box sx={{ marginLeft: "auto", flexShrink: 0 }}>{headerEnd}</Box>
+            <Box sx={{ marginLeft: "auto", flexShrink: 0, position: "relative", zIndex: 5000 }}>{headerEnd}</Box>
           )}
         </Box>
       )}
