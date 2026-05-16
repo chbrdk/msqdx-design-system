@@ -128,7 +128,7 @@ export const MSQDX_TINTS = {
 export const MSQDX_WORKFLOW_HITL = {
   headerBg: "#faf7ff",
   notePaper: "#ede4f7",
-  noteBorder: "#7c3aed",
+  noteBorder: MSQDX_BRAND_PRIMARY.purple,
   noteBand: "#ddd0f5",
 } as const;
 

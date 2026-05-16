@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Box, Divider, IconButton, useMediaQuery, useTheme, alpha } from "@mui/material";
+import { Box, Divider, IconButton, Portal, useMediaQuery, useTheme, alpha } from "@mui/material";
 import {
   MSQDX_COLORS,
   MSQDX_NEUTRAL,
@@ -80,8 +80,8 @@ export const MsqdxAdminNav = ({
   brandColor,
 }: MsqdxAdminNavProps) => {
   const theme = useTheme();
-  /** Overlay drawer for phone & tablet; docked rail from `lg` up. */
-  const isDrawerMode = useMediaQuery(theme.breakpoints.down("lg"), { noSsr: true });
+  /** Overlay drawer below `md`; docked rail from `md` up (avoids dead zone with hidden hamburger). */
+  const isDrawerMode = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
   const [expanded, setExpanded] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -143,7 +143,7 @@ export const MsqdxAdminNav = ({
       ? MSQDX_SPACING.padding.xxs
       : 0;
 
-  return (
+  const navRoot = (
     <Box
       component="nav"
       className={className ?? "msqdx-admin-nav"}
@@ -618,4 +618,10 @@ export const MsqdxAdminNav = ({
       </Box>
     </Box>
   );
+
+  if (mounted && isDrawerMode) {
+    return <Portal>{navRoot}</Portal>;
+  }
+
+  return navRoot;
 };

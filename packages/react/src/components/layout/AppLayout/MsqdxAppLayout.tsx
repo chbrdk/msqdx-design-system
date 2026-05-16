@@ -212,7 +212,7 @@ export const MsqdxAppLayout = ({
         height: "100%",
         maxWidth: "100vw",
         maxHeight: "100vh",
-        overflow: "hidden",
+        overflow: "visible",
         display: "flex",
         alignItems: "stretch",
         justifyContent: "stretch",
@@ -220,9 +220,9 @@ export const MsqdxAppLayout = ({
       }}
       {...props}
     >
-      {/* Nav außerhalb des AppLayout-Containers */}
+      {/* Nav außerhalb des AppLayout-Containers – overflow visible so fixed drawer nav is not clipped */}
       {hasSidebar && (
-        <Box sx={{ flexShrink: 0, display: "flex" }}>
+        <Box sx={{ flexShrink: 0, display: "flex", overflow: "visible" }}>
           {sidebar}
         </Box>
       )}

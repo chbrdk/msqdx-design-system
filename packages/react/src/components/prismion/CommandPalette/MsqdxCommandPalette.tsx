@@ -42,7 +42,7 @@ export function MsqdxCommandPalette({
           borderRadius: "40px",
           boxShadow: MSQDX_EFFECTS.shadows.xl,
           padding: "16px",
-          minWidth: "384px",
+          width: "100%",
         }}
       >
         <Box sx={{ fontSize: MSQDX_TYPOGRAPHY.fontSize.xs, fontFamily: MSQDX_TYPOGRAPHY.fontFamily.mono, color: MSQDX_NEUTRAL[500], marginBottom: 1 }}>
