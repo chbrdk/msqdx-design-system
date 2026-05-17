@@ -166,7 +166,13 @@ export const MsqdxAppLayout = ({
 
   const innerBoxSx = {
     ...(hasSidebar
-      ? { position: "relative" as const, flex: 1, minWidth: 0, margin: 0 }
+      ? {
+          position: "relative" as const,
+          flex: 1,
+          minWidth: 0,
+          margin: 0,
+          marginLeft: 0,
+        }
       : { position: "absolute" as const, inset: 0, margin: 0 }),
     ...(hasCornerBox && !hasSidebar
       ? {
