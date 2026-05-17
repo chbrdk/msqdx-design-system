@@ -70,12 +70,12 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
         topLeft: "rounded",
         topRight: "rounded",
         bottomLeft: "square",
-        bottomRight: "square",
+        bottomRight: "cutdown-a",
       }
     : {
         topLeft: "rounded",
         topRight: "rounded",
-        bottomLeft: "square",
+        bottomLeft: "cutdown-a",
         bottomRight: "square",
       };
 
