@@ -11,23 +11,24 @@ describe("getCornerTabCardLayout", () => {
     expect(CORNER_TAB_CARD_DEFAULTS.cornerBoxWidthExtraPx).toBe(14);
   });
 
-  it("top-left: flat top-left on body, cutdown on tab bottom-right", () => {
+  it("top-left: flat top-left on body, square tab bottom corners", () => {
     const layout = getCornerTabCardLayout({ placement: "top-left" });
     expect(layout.bodyBorderRadius).toBe("0 14px 14px 14px");
     expect(layout.tabContainerBorderRadius).toBe("16px 0 0 0");
-    expect(layout.cornerStyles.bottomRight).toBe("cutdown-a");
+    expect(layout.cornerStyles.bottomRight).toBe("square");
     expect(layout.cornerStyles.bottomLeft).toBe("square");
     expect(layout.tabContainerSx).toMatchObject({ left: 0, top: -32 });
   });
 
-  it("top-right: flat top-right on body, cutdown on tab bottom-left", () => {
+  it("top-right: flat top-right on body, square bottom-left on tab", () => {
     const layout = getCornerTabCardLayout({ placement: "top-right" });
     expect(layout.bodyBorderRadius).toBe("14px 0 14px 14px");
     expect(layout.tabContainerBorderRadius).toBe("0 16px 0 0");
-    expect(layout.cornerStyles.bottomLeft).toBe("cutdown-a");
+    expect(layout.cornerStyles.bottomLeft).toBe("square");
     expect(layout.cornerStyles.bottomRight).toBe("square");
     expect(layout.tabContainerSx).toMatchObject({ right: 0, top: -32 });
     expect(layout.cornerBoxSx).toMatchObject({ right: 0 });
+    expect(layout.cornerBoxSx).not.toHaveProperty("borderRadius");
   });
 
   it("extends corner box width for cutdown alignment", () => {

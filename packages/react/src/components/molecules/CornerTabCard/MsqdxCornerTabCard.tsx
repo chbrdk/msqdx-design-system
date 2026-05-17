@@ -71,6 +71,9 @@ export function MsqdxCornerTabCard({
   });
 
   const effectiveTabColor = tabColor ?? bodyColor;
+  const isTopRight = placement === "top-right";
+  const cornerBoxRadius =
+    cornerBoxBorderRadiusPx ?? CORNER_TAB_CARD_DEFAULTS.cornerBoxBorderRadiusPx;
   const { topLeft, topRight, bottomLeft, bottomRight } = layout.cornerStyles;
 
   return (
@@ -88,10 +91,14 @@ export function MsqdxCornerTabCard({
           topRight={topRight}
           bottomLeft={bottomLeft}
           bottomRight={bottomRight}
-          borderRadius={cornerBoxBorderRadiusPx ?? CORNER_TAB_CARD_DEFAULTS.cornerBoxBorderRadiusPx}
+          borderRadius={cornerBoxRadius}
+          bottomLeftRadius={isTopRight ? 0 : undefined}
+          bottomRightRadius={!isTopRight ? 0 : undefined}
           sx={{
             ...layout.cornerBoxSx,
             ...(effectiveTabColor ? { bgcolor: effectiveTabColor } : {}),
+            borderBottomLeftRadius: isTopRight ? 0 : undefined,
+            borderBottomRightRadius: !isTopRight ? 0 : undefined,
           }}
           aria-label={tab ? tabAriaLabel : undefined}
         >

@@ -70,12 +70,12 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
         topLeft: "rounded",
         topRight: "rounded",
         bottomLeft: "square",
-        bottomRight: "cutdown-a",
+        bottomRight: "square",
       }
     : {
         topLeft: "rounded",
         topRight: "rounded",
-        bottomLeft: "cutdown-a",
+        bottomLeft: "square",
         bottomRight: "square",
       };
 
@@ -100,7 +100,6 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: `${cornerBoxRadius}px`,
   };
 
   return {
