@@ -1,4 +1,5 @@
-import type { SxProps, Theme } from "@mui/material";
+import type { Theme } from "@mui/material";
+import type { SystemStyleObject } from "@mui/system";
 import type { CornerStyle } from "../../atoms/CornerDecoration/MsqdxCornerBox";
 
 export type CornerTabPlacement = "top-left" | "top-right";
@@ -37,8 +38,8 @@ export type CornerTabCardLayout = {
   bodyBorderRadius: string;
   tabContainerBorderRadius: string;
   cornerStyles: CornerTabCardCornerStyles;
-  tabContainerSx: SxProps<Theme>;
-  cornerBoxSx: SxProps<Theme>;
+  tabContainerSx: SystemStyleObject<Theme>;
+  cornerBoxSx: SystemStyleObject<Theme>;
 };
 
 /**
@@ -78,7 +79,7 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
         bottomRight: "square",
       };
 
-  const tabContainerSx: SxProps<Theme> = {
+  const tabContainerSx: SystemStyleObject<Theme> = {
     position: "absolute",
     top: -tabHeightPx,
     ...(isTopLeft ? { left: 0 } : { right: 0 }),
@@ -90,7 +91,7 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
     overflow: "visible",
   };
 
-  const cornerBoxSx: SxProps<Theme> = {
+  const cornerBoxSx: SystemStyleObject<Theme> = {
     position: "absolute",
     top: 0,
     ...(isTopLeft ? { left: 0 } : { right: 0 }),
