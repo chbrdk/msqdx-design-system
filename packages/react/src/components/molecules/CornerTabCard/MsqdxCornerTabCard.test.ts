@@ -13,6 +13,8 @@ describe("MsqdxCornerTabCard", () => {
     expect(componentSource).toContain("MsqdxCornerBox");
     expect(componentSource).toContain('placement = "top-left"');
     expect(componentSource).toContain("getCornerTabCardLayout");
+    expect(componentSource).toContain("tabWidthAuto");
+    expect(componentSource).toContain("msqdx-corner-tab-card__tab-box");
   });
 
   it("exports from molecules index", () => {

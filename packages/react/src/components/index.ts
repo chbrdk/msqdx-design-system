@@ -22,6 +22,7 @@ export {
 export * from './molecules/CircleContextMenu';
 export * from './molecules/CollapsiblePanel';
 export * from './molecules/CornerTabCard';
+export * from './molecules/CornerTabSection';
 export * from './molecules/Dialog';
 export { MsqdxFormField, type MsqdxFormFieldProps } from './molecules/FormField';
 export * from './molecules/GlassCard';

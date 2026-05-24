@@ -8,6 +8,10 @@ export type CornerTabPlacement = "top-left" | "top-right";
 export const CORNER_TAB_CARD_DEFAULTS = {
   tabWidthPx: 48,
   tabHeightPx: 32,
+  /** Taller tab when icon + toolbar actions sit inside the corner box. */
+  tabHeightAutoPx: 40,
+  /** Vertical offset for auto-width tab shell (sits above the card body). */
+  tabContainerTopOffsetAutoPx: 48,
   containerBorderRadiusPx: 16,
   bodyBorderRadiusPx: 14,
   cornerBoxBorderRadiusPx: 16,
@@ -18,6 +22,8 @@ export type CornerTabCardLayoutOptions = {
   placement: CornerTabPlacement;
   tabWidthPx?: number;
   tabHeightPx?: number;
+  /** Tab grows with icon + toolbar content. */
+  tabWidthAuto?: boolean;
   containerBorderRadiusPx?: number;
   bodyBorderRadiusPx?: number;
   cornerBoxBorderRadiusPx?: number;
@@ -54,6 +60,7 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
   const bodyRadius = options.bodyBorderRadiusPx ?? CORNER_TAB_CARD_DEFAULTS.bodyBorderRadiusPx;
   const cornerBoxRadius = options.cornerBoxBorderRadiusPx ?? CORNER_TAB_CARD_DEFAULTS.cornerBoxBorderRadiusPx;
   const widthExtra = options.cornerBoxWidthExtraPx ?? CORNER_TAB_CARD_DEFAULTS.cornerBoxWidthExtraPx;
+  const tabWidthAuto = options.tabWidthAuto ?? false;
 
   const isTopLeft = placement === "top-left";
 
@@ -79,28 +86,50 @@ export function getCornerTabCardLayout(options: CornerTabCardLayoutOptions): Cor
         bottomRight: "square",
       };
 
+  const tabHeightAutoPx = CORNER_TAB_CARD_DEFAULTS.tabHeightAutoPx;
+  const tabContainerTopOffsetAutoPx = CORNER_TAB_CARD_DEFAULTS.tabContainerTopOffsetAutoPx;
+  const effectiveTabHeightPx = tabWidthAuto ? tabHeightAutoPx : tabHeightPx;
+
   const tabContainerSx: SystemStyleObject<Theme> = {
     position: "absolute",
-    top: -tabHeightPx,
+    top: tabWidthAuto ? `-${tabContainerTopOffsetAutoPx}px` : -tabHeightPx,
     ...(isTopLeft ? { left: 0 } : { right: 0 }),
-    width: tabWidthPx,
-    height: tabHeightPx,
+    ...(tabWidthAuto && !isTopLeft ? { marginLeft: `-${widthExtra}px` } : {}),
+    width: tabWidthAuto ? "max-content" : tabWidthPx,
+    minWidth: tabWidthPx,
+    height: tabWidthAuto ? "auto" : tabHeightPx,
+    minHeight: effectiveTabHeightPx,
     borderRadius: tabContainerBorderRadius,
-    pointerEvents: "none",
+    pointerEvents: tabWidthAuto ? "auto" : "none",
     zIndex: 2,
     overflow: "visible",
   };
 
-  const cornerBoxSx: SystemStyleObject<Theme> = {
-    position: "absolute",
-    top: 0,
-    ...(isTopLeft ? { left: 0 } : { right: 0 }),
-    width: `calc(100% + ${widthExtra}px)`,
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
+  const cornerBoxSx: SystemStyleObject<Theme> = tabWidthAuto
+    ? {
+        position: "relative",
+        width: "fit-content",
+        minWidth: tabWidthPx,
+        minHeight: tabHeightAutoPx,
+        height: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: isTopLeft ? "flex-start" : "flex-end",
+        py: 0.5,
+        px: 1,
+        boxSizing: "border-box",
+        ...(isTopLeft ? {} : { marginLeft: `-${widthExtra}px` }),
+      }
+    : {
+        position: "absolute",
+        top: 0,
+        ...(isTopLeft ? { left: 0 } : { right: 0 }),
+        width: `calc(100% + ${widthExtra}px)`,
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      };
 
   return {
     placement,

@@ -38,4 +38,20 @@ describe("getCornerTabCardLayout", () => {
     });
     expect(layout.cornerBoxSx).toMatchObject({ width: "calc(100% + 20px)" });
   });
+
+  it("auto-width tab grows for toolbar content", () => {
+    const layout = getCornerTabCardLayout({
+      placement: "top-right",
+      tabWidthAuto: true,
+    });
+    expect(layout.tabContainerSx).toMatchObject({
+      width: "max-content",
+      top: `-${CORNER_TAB_CARD_DEFAULTS.tabContainerTopOffsetAutoPx}px`,
+      pointerEvents: "auto",
+    });
+    expect(layout.cornerBoxSx).toMatchObject({
+      width: "fit-content",
+      position: "relative",
+    });
+  });
 });

@@ -36,6 +36,8 @@ export interface MsqdxCornerTabCardProps extends Omit<BoxProps, "children"> {
   tabAriaLabel?: string;
   /** Styles for the main body region (below the corner tab). */
   bodySx?: SxProps<Theme>;
+  /** Tab width follows content (icon + toolbar actions). */
+  tabWidthAuto?: boolean;
 }
 
 /**
@@ -57,6 +59,7 @@ export function MsqdxCornerTabCard({
   containerBorderRadiusPx,
   tabAriaLabel,
   bodySx,
+  tabWidthAuto = false,
   sx,
   ...rootProps
 }: MsqdxCornerTabCardProps) {
@@ -64,6 +67,7 @@ export function MsqdxCornerTabCard({
     placement,
     tabWidthPx,
     tabHeightPx,
+    tabWidthAuto,
     bodyBorderRadiusPx,
     cornerBoxBorderRadiusPx,
     cornerBoxWidthExtraPx,
@@ -84,22 +88,25 @@ export function MsqdxCornerTabCard({
         ...sx,
       }}
     >
-      <Box sx={{ ...layout.tabContainerSx, bgcolor: tabChromeColor }}>
-        <MsqdxCornerBox
-          topLeft={topLeft}
-          topRight={topRight}
-          bottomLeft={bottomLeft}
-          bottomRight={bottomRight}
-          borderRadius={cornerBoxRadius}
-          sx={{
-            ...layout.cornerBoxSx,
-            ...(effectiveTabColor ? { bgcolor: effectiveTabColor } : {}),
-          }}
-          aria-label={tab ? tabAriaLabel : undefined}
-        >
-          {tab}
-        </MsqdxCornerBox>
-      </Box>
+      {tab ? (
+        <Box sx={{ ...layout.tabContainerSx, bgcolor: tabChromeColor }}>
+          <MsqdxCornerBox
+            className="msqdx-corner-tab-card__tab-box"
+            topLeft={topLeft}
+            topRight={topRight}
+            bottomLeft={bottomLeft}
+            bottomRight={bottomRight}
+            borderRadius={cornerBoxRadius}
+            sx={{
+              ...layout.cornerBoxSx,
+              ...(effectiveTabColor ? { bgcolor: effectiveTabColor } : {}),
+            }}
+            aria-label={tabAriaLabel}
+          >
+            {tab}
+          </MsqdxCornerBox>
+        </Box>
+      ) : null}
 
       <Box
         className="msqdx-corner-tab-card__body"

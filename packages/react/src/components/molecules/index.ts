@@ -15,6 +15,7 @@ export {
 export * from './CircleContextMenu';
 export * from './CollapsiblePanel';
 export * from './CornerTabCard';
+export * from './CornerTabSection';
 export * from './Dialog';
 export { MsqdxFormField, type MsqdxFormFieldProps } from './FormField';
 export * from './GlassCard';
