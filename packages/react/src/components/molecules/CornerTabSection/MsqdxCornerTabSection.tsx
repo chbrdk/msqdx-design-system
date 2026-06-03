@@ -8,10 +8,10 @@ export type MsqdxCornerTabSectionPlacement = "top-left" | "top-right";
 
 export type MsqdxCornerTabSectionProps = {
   children: ReactNode;
-  /** Corner tab region (icon, or heading + actions via {@link MsqdxCornerTabSectionTab}). */
-  tab: ReactNode;
-  /** Accessible name for the corner tab. */
-  tabAriaLabel: string;
+  /** Corner tab region (heading + actions via {@link MsqdxCornerTabSectionTab}). Omit for body-only shell. */
+  tab?: ReactNode;
+  /** Accessible name when `tab` is rendered. */
+  tabAriaLabel?: string;
   /** @default 'top-right' */
   placement?: MsqdxCornerTabSectionPlacement;
   /**
