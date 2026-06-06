@@ -25,5 +25,34 @@ export const minTouchTarget = MSQDX_INTERACTION.minTouchTarget.min;
 export const minTouchTargetRecommended = MSQDX_INTERACTION.minTouchTarget.recommended;
 export const minTouchTargetCompact = MSQDX_INTERACTION.minTouchTarget.compact;
 
-/** Standard transition string from effects (use for hover/focus transitions) */
-export const transitionStandard = MSQDX_EFFECTS.transitions.standard;
+/** Duration + easing only — invalid alone in `transition` (CSS defaults to `all`). */
+export const transitionTiming = MSQDX_EFFECTS.transitions.standard;
+
+/** @deprecated Use {@link transitionProperties} — bare timing animates all properties. */
+export const transitionStandard = transitionTiming;
+
+/** Build targeted transition declarations (avoids implicit CSS `all`). */
+export function transitionProperties(...properties: string[]): string {
+  return properties.map((prop) => `${prop} ${transitionTiming}`).join(", ");
+}
+
+/** Cards, buttons, avatars, chips — hover/focus surfaces */
+export const transitionInteractive = transitionProperties(
+  "background-color",
+  "border-color",
+  "box-shadow",
+  "color",
+  "opacity",
+);
+
+/** Lift / scale hover (e.g. clickable cards) */
+export const transitionTransform = transitionProperties("transform", "box-shadow");
+
+/** MUI LinearProgress bar width */
+export const transitionProgressFill = transitionProperties("transform", "background-color");
+
+/** Scrollbar thumb hover */
+export const transitionScrollbarThumb = transitionProperties("background-color");
+
+/** Switch track checked state */
+export const transitionSwitchTrack = transitionProperties("background-color", "opacity");

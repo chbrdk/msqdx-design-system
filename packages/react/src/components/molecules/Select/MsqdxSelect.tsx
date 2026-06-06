@@ -3,7 +3,8 @@
 import React from "react";
 import { Box, Select, MenuItem, Typography, styled, alpha, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import type { SelectProps } from "@mui/material";
-import { MSQDX_COLORS, MSQDX_SPACING, MSQDX_TYPOGRAPHY, MSQDX_INPUT, MSQDX_EFFECTS, MSQDX_SCROLLBAR, getScrollbarColor } from "@msqdx/tokens";
+import { MSQDX_COLORS, MSQDX_SPACING, MSQDX_TYPOGRAPHY, MSQDX_INPUT, MSQDX_EFFECTS, getScrollbarColor } from "@msqdx/tokens";
+import { transitionScrollbarThumb } from "../../../utils/atomA11y";
 import { MsqdxIcon } from "../../atoms/Icon/MsqdxIcon";
 
 export type BrandColor = 'purple' | 'yellow' | 'pink' | 'orange' | 'green' | 'black';
@@ -207,7 +208,7 @@ export const MsqdxSelect = ({
           '&::-webkit-scrollbar-thumb': {
             background: scrollbarColor.thumb,
             borderRadius: scrollbarBorderRadius,
-            transition: MSQDX_SCROLLBAR.transition,
+            transition: transitionScrollbarThumb,
             '&:hover': {
               background: scrollbarColor.thumbHover,
             },

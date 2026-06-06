@@ -2,7 +2,7 @@
 
 import { Box, styled, alpha, LinearProgress } from "@mui/material";
 import { MSQDX_COLORS, MSQDX_TYPOGRAPHY, MSQDX_EFFECTS, MSQDX_SPACING } from "@msqdx/tokens";
-import { reducedMotionStyles } from "../../../utils/atomA11y";
+import { reducedMotionStyles, transitionProgressFill } from "../../../utils/atomA11y";
 import React from "react";
 
 export interface MsqdxProgressProps {
@@ -26,12 +26,12 @@ const StyledLinearProgress = styled(LinearProgress, {
   height: height,
   borderRadius: height / 2,
   backgroundColor: alpha(theme.palette.mode === 'dark' ? "#ffffff" : "#000000", MSQDX_EFFECTS.opacity.subtle),
-  transition: MSQDX_EFFECTS.transitions.standard,
+  transition: transitionProgressFill,
   ...reducedMotionStyles,
   '& .MuiLinearProgress-bar': {
     borderRadius: height / 2,
     background: customColor,
-    transition: MSQDX_EFFECTS.transitions.standard,
+    transition: transitionProgressFill,
     ...reducedMotionStyles,
   },
 })) as React.ComponentType<any>;

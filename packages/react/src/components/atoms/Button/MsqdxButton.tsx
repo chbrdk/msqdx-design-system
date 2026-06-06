@@ -11,7 +11,7 @@ import {
   MSQDX_BRAND_PRIMARY,
   MSQDX_EFFECTS,
 } from "@msqdx/tokens";
-import { reducedMotionStyles, minTouchTarget } from "../../../utils/atomA11y";
+import { reducedMotionStyles, minTouchTarget, transitionInteractive } from "../../../utils/atomA11y";
 
 // Brand color type
 export type BrandColor = 'purple' | 'yellow' | 'pink' | 'orange' | 'green';
@@ -125,7 +125,7 @@ const StyledButton = styled(Button, {
     borderRadius: MSQDX_BUTTON.borderRadius[borderRadius],
     
     // Transitions
-    transition: MSQDX_BUTTON.transition.default,
+    transition: transitionInteractive,
     
     // Shadows
     boxShadow: MSQDX_BUTTON.shadow.default,

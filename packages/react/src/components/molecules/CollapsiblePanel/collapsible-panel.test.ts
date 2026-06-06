@@ -14,7 +14,13 @@ describe("MsqdxCollapsiblePanel flicker guards", () => {
     expect(panelSource).not.toContain("setMounted");
   });
 
-  it("uses noSsr media query for mobile drawer breakpoint", () => {
-    expect(panelSource).toContain("noSsr: true");
+  it("defers sidebar width transitions until after first paint", () => {
+    expect(panelSource).toContain("transitionsEnabled");
+    expect(panelSource).toContain("requestAnimationFrame");
+  });
+
+  it("uses stable desktop defaults for useMediaQuery before hydration", () => {
+    expect(panelSource).toContain("defaultMatches: false");
+    expect(panelSource).not.toMatch(/mounted && !isMobile/);
   });
 });

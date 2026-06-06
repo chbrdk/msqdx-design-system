@@ -1,6 +1,6 @@
 /**
- * Guards ECHON-critical DS components against common flicker/hydration anti-patterns.
- * Not every package file is scanned — focus on layout + list UI primitives.
+ * Full atoms + molecules flicker/hydration audit.
+ * Scans every Msqdx*.tsx implementation file (stories excluded).
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -8,58 +8,106 @@ import { describe, expect, it } from "vitest";
 
 const srcRoot = join(import.meta.dirname, ".");
 
-const FLICKER_CRITICAL_PATHS = [
+const LAYOUT_DEFER_TRANSITION = new Set([
   "components/molecules/AdminNav/MsqdxAdminNav.tsx",
-  "components/molecules/GlassCard/MsqdxGlassCard.tsx",
   "components/molecules/CollapsiblePanel/MsqdxCollapsiblePanel.tsx",
-  "components/layout/AppLayout/MsqdxAppLayout.tsx",
-  "components/atoms/Chip/MsqdxChip.tsx",
-  "components/molecules/Tabs/MsqdxTabs.tsx",
-  "components/molecules/Stepper/MsqdxStepper.tsx",
-];
+]);
 
-function read(path: string): string {
-  return readFileSync(join(srcRoot, path), "utf8");
-}
-
-/** Count TSX files under src (sanity: package has substantial surface). */
-function countTsxFiles(dir: string): number {
-  let count = 0;
+function collectMsqdxComponents(dir: string, prefix = ""): string[] {
+  const paths: string[] = [];
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
+    const rel = prefix ? `${prefix}/${entry}` : entry;
     const st = statSync(full);
     if (st.isDirectory()) {
-      count += countTsxFiles(full);
-    } else if (entry.endsWith(".tsx")) {
-      count += 1;
+      paths.push(...collectMsqdxComponents(full, rel));
+    } else if (
+      entry.startsWith("Msqdx") &&
+      entry.endsWith(".tsx") &&
+      !entry.endsWith(".stories.tsx")
+    ) {
+      paths.push(rel);
     }
   }
-  return count;
+  return paths.sort();
 }
 
-describe("design-system flicker audit (ECHON-critical subset)", () => {
-  it("package has many components — audit is scoped, not exhaustive", () => {
-    expect(countTsxFiles(srcRoot)).toBeGreaterThan(80);
-  });
+const atomComponents = collectMsqdxComponents(
+  join(srcRoot, "components/atoms"),
+  "components/atoms",
+);
+const moleculeComponents = collectMsqdxComponents(
+  join(srcRoot, "components/molecules"),
+  "components/molecules",
+);
 
-  for (const rel of FLICKER_CRITICAL_PATHS) {
-    it(`${rel} avoids mounted gate and transition:all`, () => {
-      const source = read(rel);
-      expect(source).not.toMatch(/\bsetMounted\b/);
-      expect(source).not.toMatch(/\bisMounted\b/);
-      expect(source).not.toMatch(/transition:\s*['"]all/);
-      expect(source).not.toMatch(/transition:\s*`all/);
-    });
+function read(rel: string): string {
+  return readFileSync(join(srcRoot, rel), "utf8");
+}
+
+function auditSource(rel: string, source: string): string[] {
+  const issues: string[] = [];
+
+  if (/\bsetMounted\b/.test(source) || /\bisMounted\b/.test(source)) {
+    issues.push("mounted gate (setMounted/isMounted)");
+  }
+  if (/transition:\s*['"]all/.test(source) || /transition:\s*`all/.test(source)) {
+    issues.push("transition: all");
+  }
+  if (/transition:\s*MSQDX_EFFECTS\.transitions\.(standard|fast|slow|spring)/.test(source)) {
+    issues.push("bare MSQDX_EFFECTS.transitions.* (implicit CSS all)");
+  }
+  if (/transition:\s*MSQDX_BUTTON\.transition\.(default|fast)/.test(source)) {
+    issues.push("bare MSQDX_BUTTON.transition (implicit CSS all)");
+  }
+  if (/transition:\s*MSQDX_AVATAR\.transition/.test(source)) {
+    issues.push("bare MSQDX_AVATAR.transition (implicit CSS all)");
+  }
+  if (/transition:\s*MSQDX_SCROLLBAR\.transition/.test(source)) {
+    issues.push("bare MSQDX_SCROLLBAR.transition (implicit CSS all)");
+  }
+  if (/noSsr:\s*true/.test(source) && !/defaultMatches:\s*false/.test(source)) {
+    issues.push("useMediaQuery noSsr without defaultMatches: false");
+  }
+  if (LAYOUT_DEFER_TRANSITION.has(rel)) {
+    if (!source.includes("transitionsEnabled") || !source.includes("requestAnimationFrame")) {
+      issues.push("layout width transition not deferred (missing transitionsEnabled)");
+    }
   }
 
-  it("AdminNav defers width transitions until after first frame", () => {
-    const nav = read("components/molecules/AdminNav/MsqdxAdminNav.tsx");
-    expect(nav).toContain("transitionsEnabled");
-    expect(nav).toContain("requestAnimationFrame");
+  return issues;
+}
+
+describe("design-system flicker audit — all atoms", () => {
+  it(`covers ${atomComponents.length} atom components`, () => {
+    expect(atomComponents.length).toBeGreaterThanOrEqual(15);
   });
 
-  it("CollapsiblePanel uses useSyncExternalStore for client detection", () => {
-    const panel = read("components/molecules/CollapsiblePanel/MsqdxCollapsiblePanel.tsx");
-    expect(panel).toContain("useSyncExternalStore");
+  for (const rel of atomComponents) {
+    it(`${rel}`, () => {
+      const issues = auditSource(rel, read(rel));
+      expect(issues, issues.join("; ")).toEqual([]);
+    });
+  }
+});
+
+describe("design-system flicker audit — all molecules", () => {
+  it(`covers ${moleculeComponents.length} molecule components`, () => {
+    expect(moleculeComponents.length).toBeGreaterThanOrEqual(20);
+  });
+
+  for (const rel of moleculeComponents) {
+    it(`${rel}`, () => {
+      const issues = auditSource(rel, read(rel));
+      expect(issues, issues.join("; ")).toEqual([]);
+    });
+  }
+});
+
+describe("design-system flicker audit — helpers", () => {
+  it("atomA11y exposes targeted transition helpers", () => {
+    const helper = read("utils/atomA11y.ts");
+    expect(helper).toContain("transitionProperties");
+    expect(helper).toContain("transitionInteractive");
   });
 });

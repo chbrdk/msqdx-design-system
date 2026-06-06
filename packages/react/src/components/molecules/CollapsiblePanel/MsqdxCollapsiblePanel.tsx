@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { Box, IconButton, useMediaQuery, useTheme, alpha } from "@mui/material";
 import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
 import type { ReactNode } from "react";
@@ -47,9 +47,18 @@ export const MsqdxCollapsiblePanel = ({
   collapsedWidth = PANEL_WIDTH_COLLAPSED_DEFAULT,
 }: MsqdxCollapsiblePanelProps) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"), {
+    noSsr: true,
+    defaultMatches: false,
+  });
   const isClient = useSyncExternalStore(subscribeNoop, () => true, () => false);
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [transitionsEnabled, setTransitionsEnabled] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setTransitionsEnabled(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const handleToggle = () => setExpanded((prev) => !prev);
 
@@ -135,7 +144,9 @@ export const MsqdxCollapsiblePanel = ({
       <Box
         className={className ?? "msqdx-collapsible-panel-desktop"}
         sx={{
-          transition: "width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease",
+          transition: transitionsEnabled
+            ? "width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease"
+            : "none",
           overflow: "visible",
           position: "relative",
           display: { xs: "none", md: "flex" },
@@ -191,7 +202,7 @@ export const MsqdxCollapsiblePanel = ({
           sx={{
             opacity: expanded ? 1 : 0,
             visibility: expanded ? "visible" : "hidden",
-            transition: "opacity 0.2s ease, visibility 0.2s ease",
+            transition: transitionsEnabled ? "opacity 0.2s ease, visibility 0.2s ease" : "none",
             width: "100%",
             flex: 1,
             display: "flex",

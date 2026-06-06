@@ -9,7 +9,7 @@ import {
   MSQDX_EFFECTS,
   MSQDX_BUTTON,
 } from "@msqdx/tokens";
-import { minTouchTarget } from "../../../utils/atomA11y";
+import { minTouchTarget, transitionInteractive } from "../../../utils/atomA11y";
 
 export type MsqdxIconButtonSize = "xs" | "small" | "medium" | "large";
 
@@ -45,7 +45,7 @@ const StyledIconButton = styled(IconButton, {
     border: `1px solid ${MSQDX_NEUTRAL[200]}`,
     boxShadow: MSQDX_EFFECTS.shadows.sm,
     color: theme.palette.text.primary,
-    transition: MSQDX_BUTTON.transition.default,
+    transition: transitionInteractive,
     "&:hover": {
       backgroundColor: "rgba(0,0,0,0.04)",
       boxShadow: MSQDX_EFFECTS.shadows.md,

@@ -4,7 +4,7 @@ import React from 'react';
 import { Avatar, styled } from '@mui/material';
 import type { AvatarProps } from '@mui/material';
 import { MSQDX_AVATAR, MSQDX_EFFECTS, getAvatarSize } from '@msqdx/tokens';
-import { reducedMotionStyles } from '../../../utils/atomA11y';
+import { reducedMotionStyles, transitionInteractive } from '../../../utils/atomA11y';
 import { MsqdxIcon } from '../Icon/MsqdxIcon';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
@@ -102,7 +102,7 @@ const StyledAvatar = styled(Avatar, {
       ? `${MSQDX_AVATAR.border.width}px ${MSQDX_AVATAR.border.style} ${MSQDX_AVATAR.border.color}`
       : 'none',
     boxShadow: MSQDX_AVATAR.shadow[avatarShadow],
-    transition: MSQDX_AVATAR.transition,
+    transition: transitionInteractive,
     ...reducedMotionStyles,
     '& .MuiAvatar-img': {
       borderRadius,

@@ -7,7 +7,7 @@ import {
   getScrollbarSize,
   getScrollbarColor,
 } from "@msqdx/tokens";
-import { reducedMotionStyles } from "../../../utils/atomA11y";
+import { reducedMotionStyles, transitionScrollbarThumb } from "../../../utils/atomA11y";
 
 export type ScrollbarSize = keyof typeof MSQDX_SCROLLBAR.size;
 export type ScrollbarBrandColor = keyof typeof MSQDX_SCROLLBAR.color;
@@ -94,7 +94,7 @@ const ScrollbarContainer = styled(Box, {
     "&::-webkit-scrollbar-thumb": {
       background: scrollbarColor.thumb,
       borderRadius,
-      transition: MSQDX_SCROLLBAR.transition,
+      transition: transitionScrollbarThumb,
       ...reducedMotionStyles,
       "&:hover": {
         background: scrollbarColor.thumbHover,

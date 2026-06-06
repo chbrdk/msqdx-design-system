@@ -4,7 +4,7 @@ import React from "react";
 import { Box, styled, alpha } from "@mui/material";
 import type { BoxProps } from "@mui/material";
 import { MSQDX_COLORS, MSQDX_SPACING, MSQDX_EFFECTS, MSQDX_TYPOGRAPHY, MSQDX_LAYOUT } from "@msqdx/tokens";
-import { reducedMotionStyles, focusOutlineStyles } from "../../../utils/atomA11y";
+import { reducedMotionStyles, focusOutlineStyles, transitionInteractive, transitionTransform } from "../../../utils/atomA11y";
 import type { ReactNode } from "react";
 import { MsqdxTypography } from "../Typography/MsqdxTypography";
 
@@ -41,7 +41,9 @@ const StyledCard = styled(Box, {
   return {
     position: "relative",
     overflow: MSQDX_LAYOUT.overflow?.hidden ?? "hidden",
-    transition: MSQDX_EFFECTS.transitions.standard,
+    transition: clickable || hoverable
+      ? `${transitionInteractive}, ${transitionTransform}`
+      : transitionInteractive,
     ...reducedMotionStyles,
     display: "flex",
     flexDirection: "column",

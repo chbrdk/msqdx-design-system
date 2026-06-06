@@ -11,7 +11,7 @@ import {
   MSQDX_STATUS,
   MSQDX_NEUTRAL,
 } from "@msqdx/tokens";
-import { reducedMotionStyles } from "../../../utils/atomA11y";
+import { reducedMotionStyles, transitionSwitchTrack } from "../../../utils/atomA11y";
 
 export type SwitchSize = "sm" | "medium" | "lg";
 
@@ -68,7 +68,7 @@ const StyledSwitch = styled(Switch, {
       borderRadius: h / 2,
       backgroundColor: MSQDX_NEUTRAL[300],
       opacity: 1,
-      transition: MSQDX_EFFECTS.transitions.standard,
+      transition: transitionSwitchTrack,
       ...reducedMotionStyles,
     },
     "&.Mui-focusVisible .MuiSwitch-thumb": {
