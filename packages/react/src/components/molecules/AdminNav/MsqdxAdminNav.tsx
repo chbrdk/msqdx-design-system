@@ -81,15 +81,19 @@ export const MsqdxAdminNav = ({
 }: MsqdxAdminNavProps) => {
   const theme = useTheme();
   /** Overlay drawer below `md`; docked rail from `md` up (avoids dead zone with hidden hamburger). */
-  const isDrawerMode = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
+  const isDrawerMode = useMediaQuery(theme.breakpoints.down("md"), {
+    noSsr: true,
+    defaultMatches: false,
+  });
   const [expanded, setExpanded] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [transitionsEnabled, setTransitionsEnabled] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const frame = requestAnimationFrame(() => setTransitionsEnabled(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
-  const useCompactChrome = mounted && !isDrawerMode;
+  const useCompactChrome = !isDrawerMode;
   const itemHeight = useCompactChrome ? ITEM_HEIGHT_COMPACT : ITEM_HEIGHT_TOUCH;
   const iconSize = useCompactChrome ? ICON_SIZE_COMPACT : ICON_SIZE_TOUCH;
   const itemPaddingY = useCompactChrome ? ITEM_PADDING_Y_COMPACT : ITEM_PADDING_Y_TOUCH;
@@ -104,12 +108,12 @@ export const MsqdxAdminNav = ({
   };
 
   const handleItemClick = () => {
-    if (mounted && isDrawerMode) onClose();
+    if (isDrawerMode) onClose();
   };
 
   const handleToggleExpand = () => setExpanded((prev) => !prev);
 
-  const isExpanded = mounted && isDrawerMode ? open : (mounted ? expanded : false);
+  const isExpanded = isDrawerMode ? open : expanded;
   const dockedWidthPx = isExpanded ? SIDEBAR_WIDTH_EXPANDED : SIDEBAR_WIDTH_COLLAPSED;
   const drawerWidth = {
     xs: "min(420px, calc(100vw - 16px))",
@@ -161,7 +165,9 @@ export const MsqdxAdminNav = ({
             ? "translateX(0)"
             : "translateX(-100%)"
           : "translateX(0)",
-        transition: "width 0.3s ease, transform 0.3s ease",
+        transition: transitionsEnabled
+          ? "width 0.3s ease, transform 0.3s ease"
+          : "none",
         zIndex: isDrawerMode ? ADMIN_NAV_ROOT_Z_INDEX.xs : ADMIN_NAV_ROOT_Z_INDEX.md,
         overflowY: "auto",
         overflowX: "hidden",
@@ -175,7 +181,7 @@ export const MsqdxAdminNav = ({
       }}
     >
       {/* Close button (drawer: mobile & tablet) */}
-      {mounted && isDrawerMode && (
+      {isDrawerMode && (
         <Box sx={{ display: "flex", justifyContent: "flex-end", p: itemGap }}>
           <IconButton
             size="large"
@@ -201,7 +207,7 @@ export const MsqdxAdminNav = ({
         }}
       >
         {/* Menü ausklappen – nur im docked Layout (lg+) */}
-        {mounted && !isDrawerMode && (isExpanded ? (
+        {!isDrawerMode && (isExpanded ? (
           <Box
             component="button"
             type="button"
@@ -619,7 +625,7 @@ export const MsqdxAdminNav = ({
     </Box>
   );
 
-  if (mounted && isDrawerMode) {
+  if (isDrawerMode) {
     return <Portal>{navRoot}</Portal>;
   }
 

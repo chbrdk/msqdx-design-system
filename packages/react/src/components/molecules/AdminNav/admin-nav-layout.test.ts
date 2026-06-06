@@ -19,4 +19,14 @@ describe("admin-nav-layout", () => {
     expect(navSource).toContain("Portal");
     expect(navSource).toContain('breakpoints.down("md")');
   });
+
+  it("defers sidebar width transitions until after first paint", () => {
+    expect(navSource).toContain("transitionsEnabled");
+    expect(navSource).toContain('requestAnimationFrame');
+  });
+
+  it("uses stable desktop defaults for useMediaQuery before hydration", () => {
+    expect(navSource).toContain("defaultMatches: false");
+    expect(navSource).not.toMatch(/mounted && !isDrawerMode/);
+  });
 });

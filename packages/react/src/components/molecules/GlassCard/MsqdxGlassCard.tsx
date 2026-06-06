@@ -21,7 +21,8 @@ const StyledCard = styled(Box, {
 })<MsqdxGlassCardProps>(({ theme, blur = 12, opacity = 0.05, hoverable, noPadding, accent, borderRadiusVariant }) => ({
   position: "relative",
   overflow: "hidden",
-  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  transition:
+    "background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
   display: "flex",
   flexDirection: "column",
   
