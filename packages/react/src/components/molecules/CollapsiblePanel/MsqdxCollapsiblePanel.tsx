@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Box, IconButton, useMediaQuery, useTheme, alpha } from "@mui/material";
 import { MSQDX_SPACING, MSQDX_NEUTRAL, MSQDX_TYPOGRAPHY, MSQDX_BRAND_PRIMARY } from "@msqdx/tokens";
 import type { ReactNode } from "react";
@@ -31,6 +31,10 @@ const PANEL_WIDTH_EXPANDED_DEFAULT = 280;
 const PANEL_WIDTH_COLLAPSED_DEFAULT = 64;
 const PANEL_MOBILE_MAX_WIDTH = 400;
 
+function subscribeNoop() {
+  return () => {};
+}
+
 export const MsqdxCollapsiblePanel = ({
   children,
   title,
@@ -44,19 +48,15 @@ export const MsqdxCollapsiblePanel = ({
 }: MsqdxCollapsiblePanelProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
+  const isClient = useSyncExternalStore(subscribeNoop, () => true, () => false);
   const [expanded, setExpanded] = useState(defaultExpanded);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleToggle = () => setExpanded((prev) => !prev);
 
   return (
     <>
       {/* Mobile: Off-Canvas Drawer */}
-      {mounted && isMobile && (
+      {isClient && isMobile && (
         <Box
           component="aside"
           className={className ?? "msqdx-collapsible-panel-mobile"}
@@ -147,7 +147,7 @@ export const MsqdxCollapsiblePanel = ({
         }}
       >
         {/* Desktop: Toggle button – compact variant (28x28) */}
-        {mounted && (
+        {isClient && (
           <Box
             sx={{
               position: "absolute",
@@ -203,7 +203,7 @@ export const MsqdxCollapsiblePanel = ({
         </Box>
 
         {/* Desktop: Collapsed – vertical title */}
-        {mounted && !expanded && title && (
+        {isClient && !expanded && title && (
           <Box
             sx={{
               display: "flex",
