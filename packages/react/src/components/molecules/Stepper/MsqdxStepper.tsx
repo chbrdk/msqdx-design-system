@@ -54,7 +54,7 @@ const StyledStepIcon = styled(Box)(({ theme }) => ({
   color: alpha(theme.palette.text.primary, 0.5),
   fontSize: '0.875rem',
   fontWeight: 600,
-  transition: 'all 0.2s ease-in-out',
+  transition: 'background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
   '&.active': {
     backgroundColor: MSQDX_COLORS.brand.green,
     color: '#ffffff',

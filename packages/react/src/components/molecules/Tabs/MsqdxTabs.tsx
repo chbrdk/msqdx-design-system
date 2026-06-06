@@ -31,7 +31,7 @@ const StyledTab = styled(Tab, {
   fontWeight: MSQDX_TYPOGRAPHY.fontWeight.medium,
   fontSize: compact ? MSQDX_TYPOGRAPHY.fontSize['2xs'] : '0.875rem',
   color: alpha(theme.palette.text.primary, 0.6),
-  transition: 'all 0.2s ease-in-out',
+  transition: 'background-color 0.2s ease-in-out, color 0.2s ease-in-out',
   minHeight: 'auto',
 
   '&.Mui-selected': {

@@ -138,7 +138,7 @@ const StyledChip = styled(Chip, {
     borderRadius: MSQDX_CHIP.borderRadius,
     
     // Transitions
-    transition: `all ${MSQDX_CHIP.transition} ${MSQDX_EFFECTS.easing.easeInOut}`,
+    transition: `background-color ${MSQDX_CHIP.transition} ${MSQDX_EFFECTS.easing.easeInOut}, border-color ${MSQDX_CHIP.transition} ${MSQDX_EFFECTS.easing.easeInOut}, box-shadow ${MSQDX_CHIP.transition} ${MSQDX_EFFECTS.easing.easeInOut}, color ${MSQDX_CHIP.transition} ${MSQDX_EFFECTS.easing.easeInOut}`,
     
     // Shadows
     boxShadow: MSQDX_CHIP.shadow.default,

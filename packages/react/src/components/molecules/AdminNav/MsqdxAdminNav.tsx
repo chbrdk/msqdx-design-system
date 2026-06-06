@@ -64,7 +64,8 @@ const ITEM_PADDING_X = MSQDX_SPACING.scale.xxs;
 /** MUI spacing units (theme spacing multiplier). */
 const ITEM_GAP_COMPACT = 2;
 const ITEM_GAP_TOUCH = 2;
-const ITEM_BORDER_RADIUS = MSQDX_SPACING.borderRadius.sm;
+const NAV_ITEM_TRANSITION =
+  "background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease";
 
 export const MsqdxAdminNav = ({
   open,
@@ -227,7 +228,7 @@ export const MsqdxAdminNav = ({
               border: "none",
               cursor: "pointer",
               "&:hover": { backgroundColor: hoverBg, color: textColor },
-              transition: "all 0.2s ease",
+              transition: NAV_ITEM_TRANSITION,
             }}
             aria-label={isExpanded ? "Navigation einklappen" : "Navigation ausklappen"}
           >
@@ -354,7 +355,7 @@ export const MsqdxAdminNav = ({
                   backgroundColor: active ? activeBgHover : hoverBg,
                   color: textColor,
                 },
-                transition: "all 0.2s ease",
+                transition: NAV_ITEM_TRANSITION,
               }}
             >
               <Box sx={{ marginRight: MSQDX_SPACING.scale.sm, display: "flex", alignItems: "center" }}>
@@ -518,7 +519,7 @@ export const MsqdxAdminNav = ({
                 border: "none",
                 fontFamily: "inherit",
                 "&:hover": { backgroundColor: hoverBg, color: textColor },
-                transition: "all 0.2s ease",
+                transition: NAV_ITEM_TRANSITION,
               }}
             >
               <Box sx={{ marginRight: MSQDX_SPACING.scale.sm, display: "flex", alignItems: "center" }}>
