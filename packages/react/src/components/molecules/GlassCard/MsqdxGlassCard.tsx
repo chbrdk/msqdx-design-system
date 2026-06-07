@@ -23,6 +23,9 @@ const StyledCard = styled(Box, {
   overflow: "hidden",
   transition:
     "background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  "@media (prefers-reduced-motion: reduce)": {
+    transition: "none",
+  },
   display: "flex",
   flexDirection: "column",
   
