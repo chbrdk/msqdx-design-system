@@ -126,7 +126,6 @@ export function MsqdxChatMessage({
         sx={{
           maxWidth: maxWidthCss,
           minWidth: 0,
-          transition: MSQDX_EFFECTS.transitions.standard,
           "& > div:last-of-type": { padding: 0 },
         }}
       >

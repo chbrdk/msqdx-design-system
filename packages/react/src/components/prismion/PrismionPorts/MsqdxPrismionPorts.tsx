@@ -52,7 +52,7 @@ const PortButton = styled(Box, {
   border: `2px solid ${MSQDX_NEUTRAL[100]}`,
   cursor: "pointer",
   pointerEvents: "auto",
-  transition: `all ${MSQDX_EFFECTS.duration.standard} ${MSQDX_EFFECTS.easing.easeOut}`,
+  transition: `box-shadow ${MSQDX_EFFECTS.duration.standard} ${MSQDX_EFFECTS.easing.easeOut}, opacity ${MSQDX_EFFECTS.duration.standard} ${MSQDX_EFFECTS.easing.easeOut}`,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

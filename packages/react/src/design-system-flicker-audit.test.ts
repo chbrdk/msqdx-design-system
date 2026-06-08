@@ -40,6 +40,18 @@ const moleculeComponents = collectMsqdxComponents(
   join(srcRoot, "components/molecules"),
   "components/molecules",
 );
+const layoutComponents = collectMsqdxComponents(
+  join(srcRoot, "components/layout"),
+  "components/layout",
+);
+const audionComponents = collectMsqdxComponents(
+  join(srcRoot, "components/audion"),
+  "components/audion",
+);
+const prismionComponents = collectMsqdxComponents(
+  join(srcRoot, "components/prismion"),
+  "components/prismion",
+);
 
 function read(rel: string): string {
   return readFileSync(join(srcRoot, rel), "utf8");
@@ -97,6 +109,45 @@ describe("design-system flicker audit — all molecules", () => {
   });
 
   for (const rel of moleculeComponents) {
+    it(`${rel}`, () => {
+      const issues = auditSource(rel, read(rel));
+      expect(issues, issues.join("; ")).toEqual([]);
+    });
+  }
+});
+
+describe("design-system flicker audit — all layout components", () => {
+  it(`covers ${layoutComponents.length} layout components`, () => {
+    expect(layoutComponents.length).toBeGreaterThanOrEqual(1);
+  });
+
+  for (const rel of layoutComponents) {
+    it(`${rel}`, () => {
+      const issues = auditSource(rel, read(rel));
+      expect(issues, issues.join("; ")).toEqual([]);
+    });
+  }
+});
+
+describe("design-system flicker audit — all audion components", () => {
+  it(`covers ${audionComponents.length} audion components`, () => {
+    expect(audionComponents.length).toBeGreaterThanOrEqual(10);
+  });
+
+  for (const rel of audionComponents) {
+    it(`${rel}`, () => {
+      const issues = auditSource(rel, read(rel));
+      expect(issues, issues.join("; ")).toEqual([]);
+    });
+  }
+});
+
+describe("design-system flicker audit — all prismion components", () => {
+  it(`covers ${prismionComponents.length} prismion components`, () => {
+    expect(prismionComponents.length).toBeGreaterThanOrEqual(15);
+  });
+
+  for (const rel of prismionComponents) {
     it(`${rel}`, () => {
       const issues = auditSource(rel, read(rel));
       expect(issues, issues.join("; ")).toEqual([]);
