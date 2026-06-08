@@ -83,6 +83,7 @@ export function MsqdxPrismionCard({
     if (!el || !onResize) return;
     const minH = prismion.size.minH ?? 120;
     const ro = new ResizeObserver(() => {
+      if (resizeStartRef.current !== null) return;
       if (rafIdRef.current != null) cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = requestAnimationFrame(() => {
         rafIdRef.current = null;

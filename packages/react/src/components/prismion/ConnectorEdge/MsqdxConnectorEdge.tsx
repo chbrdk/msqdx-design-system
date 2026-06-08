@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { Box, IconButton } from "@mui/material";
 import { Trash2 } from "lucide-react";
 import type { Connector, Prismion } from "../../../types/prismion";
@@ -196,15 +196,47 @@ export function MsqdxConnectorEdge({
     strokeDasharray: isSelected ? "none" : "5,5",
   };
 
-  const optimalPorts = findOptimalPorts(fromPrismion, toPrismion);
-  const effectiveFromPort = connector.from.port ?? optimalPorts.fromPort;
-  const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
-  const fromPos =
-    getPortPositionFromDOM?.(fromPrismion.id, effectiveFromPort) ??
-    calculatePortPosition(fromPrismion, effectiveFromPort);
-  const toPos =
-    getPortPositionFromDOM?.(toPrismion.id, effectiveToPort) ??
-    calculatePortPosition(toPrismion, effectiveToPort);
+  const computedPathData = useMemo(() => {
+    const optimalPorts = findOptimalPorts(fromPrismion, toPrismion);
+    const effectiveFromPort = connector.from.port ?? optimalPorts.fromPort;
+    const effectiveToPort = connector.to.port ?? optimalPorts.toPort;
+    const fromPos =
+      getPortPositionFromDOM?.(fromPrismion.id, effectiveFromPort) ??
+      calculatePortPosition(fromPrismion, effectiveFromPort);
+    const toPos =
+      getPortPositionFromDOM?.(toPrismion.id, effectiveToPort) ??
+      calculatePortPosition(toPrismion, effectiveToPort);
+
+    const path =
+      connector.waypoints && connector.waypoints.length > 0
+        ? [fromPos, ...connector.waypoints, toPos]
+        : computeOrthogonalPath(fromPos, toPos, effectiveFromPort, effectiveToPort);
+
+    return {
+      path,
+      effectiveFromPort,
+      effectiveToPort,
+      fromPos,
+      toPos,
+    };
+  }, [
+    fromPrismion.position.x,
+    fromPrismion.position.y,
+    fromPrismion.size.w,
+    fromPrismion.size.h,
+    toPrismion.position.x,
+    toPrismion.position.y,
+    toPrismion.size.w,
+    toPrismion.size.h,
+    connector.from.port,
+    connector.to.port,
+    connector.waypoints,
+    getPortPositionFromDOM,
+  ]);
+
+  const { effectiveFromPort, effectiveToPort, fromPos, toPos } = computedPathData;
+  let path = computedPathData.path;
+
   if (
     typeof window !== "undefined" &&
     (window as unknown as { __CONNECTOR_DEBUG__?: boolean }).__CONNECTOR_DEBUG__
@@ -218,15 +250,14 @@ export function MsqdxConnectorEdge({
       });
     }
   }
-  let path: Point[] =
-    connector.waypoints && connector.waypoints.length > 0
-      ? [fromPos, ...connector.waypoints, toPos]
-      : computeOrthogonalPath(fromPos, toPos, effectiveFromPort, effectiveToPort);
+
   if (draggingWaypointIndex !== null && dragWaypointPosition !== null && path.length > draggingWaypointIndex) {
     path = path.slice();
     path[draggingWaypointIndex] = dragWaypointPosition;
   }
-  const bounds = getConnectorBounds(path, CONNECTOR_BOUNDS_PADDING);
+  const bounds = useMemo(() => {
+    return getConnectorBounds(path, CONNECTOR_BOUNDS_PADDING);
+  }, [path]);
   const shouldShowHandles =
     isSelected &&
     path.length > 2 &&
