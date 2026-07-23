@@ -148,7 +148,8 @@ export const MsqdxFormField = ({
                         ml: 0.5,
                     }}
                 >
-                    {label} {required && '*'}
+                    {label}
+                    {required && <sup style={{ color: MSQDX_COLORS.status.error }}>*</sup>}
                 </InputLabel>
             </Box>
 
