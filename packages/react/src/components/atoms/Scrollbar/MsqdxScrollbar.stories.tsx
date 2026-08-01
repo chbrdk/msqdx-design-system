@@ -12,7 +12,7 @@ const meta = {
       description: {
         component: `
 Scrollbar-Atom: scrollbarer Bereich mit Token-Styling (\`MSQDX_SCROLLBAR\`).
-- **size**: thin (6px), medium (10px), thick (14px) – Breite/Höhe der Scrollbar
+- **size**: thin (4px), medium (6px), thick (8px) – Breite/Höhe der Scrollbar
 - **brandColor**: default, purple, yellow, pink, orange, green, black – Track/Thumb-Farben
 - **horizontal** / **vertical**: Scrollrichtung
 - **overflow**: auto (bei Bedarf) oder scroll (Track immer sichtbar)

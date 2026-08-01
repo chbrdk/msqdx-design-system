@@ -1,7 +1,7 @@
 /**
  * MSQDX Scrollbar Tokens
  *
- * Scrollbar-specific design tokens for consistent scrollbar styling across the design system.
+ * Hairline scrollbars — transparent track, low-contrast thumb.
  */
 import { MSQDX_EFFECTS } from './effects';
 
@@ -11,16 +11,16 @@ export const MSQDX_SCROLLBAR = {
    */
   size: {
     thin: {
+      width: '4px',
+      height: '4px',
+    },
+    medium: {
       width: '6px',
       height: '6px',
     },
-    medium: {
-      width: '10px',
-      height: '10px',
-    },
     thick: {
-      width: '14px',
-      height: '14px',
+      width: '8px',
+      height: '8px',
     },
   },
   /**
@@ -28,55 +28,55 @@ export const MSQDX_SCROLLBAR = {
    */
   color: {
     default: {
-      track: 'rgba(0, 0, 0, 0.05)',
-      thumb: 'rgba(0, 0, 0, 0.2)',
-      thumbHover: 'rgba(0, 0, 0, 0.3)',
-      thumbActive: 'rgba(0, 0, 0, 0.4)',
+      track: 'transparent',
+      thumb: 'rgba(0, 0, 0, 0.18)',
+      thumbHover: 'rgba(0, 0, 0, 0.32)',
+      thumbActive: 'rgba(0, 0, 0, 0.44)',
     },
     purple: {
-      track: 'rgba(182, 56, 255, 0.1)',
-      thumb: 'rgba(182, 56, 255, 0.4)',
-      thumbHover: 'rgba(182, 56, 255, 0.6)',
-      thumbActive: 'rgba(182, 56, 255, 0.8)',
+      track: 'transparent',
+      thumb: 'rgba(182, 56, 255, 0.28)',
+      thumbHover: 'rgba(182, 56, 255, 0.45)',
+      thumbActive: 'rgba(182, 56, 255, 0.6)',
     },
     yellow: {
-      track: 'rgba(254, 241, 77, 0.1)',
-      thumb: 'rgba(254, 241, 77, 0.4)',
-      thumbHover: 'rgba(254, 241, 77, 0.6)',
-      thumbActive: 'rgba(254, 241, 77, 0.8)',
+      track: 'transparent',
+      thumb: 'rgba(180, 160, 20, 0.35)',
+      thumbHover: 'rgba(180, 160, 20, 0.5)',
+      thumbActive: 'rgba(180, 160, 20, 0.65)',
     },
     pink: {
-      track: 'rgba(242, 86, 182, 0.1)',
-      thumb: 'rgba(242, 86, 182, 0.4)',
-      thumbHover: 'rgba(242, 86, 182, 0.6)',
-      thumbActive: 'rgba(242, 86, 182, 0.8)',
+      track: 'transparent',
+      thumb: 'rgba(242, 86, 182, 0.28)',
+      thumbHover: 'rgba(242, 86, 182, 0.45)',
+      thumbActive: 'rgba(242, 86, 182, 0.6)',
     },
     orange: {
-      track: 'rgba(255, 106, 59, 0.1)',
-      thumb: 'rgba(255, 106, 59, 0.4)',
-      thumbHover: 'rgba(255, 106, 59, 0.6)',
-      thumbActive: 'rgba(255, 106, 59, 0.8)',
+      track: 'transparent',
+      thumb: 'rgba(255, 106, 59, 0.28)',
+      thumbHover: 'rgba(255, 106, 59, 0.45)',
+      thumbActive: 'rgba(255, 106, 59, 0.6)',
     },
     green: {
-      track: 'rgba(0, 202, 85, 0.1)',
-      thumb: 'rgba(0, 202, 85, 0.4)',
-      thumbHover: 'rgba(0, 202, 85, 0.6)',
-      thumbActive: 'rgba(0, 202, 85, 0.8)',
+      track: 'transparent',
+      thumb: 'rgba(0, 202, 85, 0.28)',
+      thumbHover: 'rgba(0, 202, 85, 0.45)',
+      thumbActive: 'rgba(0, 202, 85, 0.6)',
     },
     black: {
-      track: 'rgba(0, 0, 0, 0.1)',
-      thumb: 'rgba(0, 0, 0, 0.3)',
-      thumbHover: 'rgba(0, 0, 0, 0.5)',
-      thumbActive: 'rgba(0, 0, 0, 0.7)',
+      track: 'transparent',
+      thumb: 'rgba(0, 0, 0, 0.22)',
+      thumbHover: 'rgba(0, 0, 0, 0.38)',
+      thumbActive: 'rgba(0, 0, 0, 0.52)',
     },
   },
   /**
    * Scrollbar border radius
    */
   borderRadius: {
-    thin: '3px',
-    medium: '5px',
-    thick: '7px',
+    thin: '999px',
+    medium: '999px',
+    thick: '999px',
   },
   /**
    * Scrollbar transitions
@@ -87,7 +87,7 @@ export const MSQDX_SCROLLBAR = {
 /**
  * Get scrollbar size values
  */
-export const getScrollbarSize = (size: keyof typeof MSQDX_SCROLLBAR.size = 'medium') => {
+export const getScrollbarSize = (size: keyof typeof MSQDX_SCROLLBAR.size = 'thin') => {
   return MSQDX_SCROLLBAR.size[size];
 };
 

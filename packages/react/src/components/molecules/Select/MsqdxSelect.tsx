@@ -237,7 +237,6 @@ export const MsqdxSelect = ({
                     '&::-webkit-scrollbar-track': {
                         background: scrollbarColor.track,
                         borderRadius: scrollbarBorderRadius,
-                        margin: '2px',
                         marginBottom: `${MSQDX_SPACING.borderRadius.lg + 4}px`,
                     },
                     '&::-webkit-scrollbar-thumb': {

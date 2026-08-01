@@ -14,8 +14,8 @@ export type ScrollbarBrandColor = keyof typeof MSQDX_SCROLLBAR.color;
 
 export interface MsqdxScrollbarProps {
   /**
-   * Scrollbar size (from MSQDX_SCROLLBAR.size: thin 6px, medium 10px, thick 14px).
-   * @default 'medium'
+   * Scrollbar size (from MSQDX_SCROLLBAR.size: thin 4px, medium 6px, thick 8px).
+   * @default 'thin'
    */
   size?: ScrollbarSize;
   /**
@@ -74,9 +74,9 @@ const ScrollbarContainer = styled(Box, {
   overflowMode: "auto" | "scroll";
 }>(({ scrollbarSize, scrollbarColor, horizontal, vertical, overflowMode }) => {
   const sizeKey: ScrollbarSize =
-    scrollbarSize.width === "6px"
+    scrollbarSize.width === "4px"
       ? "thin"
-      : scrollbarSize.width === "10px"
+      : scrollbarSize.width === "6px"
         ? "medium"
         : "thick";
   const borderRadius = MSQDX_SCROLLBAR.borderRadius[sizeKey];
@@ -89,7 +89,6 @@ const ScrollbarContainer = styled(Box, {
     "&::-webkit-scrollbar-track": {
       background: scrollbarColor.track,
       borderRadius,
-      margin: "2px",
     },
     "&::-webkit-scrollbar-thumb": {
       background: scrollbarColor.thumb,
@@ -102,6 +101,9 @@ const ScrollbarContainer = styled(Box, {
       "&:active": {
         background: scrollbarColor.thumbActive,
       },
+    },
+    "&::-webkit-scrollbar-corner": {
+      background: "transparent",
     },
     scrollbarWidth: "thin",
     scrollbarColor: `${scrollbarColor.thumb} ${scrollbarColor.track}`,
@@ -119,7 +121,7 @@ const ScrollbarContainer = styled(Box, {
  * - horizontal / vertical, overflow auto | scroll
  */
 export const MsqdxScrollbar = ({
-  size = "medium",
+  size = "thin",
   brandColor,
   color,
   children,

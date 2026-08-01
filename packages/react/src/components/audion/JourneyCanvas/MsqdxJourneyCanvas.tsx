@@ -46,7 +46,7 @@ export const MsqdxJourneyCanvas = ({
   onPhaseDelete,
   phaseCardBrandColor = "green",
   scrollbarBrandColor = "default",
-  scrollbarSize = "medium",
+  scrollbarSize = "thin",
 }: MsqdxJourneyCanvasProps) => {
   return (
     <Box
